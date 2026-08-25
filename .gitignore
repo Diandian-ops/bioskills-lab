@@ -14,3 +14,8 @@ __pycache__/
 
 # 依赖（外部 clone 自带）
 node_modules/
+
+# 外部参考 clone（各自有上游仓库 GPTomics/bioSkills、obsidian-wechat-converter，不纳入本库备份；
+# 本库只备份自身源 content/笔记|素材|pipeline，构建前按需从上游 git clone）
+content/库/bioSkills/
+content/库/obsidian-wechat-converter/
