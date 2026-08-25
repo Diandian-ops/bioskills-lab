@@ -1,0 +1,11 @@
+target            0 MV-LSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHF-DLS-----HGS
+                  0 ||-|.|..|..|.|.||||--...|.|.|||.|.....|.|...|..|-|||-----.|.
+query             0 MVHLTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVMGN
+
+target           53 AQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCLLVTLAAH
+                 60 ..||.|||||..|.....||.|........||.||..||.|||.||.||...|...||.|
+query            58 PKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVLVCVLAHH
+
+target          113 LPAEFTPAVHASLDKFLASVSTVLTSKYR 142
+                120 ...||||.|.|...|..|.|...|..||. 149
+query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147

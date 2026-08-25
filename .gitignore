@@ -1,0 +1,16 @@
+# 构建产物：一条命令可重建，不进版本库
+output/
+
+# 复现环境（隔离虚拟环境）
+.venv/
+.env-mafft/
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# 系统文件
+.DS_Store
+
+# 依赖（外部 clone 自带）
+node_modules/
