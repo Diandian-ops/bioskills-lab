@@ -8,6 +8,9 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import sys, os
+sys.path.insert(0, os.path.expanduser('~/.workbuddy/skills/bioSkills-figure-quality'))
+from fig_quality import C_WRONG, C_CORRECT, C_DATA, C_MUTED
 
 # ---- skill's own definitions (verbatim from entropy_analysis.py) ----
 ROBINSON_BACKGROUND = {
@@ -62,14 +65,14 @@ print(f"fully conserved cols (H==0): {sum(1 for h in H if h==0)}")
 
 # ================= FIGURE =================
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(11, 7.5))
-fig.patch.set_facecolor('#eee8db')
+fig.patch.set_facecolor('white')
 for ax in (ax1, ax2):
-    ax.set_facecolor('#eee8db')
+    ax.set_facecolor('white')
 
 x = np.arange(L)
-ax1.plot(x, H, color='#2b6cb0', lw=1.3, label='Shannon entropy H')
-ax1.plot(x, IC_rob, color='#c53030', lw=1.3, label='Info content (KL vs Robinson)')
-ax1.axhline(math.log2(20), color='#888', ls='--', lw=0.8, label='max H = log2(20) = 4.32')
+ax1.plot(x, H, color=C_DATA, lw=1.3, label='Shannon entropy H')
+ax1.plot(x, IC_rob, color=C_WRONG, lw=1.3, label='Info content (KL vs Robinson)')
+ax1.axhline(math.log2(20), color=C_MUTED, ls='--', lw=0.8, label='max H = log2(20) = 4.32')
 ax1.set_title('A. Real globin MSA — per-column entropy & information content', fontsize=10)
 ax1.set_xlabel('alignment column', fontsize=9)
 ax1.set_ylabel('bits', fontsize=9)
@@ -83,11 +86,11 @@ ic_uni_val = [math.log2(20)] * 4          # uniform: all identical
 ic_rob_val = [math.log2(1/b) for b in bg]  # Robinson KL: differs
 xpos = np.arange(len(residues))
 w = 0.38
-# 语义配色：uniform=红(WRONG) / Robinson=绿(correct)，与 004 一致
-ax2.bar(xpos - w/2, ic_uni_val, w, color='#c0392b', label='Uniform background (WRONG for protein)')
-ax2.bar(xpos + w/2, ic_rob_val, w, color='#2c7a4b', label='Robinson 1991 background (correct)')
+# 语义配色：uniform=砖红(WRONG) / Robinson=青瓷绿(correct)，与 004 一致
+ax2.bar(xpos - w/2, ic_uni_val, w, color=C_WRONG, label='Uniform background (WRONG for protein)')
+ax2.bar(xpos + w/2, ic_rob_val, w, color=C_CORRECT, label='Robinson 1991 background (correct)')
 for i, v in enumerate(ic_rob_val):
-    ax2.text(xpos[i]+w/2, v+0.08, f'{v:.2f}', ha='center', fontsize=8, color='#2c7a4b')
+    ax2.text(xpos[i]+w/2, v+0.08, f'{v:.2f}', ha='center', fontsize=8, color=C_CORRECT)
 ax2.set_xticks(xpos)
 ax2.set_xticklabels(residues, fontsize=9)
 ax2.set_ylabel('IC for a fully-conserved column (bits)', fontsize=9)

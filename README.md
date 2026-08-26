@@ -18,7 +18,6 @@ RedBook/
 │   │   ├── 001-生信AI工作流笔记.md
 │   │   ├── 002-bioSkills使用体验.md
 │   │   ├── 003-bioSkills拆解01-alignment专题.md
-│   │   ├── 003-bioSkills拆解01-alignment专题_dingcard.md   # 历史遗留，DingCard 已停用
 │   │   ├── 004-bioSkills真实试用-pairwise-alignment.md     # 完整试用版
 │   │   ├── 004-bioSkills小红书-pairwise-alignment.md       # 引流精简版
 │   │   ├── 005-bioSkills真实试用-msa-statistics.md         # 完整试用版
@@ -80,10 +79,10 @@ RedBook/
 
 ## 交付链路（受控闭环）
 
-选题(S1) → 真跑复现 Gate(S2a) → 写笔记(S2b, `redbook-bio-note-writer`) → 转站点(S3, `bioSkills-lab-site`) → 小红书引流(S4, 原 DingCard **已停用**) → 互链闭环(S5)。
+选题(S1) → 真跑复现 Gate(S2a) → 写笔记(S2b, `redbook-bio-note-writer`) → 转站点(S3, `bioSkills-lab-site`) → 互链闭环(S5)。
 
 - **主交付物** = 笔记（md）+ 站点（`output/bioSkills-site/`）。
-- **DingCard 已停用**：排版效果不好，不再产出小红书 ZIP。站点为当前唯一对外载体，本地预览 `python -m http.server 8123` 于 `output/bioSkills-site`。
+- **站点为当前唯一对外载体**：本地预览 `python -m http.server 8123` 于 `output/bioSkills-site`。
 
 ---
 
@@ -101,8 +100,9 @@ RedBook/
 
 ## 更新记录
 
-- 2026-08-25（目录治理收尾）：① 源/产物分层固化——顶层收敛为 `content/`(源: 库/笔记/素材) · `pipeline/`(构建脚本+复现实验) · `output/`(纯产物 bioSkills-site)；② 删除早前 DingCard 全部遗留 ZIP/解压目录/预览图，环境纯净；③ 清理零依赖死物（早期 AI 插画、未发布草稿、规划存档、死代码）；④ 原 `实验/` 改名为 `pipeline/`（装的是正式构建脚本，非"实验"）；⑤ 原 `笔记/素材/库` 收拢进 `content/`，全文引用同步。端到端重生成验证通过（站点重建 + 三图正确拷入 `assets/`）。`bioSkills-trial-pipeline/SKILL.md` 的 S4 仍残留 DingCard 引用，按"先提不自动改"约定待拍板。
-- 2026-08-25（DingCard 尾巴收口）：① `bioSkills-trial-pipeline/SKILL.md` 的 4 处 S4 引用改写为"已停用"，不再声称调 `dingcard-layout-export` 出 ZIP；② 删除 `content/库/DingCard/`（114MB 外部 git clone，可重建）；README 目录树移除该目录行。删后重跑站点构建成功，证明零硬依赖。注：`dingcard-layout-export` skill 自身（已标⚠停用）仍残留指向已删目录的悬空路径，仅供历史参考、不影响活链路。
+- 2026-08-25（卡片导出链路全清理）：删除已停用的卡片导出用户级 skill 目录；清理 3 个相关 skill（`bioSkills-trial-pipeline`/`bioSkills-lab-site`/`redbook-bio-note-writer`）中全部卡片导出引用（S4 标注「不再自动导出」、META 剥离改由 S3/手动）；删除 003 历史遗留的卡片导出版笔记；清理 `build_lab_site.py` 注释与 README 目录树/S4 引用。全仓零该链路残留。
+- 2026-08-25（目录治理收尾）：① 源/产物分层固化——顶层收敛为 `content/`(源: 库/笔记/素材) · `pipeline/`(构建脚本+复现实验) · `output/`(纯产物 bioSkills-site)；② 删除早前卡片导出工具全部遗留 ZIP/解压目录/预览图，环境纯净；③ 清理零依赖死物（早期 AI 插画、未发布草稿、规划存档、死代码）；④ 原 `实验/` 改名为 `pipeline/`（装的是正式构建脚本，非"实验"）；⑤ 原 `笔记/素材/库` 收拢进 `content/`，全文引用同步。端到端重生成验证通过（站点重建 + 三图正确拷入 `assets/`）。
+- 2026-08-25（卡片导出尾巴收口）：① `bioSkills-trial-pipeline/SKILL.md` 的 4 处 S4 引用改写为"已停用"，不再声称调卡片导出 skill 出 ZIP；② 删除 `content/库` 下的卡片导出 clone（114MB 外部 git clone，可重建）；README 目录树移除该目录行。删后重跑站点构建成功，证明零硬依赖。
 - 2026-08-25：生成 bioSkills 真实数据封面（562 skills / 65 categories 分布图）；新增《bioSkills 合集简介》；修正 README 库统计数字（562/65）与文案结构（去掉互动话术要求）。
 - 2026-08-24：初始化仓库，归档现有物料（2 篇正式笔记 + 1 篇草稿 + 7 张图），建立目录结构与本索引。
 - 2026-08-23(晚)：003 从纯文字深度稿重排为**图文发布版**（配 4 张 matplotlib 真实数据图：MSA 着色 / 黄昏区曲线 / 保守度熵剖面 / 算法交叉图）；clone `库/bioSkills/` 作本地源码对照；README 补 `库/` 说明与系列进度。

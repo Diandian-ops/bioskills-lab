@@ -1,23 +1,22 @@
 <!--
 META
-标题: 真实试用 bioSkills msa-statistics：蛋白信息量不能套 DNA 公式
-副标题: 用 MAFFT 对齐 8 条真实 globin 蛋白，原样运行 skill 的 entropy_analysis.py
-系列: bioSkills 真实试用
+标题: bioSkills msa-statistics：蛋白序列信息量的背景模型
+系列: bioSkills
 配图: ![](../素材/005-msa-statistics/005-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/msa-statistics)
 发布顺序: 005
 /META
 -->
 
-# 真实试用 bioSkills msa-statistics
+# 005｜bioSkills msa-statistics：蛋白序列信息量的背景模型
 
 用 NCBI 取的 **8 条真实 globin 蛋白序列** → MAFFT 对齐 → 原样跑 msa-statistics skill 的 `entropy_analysis.py`，严格复现并逐块拆解这个 skill 的内容成分。
 
 ---
 
-## 这个 skill 是什么
+## 功能定位与适用范围
 
-msa-statistics = **多序列比对(MSA) 的统计描述工具集**。它教的是从已完成的 MSA 中提取定量指标：每列 Shannon 熵、保守性评分、信息量(IC)、替换计数、成对 identity 矩阵等。
+msa-statistics = **多序列比对(MSA) 的统计描述工具集**。内容覆盖：从已完成的 MSA 中提取定量指标：每列 Shannon 熵、保守性评分、信息量(IC)、替换计数、成对 identity 矩阵等。
 
 | 属性 | 内容 |
 |------|------|
@@ -26,7 +25,7 @@ msa-statistics = **多序列比对(MSA) 的统计描述工具集**。它教的�
 | 前置条件 | 需要一个已完成的多序列比对（MSA）文件 |
 | 核心输出 | 逐列熵、IC、保守性评分 |
 
-注意：这个 skill **不负责做比对**——它消费已有的 MSA 文件。产 MSA 的任务属于同目录下的 `multiple-alignment` skill（MAFFT/MUSCLE）。
+适用范围：本 skill 的输入为已完成的序列比对（MSA），比对构建步骤由同目录的 `multiple-alignment` skill（MAFFT/MUSCLE）覆盖，不在本 skill 范围内。
 
 ---
 
@@ -89,7 +88,7 @@ AlignIO.read('alignment.fasta', 'fasta')   → Alignment 对象
 
 ### 它封装的经验与知识（重点）
 
-**坑一：蛋白 IC 不能套 DNA 均匀背景公式**
+**蛋白 IC 不能套 DNA 均匀背景公式**
 
 这是 skill 最核心的警告。DNA 可以用 IC = log₂4 − H（A/C/G/T 各 25%，均匀合理）。但蛋白 20 种氨基酸频率极不均（Leu ~9.2%, Trp ~1.3%）。
 
@@ -101,7 +100,7 @@ AlignIO.read('alignment.fasta', 'fasta')   → Alignment 对象
 
 Skill 的 `information_content()` 函数自动检测蛋白/DNA 并切换背景。
 
-**坑二：BLOSUM62 返回 numpy Array 不是 dict**
+**BLOSUM62 返回 numpy Array 不是 dict**
 
 `substitution_matrices.load('BLOSUM62')` 返回的是 numpy Array。用 `.get((c1,c2), 0)` 在 Array 上永远返回 0（静默出错）。必须用 `matrix[c1, c2]` 下标访问。SP-score 或 PSSM 构建中踩这个坑会导致所有替换对得分归零。
 
@@ -157,7 +156,7 @@ Shannon熵/列: min=0.000 max=4.322 mean=1.374
 ① 上方：真实 globin MSA 逐列熵（蓝）与 KL 信息量（红）剖面——保守核心区与变异区交替，符合球蛋白折叠模式
 ② 下方：核心坑可视化——完全保守列在不同残基上的 IC 差异（uniform 背景全=4.32，Robinson-KL 正确区分 Leu=3.44 vs Trp=6.23）
 
-### 坑一实测：蛋白 IC 必须用 Robinson-KL 背景
+### 蛋白 IC 必须用 Robinson-KL 背景
 
 在 18 个完全保守列上分别测试两种背景：
 
@@ -171,7 +170,7 @@ Uniform 背景把所有保守残基"拉平"到同一个值 4.32，丢失了稀�
 
 ---
 
-## 这个 skill 教对了什么
+## 实践要点
 
 三点经验封装，超出 Biopython 文档：
 
@@ -179,7 +178,7 @@ Uniform 背景把所有保守残基"拉平"到同一个值 4.32，丢失了稀�
 2. **BLOSUM62 Array 警告**——避免 dict 式访问的静默归零
 3. **替代已废弃的 AlignInfo.SummaryInfo**——提供稳定可用的自定义实现
 
-生信老手踩过这些坑后写进 skill → 后来人不用重复踩。
+这些经验属于选型知识，工具自带文档通常不单列。
 
 ---
 

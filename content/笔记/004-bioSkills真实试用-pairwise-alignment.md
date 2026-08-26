@@ -1,23 +1,22 @@
 <!--
 META
-标题: 真实试用 bioSkills pairwise-alignment：默认 gap=0 会产出多少假 gap？
-副标题: 用 NCBI 真实蛋白序列跑通 Biopython PairwiseAligner，验证两个核心坑点
-系列: bioSkills 真实试用
+标题: bioSkills pairwise-alignment：默认参数下的 gap 与一致性计算
+系列: bioSkills
 配图: ![](../素材/004-pairwise/004-fig-gappitrap.png) ![](../素材/004-pairwise/004-fig-pid.png)
 参考仓库: GPTomics/bioSkills (alignment/pairwise-alignment)
 发布顺序: 004
 /META
 -->
 
-# 真实试用 bioSkills pairwise-alignment
+# 004｜bioSkills pairwise-alignment：默认参数下的 gap 与一致性计算
 
 用 NCBI 真实蛋白序列（人血红蛋白 α 链 vs β 链）严格按 pairwise-alignment skill 自身的方法复现，逐块拆解这个 skill 的内容成分。
 
 ---
 
-## 这个 skill 是什么
+## 功能定位与适用范围
 
-pairwise-alignment = **两条序列的动态规划最优比对**。它教的是 Biopython 的 `Bio.Align.PairwiseAligner` 类——从创建 aligner、选矩阵、设 gap penalty 到取结果、算 PID，一条龙。
+pairwise-alignment = **两条序列的动态规划最优比对**。内容覆盖： Biopython 的 `Bio.Align.PairwiseAligner` 类——从创建 aligner、选矩阵、设 gap penalty 到取结果、算 PID，一条龙。
 
 | 属性 | 内容 |
 |------|------|
@@ -77,11 +76,11 @@ PairwiseAligner(mode, substitution_matrix, open_gap_score, extend_gap_score)
 
 这是 skill 超出 API 文档的价值所在——**实战踩坑后的经验沉淀**：
 
-**坑一：PairwiseAligner 默认 gap penalty 全是 0**
+**PairwiseAligner 默认 gap penalty 全是 0**
 
 `PairwiseAligner()` 不传参数时，match=1, mismatch=0, open_gap=0, extend_gap=0。配合正分的 BLOSUM62 矩阵，gap 不花钱 → aligner 会插入大量无意义的短 gap 来凑 match 分。SKILL.md 原文："Always specify gap penalties explicitly when using a substitution matrix." BLASTP 标准值是 open=-11, extend=-1。
 
-**坑二：Percent Identity 有四种定义，差可达 11.5%**
+**Percent Identity 有四种定义，差可达 11.5%**
 
 同一份比对，PID1-PID4 给出不同数字：
 
@@ -145,7 +144,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 统计：identities=65, mismatches=75, gaps=9, align_len=149
 
-### 坑一实测：默认 gap=0 陷阱
+### 默认 gap=0 陷阱
 
 同一对序列，分别用默认参数和 skill 推荐参数跑：
 
@@ -160,7 +159,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 ![](../素材/004-pairwise/004-fig-gappitrap.png)
 
-### 坑二实测：Percent Identity 四口径
+### Percent Identity 四口径
 
 用推荐配置产出的比对，按 SKILL.md 给出的四套定义计算 PID：
 
@@ -179,15 +178,15 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 ---
 
-## 这个 skill 教对了什么
+## 实践要点
 
-不是 Biopython API 文档——那些官方文档都有。skill 的价值在于三点**经验封装**：
+不是 Biopython API 文档——那些官方文档都有。skill 额外封装了三点经验：
 
 1. **把"gap=0 是个坑"写成了 warning**，而不是让你自己撞墙后发现
 2. **把 PID 四种口径并列出来**，避免误判
 3. **给了一个可直接抄的标准配置模板**（BLOSUM62 + global + -11/-1）
 
-生信老手踩过这些坑后沉淀的经验 → 写进 skill → 后来人不用重复踩。这就是 skill 作为"经验库"的意义。
+以上经验属于 skill 沉淀的选型知识，工具官方文档通常不单列。
 
 ---
 

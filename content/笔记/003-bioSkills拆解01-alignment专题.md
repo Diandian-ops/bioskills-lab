@@ -1,15 +1,12 @@
 # 003｜bioSkills 拆解 01：alignment 比对体系
 
-<!-- META -->
-> 系列：一个生信工程师的工作笔记 · **skills 使用体验**
-> 配图：1 张 2×2 拼图（4 子图）
-> 参考仓库：https://github.com/GPTomics/bioSkills
-> 标题备选：别再只会调 MAFFT：拆解 bioSkills 的比对决策树
-
-## 封面文字参考
-
-「bioSkills 专项拆解 01 ｜ alignment 序列比对体系」
-<!-- /META -->
+<!-- META
+标题: bioSkills 拆解 01：alignment 比对体系
+系列: 一个生信工程师的工作笔记 · skills 使用体验
+配图: 1 张 2×2 拼图（4 子图）
+参考仓库: https://github.com/GPTomics/bioSkills
+封面文字参考: bioSkills 专项拆解 01 ｜ alignment 序列比对体系
+/META -->
 
 ---
 

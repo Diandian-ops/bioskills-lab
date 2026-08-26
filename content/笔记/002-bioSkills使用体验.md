@@ -1,16 +1,9 @@
-# 002｜bioSkills：生信领域的 AI 知识工程样板
+# 002｜bioSkills 使用体验记录
 
-<!-- META -->
-## 标题备选
-
-- 生信日常｜bioSkills：把专家经验封装成 AI 可执行的 Skills
-- 别只当 Prompt 用：从工程角度拆 bioSkills
-- 生信 × Agent Skills：把 60+ 类专家经验系统化沉淀
-
-## 封面文字参考
-
-「深度沉淀 ｜ bioSkills 与生信 AI 知识工程」
-<!-- /META -->
+<!-- META
+标题: bioSkills 使用体验记录
+封面文字参考: 深度沉淀 ｜ bioSkills 与生信 AI 知识工程
+/META -->
 
 ---
 

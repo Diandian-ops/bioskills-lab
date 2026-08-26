@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""生成 bioSkills 试用小红书封面卡（品牌标题卡）：skill 名 + 一句话功能 + 核心能力点。
+"""生成 bioSkills 试用小红书封面卡：skill 名 + 功能要点。
 
-portrait 3:4 (1080x1440)，编辑档案风暖纸 #eee8db + 红强调 #b5341f，中文用 PingFang SC。
-这是「小红书精简模板」的封面生成器，以后每个 trial 直接套。
+portrait 3:4 (1080x1440)，白底清爽风格（适配小红书信息流）。
+中文用 PingFang SC。
 
 用法：
-  python make_cover.py --out content/素材/004-pairwise/004-cover.png \
-    --name "pairwise-alignment" --tag "bioSkills 真实试用" \
-    --line "两条序列的最优比对" --line "教你怎么用 Biopython 跑通" \
-    --cap "选矩阵：BLOSUM62" --cap "设 gap：open=-11 / extend=-1" --cap "算 PID / 经验 p 值"
+  python make_cover.py --out content/素材/006-trimming/006-cover.png \\
+    --name "alignment-trimming" \\
+    --line "比对修剪别乱砍" --line "默认模式只动 gap 列" \\
+    --cap "kpic-smart-gap 只动 gap 列" --cap "--log 让修剪可被审计"
 """
 import argparse
 import matplotlib
@@ -19,51 +19,50 @@ import matplotlib.pyplot as plt
 plt.rcParams['font.sans-serif'] = ['PingFang SC', 'Songti SC', 'Heiti SC']
 plt.rcParams['axes.unicode_minus'] = False
 
+# 小红书友好配色：白底 + 暖红强调（不刺眼、不沉闷）
+ACCENT = '#d94a38'      # 暖红（比旧 #b5341f 更亮，适合手机屏）
+BG     = '#ffffff'      # 纯白底
+TEXT_D = '#1a1a1a'      # 主文字
+TEXT_M = '#555555'      # 次要文字
+TEXT_L = '#999999'      # 弱化文字
 
-def make_cover(out, name, tag, lines, caps, accent='#b5341f', paper='#eee8db'):
+
+def make_cover(out, name, lines, caps, accent=ACCENT):
     fig, ax = plt.subplots(figsize=(5.4, 7.2), dpi=200)
-    fig.patch.set_facecolor(paper)
-    ax.set_facecolor(paper)
+    fig.patch.set_facecolor(BG)
+    ax.set_facecolor(BG)
     ax.axis('off')
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
 
-    # 顶部红色短条 + tag
-    ax.add_patch(plt.Rectangle((0.08, 0.93), 0.12, 0.012,
+    # 左侧色条（细，品牌标识）
+    ax.add_patch(plt.Rectangle((0.04, 0.88), 0.03, 0.08,
                                color=accent, transform=ax.transAxes))
-    ax.text(0.08, 0.875, tag, fontsize=15, color=accent,
-            fontweight='bold', transform=ax.transAxes)
 
-    # skill 名（等宽，长名自动缩小）
-    name_fs = 30 if len(name) > 15 else 38
-    ax.text(0.08, 0.73, name, fontsize=name_fs, color='#1a1a1a',
+    # skill 名（等宽）
+    name_fs = 30 if len(name) > 15 else 36
+    ax.text(0.10, 0.82, name, fontsize=name_fs, color=TEXT_D,
             fontweight='bold', fontfamily='monospace', transform=ax.transAxes)
 
-    # 一句话功能（多行）
-    y = 0.62
+    # 功能描述行
+    y = 0.70
     for ln in lines:
-        ax.text(0.08, y, ln, fontsize=17, color='#3a3a3a', transform=ax.transAxes)
-        y -= 0.07
+        ax.text(0.10, y, ln, fontsize=16, color=TEXT_M, transform=ax.transAxes)
+        y -= 0.065
 
-    # 分隔线
-    y -= 0.01
-    ax.plot([0.08, 0.92], [y, y], color=accent, lw=2, transform=ax.transAxes)
+    # 分隔线（轻）
+    y -= 0.02
+    ax.plot([0.10, 0.90], [y, y], color='#e8e8e8', lw=1, transform=ax.transAxes)
     y -= 0.05
 
-    # 核心能力点
-    ax.text(0.08, y, '核心能力', fontsize=13, color=accent,
-            fontweight='bold', transform=ax.transAxes)
-    y -= 0.055
-    for cap in caps:
-        ax.text(0.10, y, '●', fontsize=11, color=accent,
-                transform=ax.transAxes, va='center')
-        ax.text(0.15, y, cap, fontsize=15, color='#222',
-                transform=ax.transAxes, va='center')
-        y -= 0.055
-
-    # 底部脚注
-    ax.text(0.08, 0.05, '真实运行 · 非演示稿', fontsize=11, color='#888',
-            style='italic', transform=ax.transAxes)
+    # 要点列表（自然语句，轻量分隔符）
+    if caps:
+        for cap in caps:
+            ax.text(0.12, y, '\u00b7', fontsize=16, color=accent,
+                    transform=ax.transAxes, va='center')
+            ax.text(0.17, y, cap, fontsize=14.5, color=TEXT_M,
+                    transform=ax.transAxes, va='center')
+            y -= 0.058
 
     fig.savefig(out, dpi=200, bbox_inches='tight', facecolor=fig.get_facecolor())
     plt.close(fig)
@@ -74,9 +73,8 @@ if __name__ == '__main__':
     p = argparse.ArgumentParser()
     p.add_argument('--out', required=True)
     p.add_argument('--name', required=True)
-    p.add_argument('--tag', default='bioSkills 真实试用')
     p.add_argument('--line', action='append', default=[])
     p.add_argument('--cap', action='append', default=[])
-    p.add_argument('--accent', default='#b5341f')
+    p.add_argument('--accent', default=ACCENT)
     args = p.parse_args()
-    make_cover(args.out, args.name, args.tag, args.line, args.cap, accent=args.accent)
+    make_cover(args.out, args.name, args.line, args.cap, accent=args.accent)

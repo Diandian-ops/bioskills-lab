@@ -1,8 +1,9 @@
+# 005｜bioSkills msa-statistics：蛋白序列信息量的背景模型
+
 <!--
 META
-标题: bioSkills 真实试用 msa-statistics：蛋白信息量不能套 DNA 公式
-副标题: 用 MAFFT 对齐 8 条真实 globin 蛋白，原样运行 skill 的 entropy_analysis.py
-系列: bioSkills 真实试用
+标题: bioSkills msa-statistics：蛋白序列信息量的背景模型
+系列: bioSkills
 配图: ![](../素材/005-msa-statistics/005-cover.png)
 参考仓库: GPTomics/bioSkills (alignment/msa-statistics)
 发布顺序: 005
@@ -11,13 +12,13 @@ META
 
 ![](../素材/005-msa-statistics/005-cover.png)
 
-## 这个 skill 是干嘛的
+## 功能定位
 
 msa-statistics = 从**多序列比对(MSA)**里提取定量指标：每列 Shannon 熵(保守性)、信息量(IC)、替换计数、成对 identity。简单说：比对完一堆序列后，这 skill 帮你把"对齐"转成"数字"——哪一列保守、哪一列在进化上重要。
 
 **解决啥问题**：MSA 本身只是排好队的序列，肉眼看不出门道。做进化分析、保守位点鉴定、蛋白家族功能注释时，需要这些量化指标。这个 skill 就是干这个的。
 
-**我拿真实数据测了**：NCBI 取 8 条 globin 蛋白 → MAFFT --auto 对齐（158 列真实 MSA）→ 原样跑 skill 的 `entropy_analysis.py`。
+**怎么跑的**：NCBI 取 8 条 globin 蛋白 → MAFFT --auto 对齐（158 列真实 MSA）→ 原样跑 skill 的 `entropy_analysis.py`。
 
 ---
 
