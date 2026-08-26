@@ -37,7 +37,7 @@ msa-statistics 是 alignment 类别下**参考脚本最丰富的 skill**：
 
 | 文件 | 行数 | 功能 |
 |------|------|------|
-| SKILL.md | 449 行 | 主文档：熵/IC/保守性的数学定义 + 两大坑 + API 参考 |
+| SKILL.md | 449 行 | 主文档：熵/IC/保守性的数学定义 + 两大注意点 + API 参考 |
 | examples/entropy_analysis.py | 76 行 | **核心参考**：逐列 Shannon 熵 + KL 信息量 IC |
 | examples/conservation_profile.py | 35 行 | 保守性评分（Shannon-Jensen 方法） |
 | examples/substitution_counts.py | 37 行 | 观察到的残基替换频率矩阵 |
@@ -88,7 +88,7 @@ AlignIO.read('alignment.fasta', 'fasta')   → Alignment 对象
 
 ### 它封装的经验与知识（重点）
 
-**蛋白 IC 不能套 DNA 均匀背景公式**
+**蛋白 IC 的背景频率：均匀假设会抹平稀有残基信号**
 
 这是 skill 最核心的警告。DNA 可以用 IC = log₂4 − H（A/C/G/T 各 25%，均匀合理）。但蛋白 20 种氨基酸频率极不均（Leu ~9.2%, Trp ~1.3%）。
 
@@ -102,7 +102,7 @@ Skill 的 `information_content()` 函数自动检测蛋白/DNA 并切换背景�
 
 **BLOSUM62 返回 numpy Array 不是 dict**
 
-`substitution_matrices.load('BLOSUM62')` 返回的是 numpy Array。用 `.get((c1,c2), 0)` 在 Array 上永远返回 0（静默出错）。必须用 `matrix[c1, c2]` 下标访问。SP-score 或 PSSM 构建中踩这个坑会导致所有替换对得分归零。
+`substitution_matrices.load('BLOSUM62')` 返回的是 numpy Array。用 `.get((c1,c2), 0)` 在 Array 上永远返回 0（静默出错）。必须用 `matrix[c1, c2]` 下标访问。SP-score 或 PSSM 构建中若沿用 dict 式访问，会导致所有替换对得分归零。
 
 **其他知识封装**：
 - Shannon 熵的生物学含义：H=0 完全保守，H=log₂N 完全随机
@@ -154,19 +154,19 @@ Shannon熵/列: min=0.000 max=4.322 mean=1.374
 
 上图（两面板）：
 ① 上方：真实 globin MSA 逐列熵（蓝）与 KL 信息量（红）剖面——保守核心区与变异区交替，符合球蛋白折叠模式
-② 下方：核心坑可视化——完全保守列在不同残基上的 IC 差异（uniform 背景全=4.32，Robinson-KL 正确区分 Leu=3.44 vs Trp=6.23）
+② 下方：核心差异可视化——完全保守列在不同残基上的 IC 差异（uniform 背景全=4.32，Robinson-KL 正确区分 Leu=3.44 vs Trp=6.23）
 
 ### 蛋白 IC 必须用 Robinson-KL 背景
 
 在 18 个完全保守列上分别测试两种背景：
 
-| 残基 | uniform IC (=log₂20−0) | Robinson-KL IC | 差距 |
-|------|------------------------|----------------|------|
-| Leu (保守) | 4.32 | **3.44** | 低估了稀有性 |
-| Trp (保守) | 4.32 | **6.23** | 高估了常见性 |
-| Ala (保守) | 4.32 | **3.98** | 接近但仍有偏 |
+| 残基 | uniform IC (=log₂20−0) | Robinson-KL IC | uniform 的偏差 |
+|------|------------------------|----------------|---------------|
+| Leu（常见） | 4.32 | **3.44** | 高估了常见残基（保守 Leu 本就不那么意外，信息量应更低）|
+| Trp（稀有） | 4.32 | **6.23** | 低估了稀有残基（保守 Trp 更意外，信息量应更高）|
+| Ala（保守） | 4.32 | **3.98** | 接近但仍有偏 |
 
-Uniform 背景把所有保守残基"拉平"到同一个值 4.32，丢失了稀有残基的高信息量信号。这就是 skill 反复强调的陷阱。
+Uniform 背景把所有保守残基"拉平"到同一个值 4.32，丢失了稀有残基的高信息量信号。这就是 skill 反复强调的背景频率问题。
 
 ---
 
@@ -184,4 +184,4 @@ Uniform 背景把所有保守残基"拉平"到同一个值 4.32，丢失了稀�
 
 ## 小结
 
-msa-statistics skill 把 MSA 后统计分析打包成了完整单元：8 个参考脚本覆盖熵/IC/保守性/替换/距离/PSSM 等常用指标，核心价值在于**蛋白 IC 必须用 Robinson-KL 背景**这一实战经验的明确警告。真实 globin 数据验证了这个坑确实存在。
+msa-statistics skill 把 MSA 后统计分析打包成了完整单元：8 个参考脚本覆盖熵/IC/保守性/替换/距离/PSSM 等常用指标，核心价值在于**蛋白 IC 必须用 Robinson-KL 背景**这一实战经验的明确警告。真实 globin 数据验证了这个背景频率偏差确实存在。

@@ -74,7 +74,7 @@ PairwiseAligner(mode, substitution_matrix, open_gap_score, extend_gap_score)
 
 ### 它封装的经验与知识（重点）
 
-这是 skill 超出 API 文档的价值所在——**实战踩坑后的经验沉淀**：
+这是 skill 超出 API 文档的价值所在——**实战经验沉淀**：
 
 **PairwiseAligner 默认 gap penalty 全是 0**
 
@@ -144,7 +144,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 统计：identities=65, mismatches=75, gaps=9, align_len=149
 
-### 默认 gap=0 陷阱
+### 默认 gap=0 的配置偏差
 
 同一对序列，分别用默认参数和 skill 推荐参数跑：
 
@@ -155,7 +155,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 默认配置凭空多出 **46 个 gap**（+511%），align_len 从 149 膨胀到 172。score 反而更高（339 > 286）——因为 gap 不花钱，aligner 可以通过插入大量短 gap 来"免费"获得更多 match 分。
 
-这就是 skill 警告的陷阱：**看起来分数更好，实际上比对质量更差**。
+这就是 skill 警告的配置偏差：**看起来分数更好，实际上比对质量更差**。
 
 ![](../素材/004-pairwise/004-fig-gappitrap.png)
 
@@ -182,7 +182,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 不是 Biopython API 文档——那些官方文档都有。skill 额外封装了三点经验：
 
-1. **把"gap=0 是个坑"写成了 warning**，而不是让你自己撞墙后发现
+1. **把"默认 gap=0 是错误配置"明确写成了 warning**，而不是让使用者自行发现
 2. **把 PID 四种口径并列出来**，避免误判
 3. **给了一个可直接抄的标准配置模板**（BLOSUM62 + global + -11/-1）
 
@@ -192,4 +192,4 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 ## 小结
 
-pairwise-alignment skill 把 Biopython PairwiseAligner 的使用方法 + 实战避坑打包成了一个完整单元。它的内容成分包括：7 个文件（主文档 + 5 个参考脚本 + usage-guide）、一套完整的 API 使用流程、以及两个核心坑点的明确警告。真实数据验证表明这两个坑都是真实存在的。
+pairwise-alignment skill 把 Biopython PairwiseAligner 的使用方法 + 实战经验打包成了一个完整单元。它的内容成分包括：7 个文件（主文档 + 5 个参考脚本 + usage-guide）、一套完整的 API 使用流程、以及两个核心问题的明确警告。真实数据验证表明这两个偏差都是真实存在的。
