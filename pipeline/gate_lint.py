@@ -43,6 +43,9 @@ NUM_CTX = re.compile(r"(bits|列|个|%|％|倍|行|条|张|基因|残基|位点|
 # 元数据/说明行豁免（这些行里的数字是序号/编号，不算裸数据）
 META_LINE = re.compile(r"(用途|文案|标题建议|META|建议|序号|小红书|帖子|正文文本)")
 
+# 小红书标题硬上限（平台限制，超了帖子无法用原样标题）
+TITLE_MAX = 20
+
 
 def is_body(path: str) -> bool:
     return path.endswith("-正文.md") or "-小红书-" in path
@@ -93,6 +96,15 @@ def lint(text, path):
                                      "数字需带 标签+单位+对照，零背景读者能懂"))
         if re.search(r"/\s*META|-->\s*$", ln):
             in_meta = False
+
+    # --- ERROR: 小红书标题超长（xhs-body 标题纪律，平台硬上限 TITLE_MAX 字）---
+    # 标题写在 META 的「标题建议」里，但长度约束对所有形态都适用，故独立于 in_meta 检查。
+    m_title = re.search(r"标题建议:\s*(.+)", text)
+    if m_title:
+        title = m_title.group(1).strip()
+        if len(title) > TITLE_MAX:
+            findings.append(("ERROR", -1, "TITLE_TOO_LONG", title,
+                             f"小红书标题上限 {TITLE_MAX} 字，当前 {len(title)} 字，需压缩（保留核心钩子/数字，去掉冗余修饰）"))
 
     # --- WARN: 未解释缩写（首现） ---
     for ab in ABBR:
