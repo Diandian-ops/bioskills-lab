@@ -1,0 +1,64 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 允许 Actions 把构建产物发布到 Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只跑一个 Pages 部署，避免并发覆盖
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      # 构建脚本依赖第三方 markdown 包（非标准库），CI 纯净环境需显式安装
+      - name: Install dependencies
+        run: pip install markdown
+
+      # content/库/bioSkills 被 .gitignore 排除（外部参考 clone），CI 时按需拉取上游
+      # 本地若已存在则跳过，避免重复 clone
+      - name: Fetch bioSkills reference (gitignored, fetched at build time)
+        run: |
+          if [ ! -d "content/库/bioSkills" ]; then
+            git clone --depth 1 https://github.com/GPTomics/bioSkills "content/库/bioSkills"
+          fi
+
+      # build_lab_site.py 已改为按脚本位置推导项目根，CI 上也能跑
+      - name: Build site
+        run: python pipeline/build_lab_site.py
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/bioSkills-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

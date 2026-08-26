@@ -3,7 +3,9 @@
 """生成 bioSkills 真实试用实验室 - 多文件静态站点（多层级侧栏 + 内容居中 + 移动抽屉）。"""
 import html, os, shutil, re, markdown as _md
 
-BASE = "/Users/zhangdiandian/RedBook"
+# 项目根：优先环境变量 REDBOOK_BASE，否则按脚本位置推导（pipeline/ 的上一级）
+# 这样脚本在本地 Mac 与 CI(ubuntu) 上都能跑，不再硬编码绝对路径
+BASE = os.environ.get("REDBOOK_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BIO = BASE + "/content/库/bioSkills"
 IMG004 = BASE + "/content/素材/004-pairwise"
 IMG005 = BASE + "/content/素材/005-msa-statistics"
@@ -44,8 +46,8 @@ def load_note(md_path):
     html = html.replace("<pre>", '<div class="codewrap"><pre>').replace("</pre>", "</pre></div>")
     # 笔记里的图是裸 <img>（在 <p> 内），包进 <figure> 以复用 figure 边框样式 + 放大交互
     html = re.sub(r"<p>\s*(<img[^>]*>)\s*</p>", r"<figure>\1</figure>", html)
-    # META 存在时 masthead 已渲染 标题(h1)+副标题，正文自带的 H1+引导段是给 DingCard 独立渲染用的
-    # → 站点上去重（DingCard 读原始 md 不受影响）；无 标题 时保留正文 H1 作兜底
+    # META 存在时 masthead 已渲染 标题(h1)+副标题，正文自带的 H1+引导段会与之重复
+    # → 站点上去重；无 标题 时保留正文 H1 作兜底
     # 引导段可能含内嵌标签(<strong>/<code>)，用 .*? 而非 [^<]* 以兼容
     if meta.get("标题"):
         html = re.sub(r"^<h1>.*?</h1>\s*", "", html, count=1, flags=re.S)
@@ -66,16 +68,16 @@ NTOTAL = sum(n for _, n in cats)
 
 # ---------- 领域分类法（domain taxonomy）：64 category -> 10 领域 ----------
 DOMAIN_META = [
-    ("序列基础与读取", "#6366f1"),
-    ("转录组与差异",   "#0ea5e9"),
-    ("单细胞与空间",   "#14b8a6"),
-    ("表观与调控",     "#f59e0b"),
-    ("基因组与变异",   "#ef4444"),
-    ("蛋白与结构",     "#8b5cf6"),
-    ("微生物与生态",   "#22c55e"),
-    ("多组学与系统",   "#ec4899"),
-    ("免疫与临床",     "#f97316"),
-    ("数据与工具",     "#64748b"),
+    ("序列基础与读取", "#5b7553"),
+    ("转录组与差异",   "#4a7a8c"),
+    ("单细胞与空间",   "#7a9e7e"),
+    ("表观与调控",     "#b8893e"),
+    ("基因组与变异",   "#b5482f"),
+    ("蛋白与结构",     "#8e6f9e"),
+    ("微生物与生态",   "#6b8e4e"),
+    ("多组学与系统",   "#a86b7d"),
+    ("免疫与临床",     "#c47a4a"),
+    ("数据与工具",     "#6b7280"),
 ]
 DOMAIN_OF = {
     "alignment":"序列基础与读取","alignment-files":"序列基础与读取","read-alignment":"序列基础与读取","read-qc":"序列基础与读取","primer-design":"序列基础与读取","restriction-analysis":"序列基础与读取","sequence-io":"序列基础与读取","sequence-manipulation":"序列基础与读取",
@@ -112,7 +114,8 @@ for name, n in cats:
 CAT_MAP = "".join(chips)
 
 ALIGN_SUBS = [("pairwise", "pairwise-alignment", "alignment/pairwise-alignment.html"),
-              ("msa", "msa-statistics", "alignment/msa-statistics.html")]
+              ("msa", "msa-statistics", "alignment/msa-statistics.html"),
+              ("trimming", "alignment-trimming", "alignment/alignment-trimming.html")]
 
 def sidebar(active, prefix=""):
     s = '<aside class="side" id="side"><div class="brand">BIO / LAB</div>'
@@ -121,12 +124,12 @@ def sidebar(active, prefix=""):
     # 按领域全景分组（中文领域头 + 配色点）
     for dname, dcolor in DOMAIN_META:
         items = dmap.get(dname, [])
-        dom_active = any(c == active or (active in ('pairwise', 'msa') and c == 'alignment') for c, _ in items)
+        dom_active = any(c == active or (active in ('pairwise', 'msa', 'trimming') and c == 'alignment') for c, _ in items)
         dtot = sum(n for _, n in items)
         s += '<details class="navgrp%s" data-key="D:%s"><summary><span class="dot" style="background:%s"></span>%s<span class="cnt">×%d</span></summary>' % (
             ' open' if dom_active else '', dname, dcolor, dname, dtot)
         for cname, cn in items:
-            is_active = (cname == active) or (active in ('pairwise', 'msa') and cname == 'alignment')
+            is_active = (cname == active) or (active in ('pairwise', 'msa', 'trimming') and cname == 'alignment')
             if cname in DONE:
                 s += '<details class="navsub%s" data-key="C:%s"><summary class="%s">%s<span class="cnt">×%d</span></summary>' % (
                     ' open' if is_active else '', cname, 'cur' if is_active else '', cname, cn)
@@ -135,7 +138,7 @@ def sidebar(active, prefix=""):
                 sk = sorted(d for d in os.listdir(os.path.join(BIO, cname))
                             if os.path.isdir(os.path.join(BIO, cname, d)) and not d.startswith('.'))
                 for sn in sk:
-                    if sn in ('pairwise-alignment', 'msa-statistics'):
+                    if sn in ('pairwise-alignment', 'msa-statistics', 'alignment-trimming'):
                         continue
                     s += '<span class="sub nav-dis">%s</span>' % sn
                 s += '</details>'
@@ -154,30 +157,30 @@ def sidebar(active, prefix=""):
     s += '</nav></aside>'
     return s
 
-STYLE = """/* 文档站：深色多层级侧栏 + 浅色内容(居中) + 靛蓝强调 */
-:root{ --bg:#f6f7fb; --side:#0f1623; --side2:#182338; --side-text:#c3ccdb; --side-dim:#7c879b;
-  --ink:#15202e; --ink-soft:#475569; --muted:#7b8794; --line:#e6e9f0; --accent:#6d5efc; --accent-d:#5338e0;
-  --accent-soft:#efecfe; --card:#ffffff; --green:#16a34a; }
+STYLE = """/* 文档站：墨色多层级侧栏 + 暖白内容(居中) + 砖红强调(编辑部风) */
+:root{ --bg:#faf9f6; --side:#23211c; --side2:#322e27; --side-text:#d6d1c6; --side-dim:#9b948a;
+  --ink:#2b2823; --ink-soft:#5e584e; --muted:#8d867a; --line:#e8e3d8; --accent:#b5482f; --accent-d:#8f3522;
+  --accent-soft:#f4e9e4; --card:#ffffff; --green:#4a7a52; }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{margin:0;background:linear-gradient(180deg,#fcfcfd 0%,#f4f5f8 100%);color:var(--ink);
+body{margin:0;background:linear-gradient(180deg,#fcfbf8 0%,#f5f3ee 100%);color:var(--ink);
   font-family:-apple-system,"PingFang SC","Noto Sans CJK SC",sans-serif;line-height:1.75;}
-.side{position:fixed;top:0;left:0;width:264px;height:100vh;overflow-y:auto;background:linear-gradient(168deg,#111b2c 0%,#0c1320 60%,#0a0f1a 100%);border-right:1px solid rgba(109,94,252,.22);padding:22px 12px 40px;z-index:70;}
-.brand{font:700 16px/1 "Courier New",monospace;letter-spacing:.18em;color:#c7d2fe;margin:4px 8px 18px;}
+.side{position:fixed;top:0;left:0;width:264px;height:100vh;overflow-y:auto;background:linear-gradient(168deg,#2a2722 0%,#211e19 60%,#1a1813 100%);border-right:1px solid rgba(181,72,47,.25);padding:22px 12px 40px;z-index:70;}
+.brand{font:700 16px/1 "Courier New",monospace;letter-spacing:.18em;color:#e3b6aa;margin:4px 8px 18px;}
 .sidenav{display:flex;flex-direction:column;gap:2px;font-size:14px;}
 .sidenav>a{color:var(--side-text);text-decoration:none;padding:8px 12px;border-radius:6px;}
 .sidenav>a:hover{background:var(--side2);color:#fff;}
-.sidenav>a.cur{background:rgba(99,102,241,.20);color:#c7d2fe;font-weight:600;}
+.sidenav>a.cur{background:rgba(181,72,47,.20);color:#e3b6aa;font-weight:600;}
 .navgrp{margin:4px 0;}
 .navgrp>summary{list-style:none;cursor:pointer;padding:8px 12px;border-radius:6px;color:#cbd5e1;font-weight:600;font-size:14px;user-select:none;}
 .navgrp>summary::-webkit-details-marker{display:none;}
 .navgrp>summary::before{content:"▸";display:inline-block;margin-right:8px;font-size:10px;transition:transform .15s;color:var(--accent);}
 .navgrp[open]>summary::before{transform:rotate(90deg);}
 .navgrp>summary:hover{background:var(--side2);}
-.navgrp>summary.cur{color:#c7d2fe;}
+.navgrp>summary.cur{color:#e3b6aa;}
 .sub{display:block;padding:7px 12px 7px 32px;font-size:13px;color:var(--side-dim);text-decoration:none;border-radius:6px;}
 .sub:hover{background:var(--side2);color:#fff;}
-.sub.cur{background:rgba(99,102,241,.20);color:#c7d2fe;font-weight:600;}
+.sub.cur{background:rgba(181,72,47,.20);color:#e3b6aa;font-weight:600;}
 .nav-dis{display:block;padding:6px 12px 6px 32px;font-size:13px;color:#566072;opacity:.55;}
 .cnt{color:#4b5563;font-weight:400;}
 .navgrp>summary{display:flex;align-items:center;}
@@ -188,7 +191,7 @@ body{margin:0;background:linear-gradient(180deg,#fcfcfd 0%,#f4f5f8 100%);color:v
 .navsub>summary::-webkit-details-marker{display:none;}
 .navsub>summary::before{content:"▸";display:inline-block;margin-right:6px;font-size:9px;transition:transform .15s;color:var(--accent);}
 .navsub[open]>summary::before{transform:rotate(90deg);}
-.navsub>summary.cur{color:#c7d2fe;font-weight:600;}
+.navsub>summary.cur{color:#e3b6aa;font-weight:600;}
 .navsub>summary:hover{background:var(--side2);}
 .navsub>summary .cnt{margin-left:auto;margin-right:2px;}
 .navsub .sub{padding-left:20px;font-size:12.5px;}
@@ -203,8 +206,8 @@ body{margin:0;background:linear-gradient(180deg,#fcfcfd 0%,#f4f5f8 100%);color:v
 .crumb a{color:var(--accent);text-decoration:none;}
 .masthead{border-bottom:2px solid var(--accent);padding:0 0 22px;margin-bottom:10px;}
 .kicker{font:600 12px/1 "Courier New",monospace;letter-spacing:.3em;color:var(--accent);text-transform:uppercase;}
-h1{font-family:"Songti SC","SimSun",serif;font-size:33px;font-weight:700;margin:10px 0 6px;color:#0f172a;line-height:1.25;}
-h2{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:700;margin:8px 0 4px;color:#0f172a;scroll-margin-top:24px;}
+h1{font-family:"Songti SC","SimSun",serif;font-size:33px;font-weight:700;margin:10px 0 6px;color:#23211c;line-height:1.25;}
+h2{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:700;margin:8px 0 4px;color:#23211c;scroll-margin-top:24px;}
 .sub{color:var(--muted);font-size:15px;margin:0;}
 .lead{margin:18px 0 0;font-size:16px;color:var(--ink-soft);}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0;}
@@ -215,15 +218,15 @@ h2{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:700;margin:
 .chip{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:5px 11px;font-size:12.5px;color:var(--muted);}
 .chip b{color:#475569;font-weight:700;}
 .chip-done{background:var(--accent);border-color:var(--accent);color:#fff;}
-.chip-done b{color:#e0e7ff;font-weight:700;}
+.chip-done b{color:#f6e3dd;font-weight:700;}
 .tm-wrap{position:relative;margin:18px 0;}
 #tm svg{display:block;}
-.tm-tip{position:absolute;display:none;pointer-events:none;z-index:6;background:#0f172a;color:#e2e8f0;font-size:12.5px;line-height:1.55;padding:8px 11px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.28);max-width:220px;}
+.tm-tip{position:absolute;display:none;pointer-events:none;z-index:6;background:#23211c;color:#e6e0d4;font-size:12.5px;line-height:1.55;padding:8px 11px;border-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.28);max-width:220px;}
 .tm-tip b{color:#fff;}
 .tm-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin:14px 0 2px;}
 .tm-lg{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);}
 .tm-lg i{width:12px;height:12px;border-radius:3px;display:inline-block;}
-.tm-lg b{color:#0f172a;font-family:"Courier New",monospace;}
+.tm-lg b{color:#23211c;font-family:"Courier New",monospace;}
 .sklist{border:1px solid var(--line);background:var(--card);border-radius:12px;overflow:hidden;margin:18px 0;}
 .sklist a,.sklist div{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:var(--ink);}
 .sklist a:last-child,.sklist div:last-child{border-bottom:none;}
@@ -235,14 +238,14 @@ h2{font-family:"Songti SC","SimSun",serif;font-size:25px;font-weight:700;margin:
 section{border-top:1px solid var(--line);margin-top:42px;padding-top:28px;scroll-margin-top:24px;}
 .sec-kicker{font:600 12px/1 "Courier New",monospace;letter-spacing:.28em;color:var(--accent);text-transform:uppercase;}
 .sec-one{color:var(--muted);font-size:15px;margin:0 0 18px;}
-h3{font-size:17px;margin:26px 0 8px;color:#0f172a;scroll-margin-top:24px;}
+h3{font-size:17px;margin:26px 0 8px;color:#23211c;scroll-margin-top:24px;}
 p{margin:10px 0;color:var(--ink-soft);}
 ul{margin:8px 0;padding-left:22px;} li{margin:5px 0;color:var(--ink-soft);}
-.tree{background:#1e2430;color:#d6deeb;font:13px/1.6 "Courier New",monospace;padding:14px 16px;border-radius:8px;overflow-x:auto;white-space:pre;}
+.tree{background:#26231d;color:#d6d1c6;font:13px/1.6 "Courier New",monospace;padding:14px 16px;border-radius:8px;overflow-x:auto;white-space:pre;}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0;}
 .card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--card);box-shadow:0 1px 2px rgba(0,0,0,.03);}
 .card .n{font:700 22px/1 "Courier New",monospace;color:var(--accent-d);}
-.card .t{font-weight:600;margin:6px 0 4px;color:#0f172a;}
+.card .t{font-weight:600;margin:6px 0 4px;color:#23211c;}
 .card .d{color:var(--muted);font-size:13px;margin:0;}
 figure{margin:22px 0;text-align:center;}
 figure img, .content img{max-width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:zoom-in;transition:filter .2s ease, transform .2s ease;}
@@ -251,7 +254,7 @@ figcaption{color:var(--muted);font-size:12.5px;margin-top:8px;}
 .codewrap{position:relative;margin:12px 0;}
 pre{margin:0;border-radius:8px;}
 pre code{font:13px/1.55 "Courier New",monospace;padding:14px 16px;display:block;border-radius:8px;}
-.copy{position:absolute;top:8px;right:8px;z-index:3;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:rgba(15,23,42,.78);color:#fff;border:none;border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s ease, background .15s ease;backdrop-filter:blur(2px);}
+.copy{position:absolute;top:8px;right:8px;z-index:3;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;background:rgba(35,33,28,.78);color:#fff;border:none;border-radius:7px;cursor:pointer;opacity:0;transition:opacity .15s ease, background .15s ease;backdrop-filter:blur(2px);}
 .codewrap:hover .copy,.tbl-wrap:hover .copy{opacity:1;}
 .copy:hover{background:var(--accent-d);}
 .copy.ok{background:var(--green);}
@@ -264,11 +267,11 @@ pre code{font:13px/1.55 "Courier New",monospace;padding:14px 16px;display:block;
 .res{border:1px solid var(--line);background:var(--accent-soft);border-radius:12px;padding:13px 16px;font-size:14px;color:var(--ink);}
 .res b{color:var(--accent-d);}
 .note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:13px 16px;font-size:14px;color:var(--ink-soft);}
-.todo{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;background:#fafaff;}
+.todo{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;background:#fdf8f5;}
 footer{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13px;}
 .totop{position:fixed;right:22px;bottom:22px;z-index:60;width:42px;height:42px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:18px;cursor:pointer;display:none;box-shadow:0 2px 10px rgba(0,0,0,.18);}
 /* (modal 弹窗样式已随回退移除) */
-.lb{position:fixed;inset:0;z-index:200;background:rgba(15,23,42,.82);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;backdrop-filter:blur(3px);}
+.lb{position:fixed;inset:0;z-index:200;background:rgba(35,33,28,.82);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;backdrop-filter:blur(3px);}
 .lb.open{display:flex;}
 .lb img{max-width:94vw;max-height:92vh;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.5);background:#fff;}
 @media(max-width:900px){
@@ -414,12 +417,12 @@ TREEMAP_JS = """(function(){
       const maxC = Math.max(4, Math.floor((w - 10) / (fs * 0.6)));
       const label = c.name.length > maxC ? c.name.slice(0, maxC - 1) + '…' : c.name;
       svg.append('text').attr('x', leaf.x0 + 5).attr('y', leaf.y0 + (h > 34 ? 16 : h / 2 + 4))
-        .attr('fill', '#0f172a').attr('font-size', fs).attr('font-weight', 600).text(label);
+        .attr('fill', '#23211c').attr('font-size', fs).attr('font-weight', 600).text(label);
     } else if (h > 1.5 * w && h >= 22){
       const fs = 10.5, cx = leaf.x0 + w / 2, cy = leaf.y0 + h / 2;
       const maxR = Math.max(4, Math.floor((h - 10) / (fs * 1.05)));
       const label = c.name.length > maxR ? c.name.slice(0, maxR - 1) + '…' : c.name;
-      svg.append('text').attr('x', cx).attr('y', cy).attr('fill', '#0f172a')
+      svg.append('text').attr('x', cx).attr('y', cy).attr('fill', '#23211c')
         .attr('font-size', fs).attr('font-weight', 600).attr('text-anchor', 'middle')
         .attr('transform', 'rotate(-90 ' + cx + ' ' + cy + ')').text(label);
     }
@@ -451,11 +454,12 @@ idx = page("", "index", idx)
 
 # ---------- alignment 总览 ----------
 al = '<div class="crumb"><a href="../index.html">实验室首页</a> › alignment</div>'
-al += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>alignment</h1><p class="sub">序列比对家族 - 7 个 skill，已完成 2 个深度试用</p></div>'
+al += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>alignment</h1><p class="sub">序列比对家族 - 7 个 skill，已完成 3 个深度试用</p></div>'
 al += '<div class="sklist">'
 al += '<a href="pairwise-alignment.html"><span>pairwise-alignment</span><span class="tag tag-done">DONE 004</span></a>'
 al += '<a href="msa-statistics.html"><span>msa-statistics</span><span class="tag tag-done">DONE 005</span></a>'
-for name in ["alignment-io", "alignment-trimming", "msa-parsing", "multiple-alignment", "structural-alignment"]:
+al += '<a href="alignment-trimming.html"><span>alignment-trimming</span><span class="tag tag-done">DONE 006</span></a>'
+for name in ["alignment-io", "msa-parsing", "multiple-alignment", "structural-alignment"]:
     al += '<div><span>%s</span><span class="tag tag-todo">待做</span></div>' % name
 al += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
 al += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
@@ -474,6 +478,7 @@ def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_b
 
 NOTE004 = BASE + "/content/笔记/004-bioSkills真实试用-pairwise-alignment.md"
 NOTE005 = BASE + "/content/笔记/005-bioSkills真实试用-msa-statistics.md"
+NOTE006 = BASE + "/content/笔记/006-bioSkills真实试用-alignment-trimming.md"
 body004, meta004, need004 = load_note(NOTE004)
 p004 = skill_page("../", "pairwise", "pairwise-alignment", "DEEP DIVE 01",
                  meta004.get("标题", "pairwise-alignment"),
@@ -482,17 +487,22 @@ body005, meta005, need005 = load_note(NOTE005)
 p005 = skill_page("../", "msa", "msa-statistics", "DEEP DIVE 02",
                  meta005.get("标题", "msa-statistics"),
                  meta005.get("副标题", ""), body005, [])
+body006, meta006, need006 = load_note(NOTE006)
+p006 = skill_page("../", "trimming", "alignment-trimming", "DEEP DIVE 03",
+                 meta006.get("标题", "alignment-trimming"),
+                 meta006.get("副标题", ""), body006, [])
 
 # ---------- 写出 ----------
 shutil.rmtree(SITE, ignore_errors=True)
 os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment")
-for _src in sorted(set(need004 + need005)):
+for _src in sorted(set(need004 + need005 + need006)):
     shutil.copy(_src, ASSETS + "/" + os.path.basename(_src))
 with open(SITE + "/style.css", "w", encoding="utf-8") as f: f.write(STYLE)
 with open(SITE + "/index.html", "w", encoding="utf-8") as f: f.write(idx)
 with open(SITE + "/alignment/index.html", "w", encoding="utf-8") as f: f.write(al)
 with open(SITE + "/alignment/pairwise-alignment.html", "w", encoding="utf-8") as f: f.write(p004)
 with open(SITE + "/alignment/msa-statistics.html", "w", encoding="utf-8") as f: f.write(p005)
+with open(SITE + "/alignment/alignment-trimming.html", "w", encoding="utf-8") as f: f.write(p006)
 print("站点已生成 -> " + SITE)
 for root, _, files in os.walk(SITE):
     for fn in sorted(files):
