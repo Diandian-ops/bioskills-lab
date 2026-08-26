@@ -1,7 +1,7 @@
 <!--
 META
 用途: 004 pairwise-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: pairwise默认塞46个假gap
+标题建议: pairwise比对默认多46假gap
 / META
 -->
 
