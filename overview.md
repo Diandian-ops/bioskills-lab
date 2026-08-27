@@ -26,4 +26,4 @@
 - 如需补全说明书，可创建自动化「每日/定期」巡检 bioSkills 文档与实际二进制行为差异。
 - 本 skill（library 级，非 agent_created）的 `tmscore` 文档错误属 P2 级小修正，已在本报告标注；是否修改原 skill 需用户确认（未自动改）。
 
-提交：待用户确认后 push（本次未执行 git push，避免未授权推送）。
+提交：本地 commit `9c99f7f` 已成功推送至 `origin/main`（`641e154..9c99f7f`，含 010 全部源文件与站点脚本）。bioSkills alignment 家族 7 个 skill（004–010）全部完成并接入站点。
