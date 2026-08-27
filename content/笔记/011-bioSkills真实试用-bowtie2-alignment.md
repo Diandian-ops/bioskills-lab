@@ -108,6 +108,8 @@ bowtie2 -p 8 --very-sensitive --local --dovetail -X 2000 \
 - `-x` 永远传索引 basename（构建时 `bowtie2-build ref ref_index` 的 `ref_index` 那一段），不要带 `.bt2` 后缀或具体分片文件。
 - 带接头污染的 reads 优先 `--local` 或先剪切再 end-to-end，不要硬上 end-to-end。
 
+![011 bowtie2 跨模式 MAPQ 标度与适配器污染对比](../素材/011-bowtie2-alignment/011-fig.png)
+
 ## 六、小结
 
 bowtie2-alignment 的核心不在「跑通比对」，而在「为峰 assay 选对模式与几何旗标」：end-to-end/local 决定读长末端如何处理，碎片几何旗标决定下游峰调用器看到的坐标。本次复现用合成参考 + wgsim 模拟 reads 真跑全部命令，实测印证了文档两条最关键论断——适配器污染下 --local 比 end-to-end 比对率高 +50.49 pp（49.28% → 99.77%），以及 Bowtie2 MAPQ 上限 e2e 42 / local 44、到不了 BWA 的 60。文档与工具行为一致，未发现需修正的文档错误。

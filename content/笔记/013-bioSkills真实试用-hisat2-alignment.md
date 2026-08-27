@@ -101,6 +101,8 @@ hisat2 -p 8 -x hisat2_index --rna-strandness RF --dta -1 r1.fq.gz -2 r2.fq.gz | 
 - 链特异性按建库化学设（dUTP/TruSeq → RF），否则计数约减半。
 - 比对时设 `--rna-strandness` 与 `@RG`；长内含子基因按需调大 `--max-intronlen`。
 
+![013 hisat2 剪接 CIGAR/两趟法/XS 标签/MAPQ60 实测小结](../素材/013-hisat2-alignment/013-fig.png)
+
 ## 六、小结
 
 hisat2-alignment 的难点在「为 RNA 剪接与下游选对模式」：图索引换低内存剪接，SNP 图索引换参考偏差消除，`--dta` 只服务于组装、链特异性决定计数正确性。本次复现用合成参考 + 手工跨 junction 读长真跑全部命令，实测印证关键论断——跨内含子读长被对齐为 `50M800N50M`（剪接能力直接可见）；两趟法发现并复用 1 个 novel junction；max MAPQ=60（与 011 bowtie2 的 42/44、012 bwa 的 60 同台对照，HISAT2 与 bwa 同为 GATK 友好的 60 标度）；`-x` 传文件名 rc=255。首跑因 FASTA 输入漏 `-f` 失败，修正后即命中，属脚本输入格式问题、非工具缺陷。文档与工具行为一致，未发现需修正的文档错误。
