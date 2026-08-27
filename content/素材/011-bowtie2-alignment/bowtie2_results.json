@@ -1,0 +1,46 @@
+{
+  "index": {
+    "rc": 0,
+    "bt2_files": 6
+  },
+  "e2e": {
+    "overall_rate": 99.23,
+    "max_mapq": 42,
+    "mapped_reads": 5954
+  },
+  "neg_x_filename": {
+    "rc": 255,
+    "last_err": "Exiting now ..."
+  },
+  "adapter_contam": {
+    "e2e_rate": 49.28,
+    "local_rate": 99.77,
+    "recovered_by_local": 50.49,
+    "local_max_mapq": 44
+  },
+  "chip": {
+    "overall_rate": 50.93,
+    "max_mapq": 42,
+    "mapped_after_q30_F1804": 3056
+  },
+  "atac": {
+    "overall_rate": 100.0,
+    "max_mapq": 44,
+    "mapped_after_q30_F1804": 6000
+  },
+  "presets": {
+    "--very-fast": 95.95,
+    "--sensitive": 99.23,
+    "--very-sensitive": 99.98
+  },
+  "multimap_k5": {
+    "rc": 0,
+    "secondary_alignments": 0
+  },
+  "mapq_cap": {
+    "e2e_max": 42,
+    "local_max": 44,
+    "bwa_equivalent": 60,
+    "note": "Bowtie2 MAPQ 上限 42(e2e)/44(local)，永远到不了 BWA 的 60；-q 60 会把 BAM 清空"
+  }
+}
