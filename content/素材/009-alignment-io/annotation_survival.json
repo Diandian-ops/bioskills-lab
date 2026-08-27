@@ -1,0 +1,32 @@
+{
+  "stockholm": {
+    "GS": true,
+    "GR": true,
+    "GC": true,
+    "written": true
+  },
+  "fasta": {
+    "GS": false,
+    "GR": false,
+    "GC": false,
+    "written": true
+  },
+  "clustal": {
+    "GS": false,
+    "GR": false,
+    "GC": false,
+    "written": true
+  },
+  "phylip-relaxed": {
+    "GS": false,
+    "GR": false,
+    "GC": false,
+    "written": true
+  },
+  "nexus": {
+    "GS": true,
+    "GR": false,
+    "GC": false,
+    "written": true
+  }
+}
