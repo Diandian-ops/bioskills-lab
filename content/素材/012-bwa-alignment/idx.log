@@ -1,0 +1,9 @@
+[bwa_index] Pack FASTA... 0.00 sec
+* Entering FMI_search
+init ticks = 24100
+ref seq len = 24000
+binary seq ticks = 11641
+build suffix-array ticks = 41907
+pos: 3001, ref_seq_len__: 3000
+build fm-index ticks = 26239
+Total time taken: 0.0062

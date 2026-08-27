@@ -1,0 +1,34 @@
+{
+  "index": {
+    "rc": 0,
+    "files": 5
+  },
+  "with_rg": {
+    "rc": 0,
+    "has_RG_header": true,
+    "max_mapq": 60,
+    "mapped_reads": 6000
+  },
+  "without_rg": {
+    "has_RG_header": false
+  },
+  "markdup": {
+    "rc": 0,
+    "has_MC_tag": true,
+    "dup_flagged": 2
+  },
+  "Y_vs_M": {
+    "Y_supplementary_0x800": 0,
+    "M_secondary_0x100": 0,
+    "note": "合成参考无 SV 断点，二者均为 0；差异在语义：SV 时 -M 把分裂片段降为 secondary(0x100) 会被 SV caller 跳过，-Y 保留 supplementary(0x800) 全程序列"
+  },
+  "reproducible_K": {
+    "md5_1": "7a6ac1919c75ec124865f0f4d82dc747",
+    "md5_2": "7a6ac1919c75ec124865f0f4d82dc747",
+    "identical": true
+  },
+  "idx_mismatch": {
+    "rc": 1,
+    "last_err": "ERROR! Unable to open the file: /Users/zhangdiandian/RedBook/content/素材/012-bwa-alignment/bwaonly/ref.bwt.2bit.64"
+  }
+}

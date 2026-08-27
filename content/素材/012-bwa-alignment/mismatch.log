@@ -1,0 +1,7 @@
+-----------------------------
+Executing in AVX mode!!
+-----------------------------
+* SA compression enabled with xfactor: 8
+* Ref file: /Users/zhangdiandian/RedBook/content/素材/012-bwa-alignment/bwaonly/ref
+* Entering FMI_search
+ERROR! Unable to open the file: /Users/zhangdiandian/RedBook/content/素材/012-bwa-alignment/bwaonly/ref.bwt.2bit.64
