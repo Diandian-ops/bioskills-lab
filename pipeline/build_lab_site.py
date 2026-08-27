@@ -62,7 +62,7 @@ for name in sorted(os.listdir(BIO)):
         n = len([d for d in os.listdir(p) if os.path.isdir(os.path.join(p, d)) and not d.startswith('.')])
         if n > 0:
             cats.append((name, n))
-DONE = {"alignment"}
+DONE = {"alignment", "read-alignment"}
 NCAT = len(cats)
 NTOTAL = sum(n for _, n in cats)
 
@@ -100,7 +100,7 @@ for dname, dcolor in DOMAIN_META:
     TREE["children"].append({
         "name": dname, "color": dcolor,
         "children": [{"name":c,"value":n,"done": c in DONE,
-                      "link": ("alignment/index.html" if c=="alignment" else None),
+                      "link": ("alignment/index.html" if c=="alignment" else ("read-alignment/index.html" if c=="read-alignment" else None)),
                       "skills": sorted(d for d in os.listdir(os.path.join(BIO,c)) if os.path.isdir(os.path.join(BIO,c, d)) and not d.startswith('.'))} for c,n in items]
     })
 TREE_JSON = __import__("json").dumps(TREE, ensure_ascii=False)
@@ -120,6 +120,13 @@ ALIGN_SUBS = [("pairwise", "pairwise-alignment", "alignment/pairwise-alignment.h
               ("msaparse", "msa-parsing", "alignment/msa-parsing.html"),
               ("alnio", "alignment-io", "alignment/alignment-io.html"),
               ("struct", "structural-alignment", "alignment/structural-alignment.html")]
+READ_ALIGN_SUBS = [("bowtie2", "bowtie2-alignment", "read-alignment/bowtie2-alignment.html"),
+                  ("bwa", "bwa-alignment", "read-alignment/bwa-alignment.html"),
+                  ("hisat2", "hisat2-alignment", "read-alignment/hisat2-alignment.html"),
+                  ("star", "star-alignment", "read-alignment/star-alignment.html")]
+# 同一套「family 子页」机制同时服务 alignment 与 read-alignment，避免对 category 名硬编码
+FAMILY_SUBS = {"alignment": ALIGN_SUBS, "read-alignment": READ_ALIGN_SUBS}
+FAMILY_KEYS = {k for subs in FAMILY_SUBS.values() for k, _, _ in subs}
 
 def sidebar(active, prefix=""):
     s = '<aside class="side" id="side"><div class="brand">BIO / LAB</div>'
@@ -128,21 +135,24 @@ def sidebar(active, prefix=""):
     # 按领域全景分组（中文领域头 + 配色点）
     for dname, dcolor in DOMAIN_META:
         items = dmap.get(dname, [])
-        dom_active = any(c == active or (active in ('pairwise', 'msa', 'trimming', 'multalign', 'msaparse', 'alnio', 'struct') and c == 'alignment') for c, _ in items)
+        def _cat_active(c):
+            return c == active or (c in FAMILY_SUBS and active in {k for k, _, _ in FAMILY_SUBS[c]})
+        dom_active = any(_cat_active(c) for c, _ in items)
         dtot = sum(n for _, n in items)
         s += '<details class="navgrp%s" data-key="D:%s"><summary><span class="dot" style="background:%s"></span>%s<span class="cnt">×%d</span></summary>' % (
             ' open' if dom_active else '', dname, dcolor, dname, dtot)
         for cname, cn in items:
-            is_active = (cname == active) or (active in ('pairwise', 'msa', 'trimming', 'multalign', 'msaparse', 'alnio', 'struct') and cname == 'alignment')
-            if cname in DONE:
+            is_active = _cat_active(cname)
+            if cname in DONE and cname in FAMILY_SUBS:
+                subs = FAMILY_SUBS[cname]
                 s += '<details class="navsub%s" data-key="C:%s"><summary class="%s">%s<span class="cnt">×%d</span></summary>' % (
                     ' open' if is_active else '', cname, 'cur' if is_active else '', cname, cn)
-                for key, label, href in ALIGN_SUBS:
+                for key, label, href in subs:
                     s += '<a class="sub %s" href="%s%s">%s</a>' % ('cur' if active == key else '', prefix, href, label)
                 sk = sorted(d for d in os.listdir(os.path.join(BIO, cname))
                             if os.path.isdir(os.path.join(BIO, cname, d)) and not d.startswith('.'))
                 for sn in sk:
-                    if sn in ('pairwise-alignment', 'msa-statistics', 'alignment-trimming', 'multiple-alignment', 'msa-parsing', 'alignment-io', 'structural-alignment'):
+                    if sn in FAMILY_KEYS:
                         continue
                     s += '<span class="sub nav-dis">%s</span>' % sn
                 s += '</details>'
@@ -379,7 +389,7 @@ idx = '<div class="masthead"><div class="kicker">BIO / LAB</div><h1>bioSkills �
 idx += '<p class="sub">基于 GPTomics/bioSkills 的可复现实践 - 严格按原方案复现 + 成分拆解 + 真实数据图</p>'
 idx += '<p class="lead">这不是 AI 生成的演示稿，是<strong>真跑通</strong>的结果。bioSkills 是个教 AI coding agents 做生信任务的 skill 仓库（已 archived，结构仍有效）。这个实验室挑真实 skill，严格按它自己的方案复现，再拆开"零件"告诉你它到底教什么、坑在哪。</p></div>'
 idx += '<section id="overview"><div class="sec-kicker">OVERVIEW</div><h2>bioSkills 是什么</h2>'
-idx += '<div class="stats"><div class="stat"><div class="v">%d</div><div class="l">个 category</div></div><div class="stat"><div class="v">%d</div><div class="l">个 skill 总量</div></div><div class="stat"><div class="v">archived</div><div class="l">结构有效，鼓励 fork</div></div><div class="stat"><div class="v">1</div><div class="l">category 已试用</div></div></div>' % (NCAT, NTOTAL)
+idx += '<div class="stats"><div class="stat"><div class="v">%d</div><div class="l">个 category</div></div><div class="stat"><div class="v">%d</div><div class="l">个 skill 总量</div></div><div class="stat"><div class="v">archived</div><div class="l">结构有效，鼓励 fork</div></div><div class="stat"><div class="v">%d</div><div class="l">category 已试用</div></div></div>' % (NCAT, NTOTAL, len(DONE))
 idx += '<div class="note"><b>定位</b>：A collection of skills that guide AI coding agents (Claude Code / Codex / Gemini / OpenCode / OpenClaw) through common bioinformatics tasks. 每个 skill 含代码范式、最佳实践、示例。</div>'
 idx += '<p style="margin-top:14px;">方法论：<strong>真实数据 → 严格按 skill 原方案复现 → 拆零件（文件结构/参考脚本/核心 API/经验封装）→ 出真实数据图 → 写进站点</strong>。从左侧目录进入任意分支。</p></section>'
 # ---------- 类别地图：领域着色的 Treemap（面积=skill数 / 颜色=领域）----------
@@ -471,15 +481,27 @@ al += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同
 al += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
 al = page("../", "alignment", al)
 
-def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_blocks):
-    c = '<div class="crumb"><a href="%sindex.html">实验室首页</a> › <a href="alignment/index.html">alignment</a> › %s</div>' % (prefix, crumb)
+# ---------- read-alignment 总览 ----------
+ra = '<div class="crumb"><a href="../index.html">实验室首页</a> › read-alignment</div>'
+ra += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>read-alignment</h1><p class="sub">读长比对家族 - 4 个 skill，已完成 4 个深度试用</p></div>'
+ra += '<div class="sklist">'
+ra += '<a href="bowtie2-alignment.html"><span>bowtie2-alignment</span><span class="tag tag-done">DONE 011</span></a>'
+ra += '<a href="bwa-alignment.html"><span>bwa-alignment</span><span class="tag tag-done">DONE 012</span></a>'
+ra += '<a href="hisat2-alignment.html"><span>hisat2-alignment</span><span class="tag tag-done">DONE 013</span></a>'
+ra += '<a href="star-alignment.html"><span>star-alignment</span><span class="tag tag-done">DONE 014</span></a>'
+ra += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
+ra += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
+ra = page("../", "read-alignment", ra)
+
+def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_blocks, cat="alignment"):
+    c = '<div class="crumb"><a href="%sindex.html">实验室首页</a> › <a href="%s/index.html">%s</a> › %s</div>' % (prefix, cat, cat, crumb)
     c += '<div class="masthead"><div class="sec-kicker">%s</div><h1>%s</h1><p class="sub">%s</p></div>' % (sec_kicker, h1, sec_one)
     c += body_html
     if code_blocks:
         c += '<h2>本实验室真实复现代码</h2><p class="sec-one">以下代码来自 pipeline/ 目录，与 SKILL.md 配置严格一致，可直接复现。</p>'
     for cb in code_blocks:
         c += '<div class="codewrap"><pre><code class="language-python">%s</code></pre></div>' % cb
-    c += '<footer><p><a href="alignment/index.html">← 返回 alignment 分支</a></p></footer>'
+    c += '<footer><p><a href="%s/index.html">← 返回 %s 分支</a></p></footer>' % (cat, cat)
     return page(prefix, active, c)
 
 NOTE004 = BASE + "/content/笔记/004-bioSkills真实试用-pairwise-alignment.md"
@@ -518,14 +540,38 @@ p010 = skill_page("../", "struct", "structural-alignment", "DEEP DIVE 07",
                  meta010.get("标题", "structural-alignment"),
                  meta010.get("副标题", ""), body010, [])
 
+# ---------- read-alignment 家族（011-014）----------
+NOTE011 = BASE + "/content/笔记/011-bioSkills真实试用-bowtie2-alignment.md"
+body011, meta011, need011 = load_note(NOTE011)
+p011 = skill_page("../", "bowtie2", "bowtie2-alignment", "DEEP DIVE 08",
+                 meta011.get("标题", "bowtie2-alignment"),
+                 meta011.get("副标题", ""), body011, [], cat="read-alignment")
+NOTE012 = BASE + "/content/笔记/012-bioSkills真实试用-bwa-alignment.md"
+body012, meta012, need012 = load_note(NOTE012)
+p012 = skill_page("../", "bwa", "bwa-alignment", "DEEP DIVE 09",
+                 meta012.get("标题", "bwa-alignment"),
+                 meta012.get("副标题", ""), body012, [], cat="read-alignment")
+NOTE013 = BASE + "/content/笔记/013-bioSkills真实试用-hisat2-alignment.md"
+body013, meta013, need013 = load_note(NOTE013)
+p013 = skill_page("../", "hisat2", "hisat2-alignment", "DEEP DIVE 10",
+                 meta013.get("标题", "hisat2-alignment"),
+                 meta013.get("副标题", ""), body013, [], cat="read-alignment")
+NOTE014 = BASE + "/content/笔记/014-bioSkills真实试用-star-alignment.md"
+body014, meta014, need014 = load_note(NOTE014)
+p014 = skill_page("../", "star", "star-alignment", "DEEP DIVE 11",
+                 meta014.get("标题", "star-alignment"),
+                 meta014.get("副标题", ""), body014, [], cat="read-alignment")
+
 # ---------- 写出 ----------
 shutil.rmtree(SITE, ignore_errors=True)
-os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment")
-for _src in sorted(set(need004 + need005 + need006 + need007 + need008 + need009 + need010)):
+os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment"); os.makedirs(SITE + "/read-alignment")
+for _src in sorted(set(need004 + need005 + need006 + need007 + need008 + need009 + need010
+                       + need011 + need012 + need013 + need014)):
     shutil.copy(_src, ASSETS + "/" + os.path.basename(_src))
 with open(SITE + "/style.css", "w", encoding="utf-8") as f: f.write(STYLE)
 with open(SITE + "/index.html", "w", encoding="utf-8") as f: f.write(idx)
 with open(SITE + "/alignment/index.html", "w", encoding="utf-8") as f: f.write(al)
+with open(SITE + "/read-alignment/index.html", "w", encoding="utf-8") as f: f.write(ra)
 with open(SITE + "/alignment/pairwise-alignment.html", "w", encoding="utf-8") as f: f.write(p004)
 with open(SITE + "/alignment/msa-statistics.html", "w", encoding="utf-8") as f: f.write(p005)
 with open(SITE + "/alignment/alignment-trimming.html", "w", encoding="utf-8") as f: f.write(p006)
@@ -533,6 +579,10 @@ with open(SITE + "/alignment/multiple-alignment.html", "w", encoding="utf-8") as
 with open(SITE + "/alignment/msa-parsing.html", "w", encoding="utf-8") as f: f.write(p008)
 with open(SITE + "/alignment/alignment-io.html", "w", encoding="utf-8") as f: f.write(p009)
 with open(SITE + "/alignment/structural-alignment.html", "w", encoding="utf-8") as f: f.write(p010)
+with open(SITE + "/read-alignment/bowtie2-alignment.html", "w", encoding="utf-8") as f: f.write(p011)
+with open(SITE + "/read-alignment/bwa-alignment.html", "w", encoding="utf-8") as f: f.write(p012)
+with open(SITE + "/read-alignment/hisat2-alignment.html", "w", encoding="utf-8") as f: f.write(p013)
+with open(SITE + "/read-alignment/star-alignment.html", "w", encoding="utf-8") as f: f.write(p014)
 print("站点已生成 -> " + SITE)
 for root, _, files in os.walk(SITE):
     for fn in sorted(files):
