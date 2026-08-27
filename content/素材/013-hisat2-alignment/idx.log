@@ -1,0 +1,78 @@
+Settings:
+  Output files: "/Users/zhangdiandian/RedBook/content/素材/013-hisat2-alignment/hisat2_index.*.ht2"
+  Line rate: 6 (line is 64 bytes)
+  Lines per side: 1 (side is 64 bytes)
+  Offset rate: 4 (one in 16)
+  FTable chars: 10
+  Strings: unpacked
+  Local offset rate: 3 (one in 8)
+  Local fTable chars: 6
+  Local sequence length: 57344
+  Local sequence overlap between two consecutive indexes: 1024
+  Endianness: little
+  Actual local endianness: little
+  Sanity checking: disabled
+  Assertions: disabled
+  Random seed: 0
+  Sizeofs: void*:8, int:4, long:8, size_t:8
+Input files DNA, FASTA:
+  /Users/zhangdiandian/RedBook/content/素材/013-hisat2-alignment/reference.fa
+Reading reference sizes
+  Time reading reference sizes: 00:00:00
+Calculating joined length
+Writing header
+Reserving space for joined string
+Joining reference sequences
+  Time to join reference sequences: 00:00:00
+  Time to read SNPs and splice sites: 00:00:00
+Using parameters --bmax 282 --dcv 1024
+  Doing ahead-of-time memory usage test
+  Passed!  Constructing with these parameters: --bmax 282 --dcv 1024
+Constructing suffix-array element generator
+Converting suffix-array elements to index image
+Allocating ftab, absorbFtab
+Entering GFM loop
+Exited GFM loop
+fchr[A]: 0
+fchr[C]: 3069
+fchr[G]: 6180
+fchr[T]: 9087
+fchr[$]: 12000
+Exiting GFM::buildToDisk()
+Returning from initFromVector
+Wrote 4198611 bytes to primary GFM file: /Users/zhangdiandian/RedBook/content/素材/013-hisat2-alignment/hisat2_index.1.ht2
+Wrote 3008 bytes to secondary GFM file: /Users/zhangdiandian/RedBook/content/素材/013-hisat2-alignment/hisat2_index.2.ht2
+Re-opening _in1 and _in2 as input streams
+Returning from GFM constructor
+Returning from initFromVector
+Wrote 36669 bytes to primary GFM file: /Users/zhangdiandian/RedBook/content/素材/013-hisat2-alignment/hisat2_index.5.ht2
+Wrote 3012 bytes to secondary GFM file: /Users/zhangdiandian/RedBook/content/素材/013-hisat2-alignment/hisat2_index.6.ht2
+Re-opening _in5 and _in5 as input streams
+Returning from HGFM constructor
+Headers:
+    len: 12000
+    gbwtLen: 12001
+    nodes: 12001
+    sz: 3000
+    gbwtSz: 3001
+    lineRate: 6
+    offRate: 4
+    offMask: 0xfffffff0
+    ftabChars: 10
+    eftabLen: 0
+    eftabSz: 0
+    ftabLen: 1048577
+    ftabSz: 4194308
+    offsLen: 751
+    offsSz: 3004
+    lineSz: 64
+    sideSz: 64
+    sideGbwtSz: 48
+    sideGbwtLen: 192
+    numSides: 63
+    numLines: 63
+    gbwtTotLen: 4032
+    gbwtTotSz: 4032
+    reverse: 0
+    linearFM: Yes
+Total time for call to driver() for forward index: 00:00:00

@@ -1,0 +1,30 @@
+{
+  "index": {
+    "rc": 0,
+    "ht2_files": 8
+  },
+  "pe": {
+    "overall_rate": 99.17,
+    "max_mapq": 60
+  },
+  "splice": {
+    "cigar": "50M800N50M",
+    "is_spliced": true
+  },
+  "strand_rf": {
+    "has_XS_tag": true
+  },
+  "dta": {
+    "rc": 0,
+    "overall_rate": 98.05
+  },
+  "two_pass": {
+    "discovered_junctions": 1,
+    "pass2_cigar": "50M800N50M",
+    "pass2_spliced": true
+  },
+  "neg_x_file": {
+    "rc": 255,
+    "last_err": "Exiting now ..."
+  }
+}
