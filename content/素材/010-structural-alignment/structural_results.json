@@ -1,0 +1,81 @@
+{
+  "superimposer": {
+    "rmsd": 0.0908,
+    "n_aligned": 76,
+    "n_ref": 76,
+    "n_mob": 76
+  },
+  "tmalign": {
+    "1ubq|1ubi": {
+      "tm_score": 0.9991,
+      "tm1": null,
+      "tm2": null,
+      "rmsd": 0.09,
+      "aligned_len": 76,
+      "rc": 0,
+      "stderr_first": ""
+    },
+    "1ubq|1fmb": {
+      "tm_score": 0.4079,
+      "tm1": null,
+      "tm2": null,
+      "rmsd": 3.41,
+      "aligned_len": 56,
+      "rc": 0,
+      "stderr_first": ""
+    },
+    "1ubi|1fmb": {
+      "tm_score": 0.4079,
+      "tm1": null,
+      "tm2": null,
+      "rmsd": 3.41,
+      "aligned_len": 56,
+      "rc": 0,
+      "stderr_first": ""
+    }
+  },
+  "foldseek_search": {
+    "rc": 0,
+    "rows": [
+      {
+        "query": "1ubq",
+        "target": "1ubq",
+        "alntmscore": "1.013E+00",
+        "qtmscore": "1.000E+00",
+        "ttmscore": "1.000E+00",
+        "lddt": "1.000E+00",
+        "bits": "635",
+        "rmsd": "1.594E-02"
+      },
+      {
+        "query": "1ubq",
+        "target": "1ubi",
+        "alntmscore": "1.013E+00",
+        "qtmscore": "9.995E-01",
+        "ttmscore": "9.995E-01",
+        "lddt": "1.000E+00",
+        "bits": "581",
+        "rmsd": "9.067E-02"
+      }
+    ],
+    "stderr_first": ""
+  },
+  "foldseek_cluster": {
+    "rc": 0,
+    "rows": [
+      {
+        "member": "1fmb",
+        "rep": "1fmb"
+      },
+      {
+        "member": "1ubq",
+        "rep": "1ubq"
+      },
+      {
+        "member": "1ubq",
+        "rep": "1ubi"
+      }
+    ],
+    "stderr_first": ""
+  }
+}
