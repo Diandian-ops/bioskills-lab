@@ -1,0 +1,19 @@
+### /Applications/anaconda3/envs/bioaligners/bin/STAR   --runMode genomeGenerate      --runThreadN 4   --genomeDir /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index   --genomeFastaFiles /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa      --genomeSAindexNbases 5   --outFileNamePrefix /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_   --sjdbGTFfile /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf   --sjdbOverhang 99
+### GstrandBit 32
+versionGenome	2.7.4a
+genomeType	Full
+genomeFastaFiles	/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa 
+genomeSAindexNbases	5
+genomeChrBinNbits	18
+genomeSAsparseD	1
+genomeTransformType	None
+genomeTransformVCF	-
+sjdbOverhang	99
+sjdbFileChrStartEnd	- 
+sjdbGTFfile	/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf
+sjdbGTFchrPrefix	-
+sjdbGTFfeatureExon	exon
+sjdbGTFtagExonParentTranscript	transcript_id
+sjdbGTFtagExonParentGene	gene_id
+sjdbInsertSave	Basic
+genomeFileSizes	1048775 108887

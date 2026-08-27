@@ -1,0 +1,43 @@
+STAR version=                 2.7.11b
+STAR compilation time,server,dir= :/opt/mambaforge/envs/bioconda/conda-bld/star_1763121632674/work/source
+##### Command Line:
+/Applications/anaconda3/envs/bioaligners/bin/STAR --runThreadN 4 --genomeDir star_index/ --outFileNamePrefix run_default_test/ --readFilesIn reads_1.fq.gz reads_2.fq.gz --readFilesCommand /usr/bin/zcat --outSAMtype BAM SortedByCoordinate
+##### Initial USER parameters from Command Line:
+outFileNamePrefix                 run_default_test/
+###### All USER parameters from Command Line:
+runThreadN                    4     ~RE-DEFINED
+genomeDir                     star_index/     ~RE-DEFINED
+outFileNamePrefix             run_default_test/     ~RE-DEFINED
+readFilesIn                   reads_1.fq.gz   reads_2.fq.gz        ~RE-DEFINED
+readFilesCommand              /usr/bin/zcat        ~RE-DEFINED
+outSAMtype                    BAM   SortedByCoordinate        ~RE-DEFINED
+##### Finished reading parameters from all sources
+
+##### Final user re-defined parameters-----------------:
+runThreadN                        4
+genomeDir                         star_index/
+readFilesIn                       reads_1.fq.gz   reads_2.fq.gz   
+readFilesCommand                  /usr/bin/zcat   
+outFileNamePrefix                 run_default_test/
+outSAMtype                        BAM   SortedByCoordinate   
+
+-------------------------------
+##### Final effective command line:
+/Applications/anaconda3/envs/bioaligners/bin/STAR   --runThreadN 4   --genomeDir star_index/   --readFilesIn reads_1.fq.gz   reads_2.fq.gz      --readFilesCommand /usr/bin/zcat      --outFileNamePrefix run_default_test/   --outSAMtype BAM   SortedByCoordinate   
+----------------------------------------
+
+Number of fastq files for each mate = 1
+
+   Input read files for mate 1 :
+-rw-r--r--@ 1 zhangdiandian  staff  94600 Aug 27 18:36 reads_1.fq.gz
+
+   readsCommandsFile:
+exec > "run_default_test/_STARtmp/tmp.fifo.read1"
+echo FILE 0
+/usr/bin/zcat      "reads_1.fq.gz"
+
+
+EXITING: because of fatal EXECUTION error: Failed spawning readFilesCommand
+2: No such file or directory
+
+Aug 27 18:36:33 ...... FATAL ERROR, exiting

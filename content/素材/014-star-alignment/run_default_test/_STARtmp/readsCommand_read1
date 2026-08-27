@@ -1,0 +1,3 @@
+exec > "run_default_test/_STARtmp/tmp.fifo.read1"
+echo FILE 0
+/usr/bin/zcat      "reads_1.fq.gz"

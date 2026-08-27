@@ -1,0 +1,3 @@
+exec > "run_cat/_STARtmp/tmp.fifo.read1"
+echo FILE 0
+/bin/cat      "reads_1.fq"

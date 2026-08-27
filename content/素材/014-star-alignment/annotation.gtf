@@ -1,0 +1,9 @@
+chr1	star_sim	gene	1	4000	.	+	.	gene_id "GENE1"; transcript_id "TR1";
+chr1	star_sim	exon	1	1000	.	+	.	gene_id "GENE1"; transcript_id "TR1";
+chr1	star_sim	exon	1801	4000	.	+	.	gene_id "GENE1"; transcript_id "TR1";
+chr2	star_sim	gene	1	3000	.	+	.	gene_id "GENE2"; transcript_id "TR2";
+chr2	star_sim	exon	1	3000	.	+	.	gene_id "GENE2"; transcript_id "TR2";
+chr3	star_sim	gene	1	3000	.	+	.	gene_id "GENE3"; transcript_id "TR3";
+chr3	star_sim	exon	1	3000	.	+	.	gene_id "GENE3"; transcript_id "TR3";
+chr4	star_sim	gene	1	3000	.	+	.	gene_id "GENE4"; transcript_id "TR4";
+chr4	star_sim	exon	1	3000	.	+	.	gene_id "GENE4"; transcript_id "TR4";
