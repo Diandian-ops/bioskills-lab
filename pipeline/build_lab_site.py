@@ -116,7 +116,8 @@ CAT_MAP = "".join(chips)
 ALIGN_SUBS = [("pairwise", "pairwise-alignment", "alignment/pairwise-alignment.html"),
               ("msa", "msa-statistics", "alignment/msa-statistics.html"),
               ("trimming", "alignment-trimming", "alignment/alignment-trimming.html"),
-              ("multalign", "multiple-alignment", "alignment/multiple-alignment.html")]
+              ("multalign", "multiple-alignment", "alignment/multiple-alignment.html"),
+              ("msaparse", "msa-parsing", "alignment/msa-parsing.html")]
 
 def sidebar(active, prefix=""):
     s = '<aside class="side" id="side"><div class="brand">BIO / LAB</div>'
@@ -125,12 +126,12 @@ def sidebar(active, prefix=""):
     # 按领域全景分组（中文领域头 + 配色点）
     for dname, dcolor in DOMAIN_META:
         items = dmap.get(dname, [])
-        dom_active = any(c == active or (active in ('pairwise', 'msa', 'trimming', 'multalign') and c == 'alignment') for c, _ in items)
+        dom_active = any(c == active or (active in ('pairwise', 'msa', 'trimming', 'multalign', 'msaparse') and c == 'alignment') for c, _ in items)
         dtot = sum(n for _, n in items)
         s += '<details class="navgrp%s" data-key="D:%s"><summary><span class="dot" style="background:%s"></span>%s<span class="cnt">×%d</span></summary>' % (
             ' open' if dom_active else '', dname, dcolor, dname, dtot)
         for cname, cn in items:
-            is_active = (cname == active) or (active in ('pairwise', 'msa', 'trimming', 'multalign') and cname == 'alignment')
+            is_active = (cname == active) or (active in ('pairwise', 'msa', 'trimming', 'multalign', 'msaparse') and cname == 'alignment')
             if cname in DONE:
                 s += '<details class="navsub%s" data-key="C:%s"><summary class="%s">%s<span class="cnt">×%d</span></summary>' % (
                     ' open' if is_active else '', cname, 'cur' if is_active else '', cname, cn)
@@ -139,7 +140,7 @@ def sidebar(active, prefix=""):
                 sk = sorted(d for d in os.listdir(os.path.join(BIO, cname))
                             if os.path.isdir(os.path.join(BIO, cname, d)) and not d.startswith('.'))
                 for sn in sk:
-                    if sn in ('pairwise-alignment', 'msa-statistics', 'alignment-trimming', 'multiple-alignment'):
+                    if sn in ('pairwise-alignment', 'msa-statistics', 'alignment-trimming', 'multiple-alignment', 'msa-parsing'):
                         continue
                     s += '<span class="sub nav-dis">%s</span>' % sn
                 s += '</details>'
@@ -455,13 +456,14 @@ idx = page("", "index", idx)
 
 # ---------- alignment 总览 ----------
 al = '<div class="crumb"><a href="../index.html">实验室首页</a> › alignment</div>'
-al += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>alignment</h1><p class="sub">序列比对家族 - 7 个 skill，已完成 4 个深度试用</p></div>'
+al += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>alignment</h1><p class="sub">序列比对家族 - 7 个 skill，已完成 5 个深度试用</p></div>'
 al += '<div class="sklist">'
 al += '<a href="pairwise-alignment.html"><span>pairwise-alignment</span><span class="tag tag-done">DONE 004</span></a>'
 al += '<a href="msa-statistics.html"><span>msa-statistics</span><span class="tag tag-done">DONE 005</span></a>'
 al += '<a href="alignment-trimming.html"><span>alignment-trimming</span><span class="tag tag-done">DONE 006</span></a>'
 al += '<a href="multiple-alignment.html"><span>multiple-alignment</span><span class="tag tag-done">DONE 007</span></a>'
-for name in ["alignment-io", "msa-parsing", "structural-alignment"]:
+al += '<a href="msa-parsing.html"><span>msa-parsing</span><span class="tag tag-done">DONE 008</span></a>'
+for name in ["alignment-io", "structural-alignment"]:
     al += '<div><span>%s</span><span class="tag tag-todo">待做</span></div>' % name
 al += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
 al += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
@@ -498,11 +500,16 @@ body007, meta007, need007 = load_note(NOTE007)
 p007 = skill_page("../", "multalign", "multiple-alignment", "DEEP DIVE 04",
                  meta007.get("标题", "multiple-alignment"),
                  meta007.get("副标题", ""), body007, [])
+NOTE008 = BASE + "/content/笔记/008-bioSkills真实试用-msa-parsing.md"
+body008, meta008, need008 = load_note(NOTE008)
+p008 = skill_page("../", "msaparse", "msa-parsing", "DEEP DIVE 05",
+                 meta008.get("标题", "msa-parsing"),
+                 meta008.get("副标题", ""), body008, [])
 
 # ---------- 写出 ----------
 shutil.rmtree(SITE, ignore_errors=True)
 os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment")
-for _src in sorted(set(need004 + need005 + need006 + need007)):
+for _src in sorted(set(need004 + need005 + need006 + need007 + need008)):
     shutil.copy(_src, ASSETS + "/" + os.path.basename(_src))
 with open(SITE + "/style.css", "w", encoding="utf-8") as f: f.write(STYLE)
 with open(SITE + "/index.html", "w", encoding="utf-8") as f: f.write(idx)
@@ -511,6 +518,7 @@ with open(SITE + "/alignment/pairwise-alignment.html", "w", encoding="utf-8") as
 with open(SITE + "/alignment/msa-statistics.html", "w", encoding="utf-8") as f: f.write(p005)
 with open(SITE + "/alignment/alignment-trimming.html", "w", encoding="utf-8") as f: f.write(p006)
 with open(SITE + "/alignment/multiple-alignment.html", "w", encoding="utf-8") as f: f.write(p007)
+with open(SITE + "/alignment/msa-parsing.html", "w", encoding="utf-8") as f: f.write(p008)
 print("站点已生成 -> " + SITE)
 for root, _, files in os.walk(SITE):
     for fn in sorted(files):

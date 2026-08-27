@@ -1,0 +1,68 @@
+======================================================================
+MSA PARSING — real reproduction (bioSkills alignment/msa-parsing)
+======================================================================
+
+[Loading] 4 sequences, 21 columns  (format=clustal)
+[IDs] ['seq1', 'seq2', 'seq3', 'seq4']
+[get_sequence_by_id seq3] ATGGCTAGCTAGAACGTACGT
+
+[Conserved] fully (>=100%): 18 positions
+    col  0  A  (cons=1.0)
+    col  1  T  (cons=1.0)
+    col  2  G  (cons=1.0)
+    col  3  G  (cons=1.0)
+    col  4  C  (cons=1.0)
+    col  5  T  (cons=1.0)
+    col  7  G  (cons=1.0)
+    col  8  C  (cons=1.0)
+    col  9  T  (cons=1.0)
+    col 10  A  (cons=1.0)
+    col 11  G  (cons=1.0)
+    col 13  A  (cons=1.0)
+    col 14  C  (cons=1.0)
+    col 15  G  (cons=1.0)
+    col 16  T  (cons=1.0)
+    col 18  C  (cons=1.0)
+    col 19  G  (cons=1.0)
+    col 20  T  (cons=1.0)
+[Conserved] mostly (>=80%): 18 positions -> [0, 1, 2, 3, 4, 5, 7, 8, 9, 10, 11, 13, 14, 15, 16, 18, 19, 20]
+
+[Gap per sequence]
+    seq1: 1 gaps (4.8%)
+    seq2: 2 gaps (9.5%)
+    seq3: 0 gaps (0.0%)
+    seq4: 2 gaps (9.5%)
+[Gap per column] [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 1, 0, 0, 0]
+[Gappy columns] (>50% gaps): [12]
+[Remove gappy] kept 20/21 columns -> 20 cols, 4 seqs
+
+[Consensus @0.5] ATGGCTAGCTAGNACGTACGT
+[Consensus @0.7] ATGGCTAGCTAGNACGTACGT
+
+[Ungapped from ref=0] 20 cols (ref seq1 had 1 gap removed)
+
+[filter_by_id seq[12]] 2 seqs -> ['seq1', 'seq2']
+[filter_by_gap <=5%] 2 seqs -> ['seq1', 'seq3']
+[remove_duplicates] 4 seqs (no dups in sample)
+
+[Coordinate map seq1] residue positions in aln: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20]
+    aln col -> seq pos (gap=-1): [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, -1, 12, 13, 14, 15, 16, 17, 18, 19]
+    residue at aln col 5 -> seq pos 5 ('T')
+
+[Henikoff weights]
+    seq1: 0.2500  (sum=1.0000)
+    seq2: 0.2500  (sum=1.0000)
+    seq3: 0.2500  (sum=1.0000)
+    seq4: 0.2500  (sum=1.0000)
+
+[Neff @id=0.62] Neff=0.250  (L=21, Neff/L=0.012)
+    clusters: [4]  (4 seqs -> 1 clusters)
+
+[MI / APC] L=21 cols
+    NOTE: L=21 < 100 -> APC over-correction caveat applies; raw MI shown, APC reported for completeness
+    top raw-MI pair  (col 0,0) = 0.0000 bits
+    top APC-MI pair  (col 0,0) = 0.0000 bits
+
+======================================================================
+DONE
+======================================================================
