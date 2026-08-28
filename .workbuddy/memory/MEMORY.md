@@ -22,3 +22,16 @@
   - 发布脚本 `md2card_automation.py` / `trial2xhs.py` 从输入 md 路径推导 cat 层，产物落到 `output/xhs-cards/<cat>/<slug>/`，素材根退两层到 `content/素材/<cat>/`。
   - 新增分类时：建 `content/笔记/<新cat>/` + `content/素材/<新cat>/`，在 `TRIALS` 加条目即可；README 索引表同步加行。
   - 提交 `5658729`（716 files）已完成该重排 + 配置化。
+- **小红书文件名带 `-正文` 后缀（易漏）**：实际文件是 `00X-bioSkills小红书-<topic>-正文.md`，README/索引引用时必须带后缀（004–015 曾有 12 条链接因此全挂，2026-08-28 修复）。
+- **素材目录须自带数据可独立复现（016 起）**：`content/素材/<cat>/00X-/` 内除图外，还要放输入数据 + `make_figs.py` + `repro_transcript.txt`，脚本用 `os.path.dirname(os.path.abspath(__file__))` 取路径、图与脚本**平铺**（对齐 008/011）。`pipeline/00X-*/` 工作区保留中间产物、**不入库**（015/016 皆如此，用户「不希望延伸」）。
+- **站点侧栏需同步 `FAMILY_SUBS`（易漏）**：`build_lab_site.py` 里 `TRIALS` 加行后，若该 cat 还没有 `FAMILY_SUBS` 条目，侧栏不会高亮也不会出现子页链接（015 曾因此从未被高亮）。新增 cat 的第二篇时补一条 `VARCALL_SUBS` 式列表即可。
+
+## 出图质量：程序化自检 Gate（016 起）
+- 当前模型读不了图，**出图后一律跑** `python ~/.workbuddy/skills/bioSkills-figure-quality/check_figs.py make_figs.py`，要求 `TOTAL FAILS = 0`（退出码可接 CI）。它 hook `Figure.savefig`，落盘前量所有 Text 的 window bbox，判定「文本越界 / 文本互相重叠 / legend 压数据点」。
+- `place_labels()`（fig_quality.py）必须在 `set_xlim/set_ylim` + `tight_layout()` **之后**调用：顺序反了避让会算在自动缩放坐标系下，渲染时坐标一变标签整体偏移，且自检与渲染同处错误坐标系会报**假 PASS**。
+- `ax.get_yaxis_transform()` 中 **x 是 axes 分数、y 是 data 值**，混用会把文字甩到轴外被裁。
+- 数据点扎堆时（016 有 6/9 位点 GQ 顶到 99 上限、两个 QUAL 仅差 0.16）固定 `xytext` 必然重叠，只能贪心避让；柱状图数值标签与顶部参考线说明冲突时，把数值标签放**柱底内侧**（白字加粗）。
+
+## 笔记机检 gate_lint（2026-08-28 改版）
+- `pipeline/gate_lint.py` 已跳过 ``` 围栏代码块、YAML frontmatter、markdown 表格行——此前命令行/报错原文被当叙述句判 ADJ_REPEAT、frontmatter 被判 BARE_NUM，噪声淹没真信号。
+- 现状基线：004–016 全部 `ERROR=0 WARN=0`；002 的 METAPHOR 是早期遗留（001–003 保持扁平不动，不改）。改完工具或新增笔记后跑一次全量回归确认无新增 ERROR。
