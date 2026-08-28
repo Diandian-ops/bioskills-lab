@@ -6,7 +6,7 @@ import sys, os
 sys.path.insert(0, os.path.expanduser('~/.workbuddy/skills/bioSkills-figure-quality'))
 from fig_quality import C_WRONG, C_CORRECT
 
-OUT = '/Users/zhangdiandian/RedBook/content/素材/004-pairwise'
+OUT = '/Users/zhangdiandian/RedBook/content/素材/alignment/004-pairwise'
 
 # ---- 图1：坑一 默认 gap=0 陷阱 ----
 fig, ax = plt.subplots(figsize=(6.2, 3.4), dpi=150)

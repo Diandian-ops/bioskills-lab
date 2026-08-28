@@ -11,7 +11,7 @@ from fig_quality import save_clean, place_legend, caption, C_CORRECT, C_WRONG
 
 BASE = "/Users/zhangdiandian/RedBook"
 LOG = Path(BASE + "/pipeline/006-trimming/trimmed.fasta.log")
-OUT = Path(BASE + "/content/素材/006-trimming/006-fig.png")
+OUT = Path(BASE + "/content/素材/alignment/006-trimming/006-fig.png")
 
 # 解析 clipkit --log：每行 "pos keep|trim classification gap_proportion"
 cols = []

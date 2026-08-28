@@ -1,0 +1,144 @@
+# ===== S2a 真实复现：bioSkills vcf-basics =====
+# 命令来源：content/库/bioSkills/variant-calling/vcf-basics/SKILL.md
+# 输入：015 真跑产物 variants.vcf.gz（9 变异, 样本 HG00100, contig 17）
+# 时间：2026-08-28 14:35:45
+# 环境：bcftools 1.24 | cyvcf2 0.34.0 | numpy 2.1.3
+
+## 1) bcftools view —— 全记录（前 3 行正文）
+$ bcftools view variants.vcf.gz | grep -v "^##" | head -4
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	HG00100
+17	302	.	T	TA	128.226	.	INDEL;IDV=5;IMF=0.454545;DP=11;VDB=0.377852;SGB=-0.616816;RPBZ=1.64317;MQBZ=2.18218;MQSBZ=0;BQBZ=0;SCBZ=-0.912871;MQ0F=0;AC=1;AN=2;DP4=1,4,4,2;MQ=48	GT:PL:DP:AD	0/1:161,0,99:11:5,6
+17	828	.	T	C	180.829	.	DP=12;VDB=0.826152;SGB=-0.670168;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=1.07795;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=1,1,3,7;MQ=60	GT:PL:DP:AD	0/1:216,0,35:12:2,10
+17	834	.	G	A	185.079	.	DP=12;VDB=0.832735;SGB=-0.670168;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-1.53084;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=1,1,3,7;MQ=60	GT:PL:DP:AD	0/1:220,0,43:12:2,10
+
+## 2) bcftools view -h —— 头信息（FORMAT/INFO 声明）
+$ bcftools view -h variants.vcf.gz | grep -E "^##FORMAT|^#CHROM"
+##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Number of high-quality bases">
+##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths (high-quality bases)">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	HG00100
+
+## 3) bcftools view -H —— 跳过头（前 3 条，截断显示）
+$ bcftools view -H variants.vcf.gz | head -3
+17	302	.	T	TA	128.226	.	INDEL;IDV=5;IMF=0.454545;DP=11;VDB=0.377852;SGB=-0.616816;RPBZ=1.64317;MQBZ=2.18218;MQSBZ=0;BQBZ
+17	828	.	T	C	180.829	.	DP=12;VDB=0.826152;SGB=-0.670168;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=1.07795;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=1
+17	834	.	G	A	185.079	.	DP=12;VDB=0.832735;SGB=-0.670168;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-1.53084;SCBZ=0;MQ0F=0;AC=1;AN=2;DP4=
+
+## 4) 索引 + 区域查询（SKILL.md: region needs index）
+$ bcftools index variants.vcf.gz
+index exit=0
+$ bcftools view variants.vcf.gz 17:300-900
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	HG00100
+17	302	.	T	TA	128.226	.	INDEL;IDV=5;IMF=0.454545;DP=11;VDB=0.377852;SGB=-0.616816;RPBZ=1.64317;MQBZ=
+17	828	.	T	C	180.829	.	DP=12;VDB=0.826152;SGB=-0.670168;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=1.07795;SCBZ=0;MQ
+17	834	.	G	A	185.079	.	DP=12;VDB=0.832735;SGB=-0.670168;RPBZ=0;MQBZ=0;MQSBZ=0;BQBZ=-1.53084;SCBZ=0;M
+
+## 5) 样本保留/排除（-s / -s ^）
+$ bcftools view -s HG00100 variants.vcf.gz | grep -vc "^#"
+9
+$ bcftools view -s ^HG00100 variants.vcf.gz | grep -vc "^#"   # 排除该样本
+9
+
+## 5b) -s ^ 真实行为（纠正：不是 shell 吃 ^，是剥离样本列）
+$ bcftools view -s "^HG00100" variants.vcf.gz   # 表头列数对比
+排除后表头列数: 8
+原表头列数: 10
+排除后记录数:        9
+bcftools 警告: Warn: subsetting has removed all samples
+
+## 6) bcftools query —— 字段抽取（SKILL.md 格式串）
+$ bcftools query -f "%CHROM	%POS	%REF	%ALT
+" variants.vcf.gz
+17	302	T	TA
+17	828	T	C
+17	834	G	A
+17	1869	A	T
+17	2041	G	A
+17	2220	G	A
+17	2564	A	G
+17	3587	G	A
+17	3936	A	G
+
+$ bcftools query -f "%CHROM	%POS	%INFO/DP	%INFO/AF
+" variants.vcf.gz   # AF 本数据未产生
+
+$ bcftools query -f "%CHROM	%POS[	%GT]
+" variants.vcf.gz   # 每样本 GT
+17	302	0/1
+17	828	0/1
+17	834	0/1
+17	1869	0/1
+17	2041	0/1
+17	2220	0/1
+17	2564	0/1
+17	3587	0/1
+17	3936	0/1
+
+$ bcftools query -f "%CHROM	%POS[	%SAMPLE=%GT]
+" -s HG00100 variants.vcf.gz
+17	302	HG00100=0/1
+17	828	HG00100=0/1
+17	834	HG00100=0/1
+17	1869	HG00100=0/1
+17	2041	HG00100=0/1
+17	2220	HG00100=0/1
+17	2564	HG00100=0/1
+17	3587	HG00100=0/1
+17	3936	HG00100=0/1
+
+$ bcftools query -H -f "%CHROM	%POS	%REF	%ALT
+" variants.vcf.gz   # 带列名
+#[1]CHROM	[2]POS	[3]REF	[4]ALT
+17	302	T	TA
+17	828	T	C
+17	834	G	A
+
+$ bcftools query -f "%CHROM	%POS	%TYPE	%QUAL[	%GT	%GQ]
+" variants.vcf.gz   # TYPE/QUAL/GQ
+
+## 7) 格式转换与索引（SKILL.md 命令组）
+$ bcftools view -Ob -o variants.bcf variants.vcf.gz    # VCF.gz -> BCF
+  -> 2591 bytes
+$ bcftools view -Ov -o variants.roundtrip.vcf variants.bcf   # BCF -> VCF
+  ->      127 lines
+$ bgzip variants.roundtrip.vcf   # -> .vcf.gz (bgzip, NOT gzip)
+  -> variants.roundtrip.vcf.gz 已生成
+$ bcftools index variants.roundtrip.vcf.gz   # -> .csi
+  -> .csi 索引已生成
+$ bcftools index -t variants.roundtrip.vcf.gz   # -> .tbi
+  -> .tbi 索引已生成
+
+## 8) 验证 SKILL.md 论断：plain gzip 非 BGZF，不可随机访问
+$ bcftools view -Ov -o variants.plain.vcf variants.vcf.gz && gzip -c variants.plain.vcf > variants.gzip.vcf.gz
+$ bcftools index variants.gzip.vcf.gz   # 预期失败
+index: the file is not BGZF compressed, cannot index: variants.gzip.vcf.gz
+$ bcftools view variants.gzip.vcf.gz 17:300-900   # 区域查询预期失败
+Failed to read from variants.gzip.vcf.gz: not compressed with bgzip
+
+## 9) cyvcf2 —— 跑 skill 自带示例脚本 examples/view_vcf.py
+$ python $SKILL/examples/view_vcf.py variants.vcf.gz 5
+Samples: HG00100
+Contigs: 86
+
+17:302	T>TA	QUAL=128.2	FILTER=PASS	TYPE=indel
+17:828	T>C	QUAL=180.8	FILTER=PASS	TYPE=snp
+17:834	G>A	QUAL=185.1	FILTER=PASS	TYPE=snp
+17:1869	A>T	QUAL=91.0	FILTER=PASS	TYPE=snp
+17:2041	G>A	QUAL=193.4	FILTER=PASS	TYPE=snp
+
+## 10) cyvcf2 —— SKILL.md「Genotypes and Per-Sample Fields」片段
+POS=302	gt_types=[1]	DP=[[11]]	AD=[[5, 6]]
+POS=828	gt_types=[1]	DP=[[12]]	AD=[[2, 10]]
+POS=834	gt_types=[1]	DP=[[12]]	AD=[[2, 10]]
+POS=1869	gt_types=[1]	DP=[[16]]	AD=[[10, 6]]
+POS=2041	gt_types=[1]	DP=[[20]]	AD=[[10, 10]]
+POS=2220	gt_types=[1]	DP=[[12]]	AD=[[6, 6]]
+POS=2564	gt_types=[1]	DP=[[6]]	AD=[[3, 3]]
+POS=3587	gt_types=[1]	DP=[[14]]	AD=[[7, 7]]
+POS=3936	gt_types=[1]	DP=[[18]]	AD=[[9, 9]]
+
+## 11) cyvcf2 —— 区域抓取（需索引；本数据 contig 为 17）
+samples: ['HG00100']
+header INFO 声明数: 16
+region 17:300-900 -> [('17', 302), ('17', 828), ('17', 834)]

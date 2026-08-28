@@ -61,8 +61,29 @@ def lint(text, path):
 
     body = is_body(path)
 
-    in_meta = False  # META 块（作者自用建议/元信息）内的行不卡发布正文规则
+    in_meta = False   # META 块（作者自用建议/元信息）内的行不卡发布正文规则
+    in_fence = False  # ``` 围栏内：命令/报错原文，不是叙述句，不参与任何行级规则
+    in_front = False  # YAML frontmatter（元数据），不参与行级规则
+    prose = []        # 参与 ADJ_REPEAT 的真正叙述行（去围栏、去 frontmatter）
+
     for i, ln in enumerate(lines):
+        stripped = ln.strip()
+        # --- 围栏状态机（先于其它判断，围栏行本身也不参与检查）---
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        # --- frontmatter 状态机：文件开头的 --- ... --- 区间 ---
+        if i == 0 and stripped == "---":
+            in_front = True
+            continue
+        if in_front:
+            if stripped == "---":
+                in_front = False
+            continue
+
+        prose.append(ln)
         if re.search(r"<!--|META", ln):
             in_meta = True
         if not in_meta:
@@ -107,9 +128,10 @@ def lint(text, path):
                              f"小红书标题上限 {TITLE_MAX} 字，当前 {len(title)} 字，需压缩（保留核心钩子/数字，去掉冗余修饰）"))
 
     # --- WARN: 未解释缩写（首现） ---
+    # 只看叙述行：代码块里的标识符与 frontmatter 的 tag 不算「首现未解释」
     for ab in ABBR:
         pat = re.compile(rf"\b{ab}\b")
-        for i, ln in enumerate(lines):
+        for i, ln in enumerate(prose):
             if pat.search(ln):
                 pos = ln.find(ab)
                 window = ln[max(0, pos - 15): pos + 30]
@@ -120,7 +142,12 @@ def lint(text, path):
                 break  # 只看首现
 
     # --- WARN: 相邻句重复同一观点 ---
-    sents = [s.strip() for s in re.split(r"[。！？\n]", text) if len(s.strip()) > 8]
+    # 基于 prose（已剔除围栏代码块与 frontmatter）：命令行、报错原文、表格行
+    # 天然高度相似，把它们算进来只会淹没真正的叙述重复。
+    # markdown 表格行是结构化数据，同行不同列数值不构成「观点重复」
+    sents = [s.strip() for s in re.split(r"[。！？\n]", "\n".join(
+        ln for ln in prose if not ln.lstrip().startswith("|")))
+        if len(s.strip()) > 8]
     for a, b in zip(sents, sents[1:]):
         # 跳过代码/公式片段（含 = 或括号密集），避免误报
         if re.search(r"[=\[\]()]", a) and re.search(r"[=\[\]()]", b):

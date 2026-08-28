@@ -120,8 +120,11 @@ READ_ALIGN_SUBS = [("bowtie2", "bowtie2-alignment", "read-alignment/bowtie2-alig
                   ("bwa", "bwa-alignment", "read-alignment/bwa-alignment.html"),
                   ("hisat2", "hisat2-alignment", "read-alignment/hisat2-alignment.html"),
                   ("star", "star-alignment", "read-alignment/star-alignment.html")]
-# 同一套「family 子页」机制同时服务 alignment 与 read-alignment，避免对 category 名硬编码
-FAMILY_SUBS = {"alignment": ALIGN_SUBS, "read-alignment": READ_ALIGN_SUBS}
+VARCALL_SUBS = [("varcall", "variant-calling", "variant-calling/variant-calling.html"),
+                ("vcfbasics", "vcf-basics", "variant-calling/vcf-basics.html")]
+# 同一套「family 子页」机制同时服务 alignment / read-alignment / variant-calling，避免对 category 名硬编码
+FAMILY_SUBS = {"alignment": ALIGN_SUBS, "read-alignment": READ_ALIGN_SUBS,
+               "variant-calling": VARCALL_SUBS}
 FAMILY_KEYS = {k for subs in FAMILY_SUBS.values() for k, _, _ in subs}
 
 def sidebar(active, prefix=""):
@@ -482,6 +485,7 @@ TRIALS = [
     ("read-alignment",  "013", "hisat2-alignment",     "DEEP DIVE 10", "hisat2"),
     ("read-alignment",  "014", "star-alignment",       "DEEP DIVE 11", "star"),
     ("variant-calling", "015", "variant-calling",      "DEEP DIVE 12", "varcall"),
+    ("variant-calling", "016", "vcf-basics",           "DEEP DIVE 13", "vcfbasics"),
 ]
 def cat_page(cat):
     items = pages.get(cat, [])
