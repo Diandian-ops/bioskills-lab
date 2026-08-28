@@ -19,3 +19,7 @@ node_modules/
 # 本库只备份自身源 content/笔记|素材|pipeline，构建前按需从上游 git clone）
 content/库/bioSkills/
 content/库/obsidian-wechat-converter/
+content/库/md2card/
+
+# WorkBuddy 临时产物（预览/输出缓存，不进版本库）
+.workbuddy/artifacts/
