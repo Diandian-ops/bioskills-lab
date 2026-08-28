@@ -13,3 +13,12 @@
   - 禁用："这个 skill 教对了什么""这个 skill 不负责做 X""它教的是""生信老手踩过…后来人不用重复踩"等拟人/主观表述。
   - 中性替代：标题用「功能定位与适用范围」「实践要点」；边界用「适用范围：本 skill 的输入为…，比对构建由 multiple-alignment 覆盖，不在本 skill 范围内」；内容用「内容覆盖：…」。
   - 规范已固化进 `redbook-bio-note-writer/SKILL.md` 第四节（客观描述纪律）+ 8.1/8.2 模板标题。004/005/006 三篇笔记已全量改写为中性写法。
+- **分类目录层纪律（2026-08-28 用户确认「复用 bioSkills 分类名 + 现在就重排」）**：004–015 已从扁平移入按 bioSkills 顶层分类名分层的子目录，从根消除后期堆砌。
+  - `content/笔记/<cat>/` = 两文件（真实试用 + 小红书）按 `alignment` / `read-alignment` / `variant-calling` 分层；001–003 早期杂项保持扁平不动。
+  - `content/素材/<cat>/` = 同构分层，与笔记一一对应。
+  - `output/xhs-cards/<cat>/` = 同构分层（output 不进库）。
+  - 图片引用：笔记在 `<cat>/` 下时正文用 `../../素材/<cat>/00X-主题/图.png`（退两层到仓库根再进 素材/<cat>）；文字提及素材用 `content/素材/<cat>/00X-主题/`。
+  - 站点构建器 `pipeline/build_lab_site.py` 已**配置化**：`TRIALS` 列表 + `cat_page()` 自动扫描 `content/笔记/<cat>/`，**新增一篇只需往 TRIALS 加一行**，不再手写三处硬编码映射。
+  - 发布脚本 `md2card_automation.py` / `trial2xhs.py` 从输入 md 路径推导 cat 层，产物落到 `output/xhs-cards/<cat>/<slug>/`，素材根退两层到 `content/素材/<cat>/`。
+  - 新增分类时：建 `content/笔记/<新cat>/` + `content/素材/<新cat>/`，在 `TRIALS` 加条目即可；README 索引表同步加行。
+  - 提交 `5658729`（716 files）已完成该重排 + 配置化。
