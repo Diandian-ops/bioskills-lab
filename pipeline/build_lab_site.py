@@ -62,7 +62,7 @@ for name in sorted(os.listdir(BIO)):
         n = len([d for d in os.listdir(p) if os.path.isdir(os.path.join(p, d)) and not d.startswith('.')])
         if n > 0:
             cats.append((name, n))
-DONE = {"alignment", "read-alignment"}
+DONE = {"alignment", "read-alignment", "variant-calling"}
 NCAT = len(cats)
 NTOTAL = sum(n for _, n in cats)
 
@@ -100,7 +100,7 @@ for dname, dcolor in DOMAIN_META:
     TREE["children"].append({
         "name": dname, "color": dcolor,
         "children": [{"name":c,"value":n,"done": c in DONE,
-                      "link": ("alignment/index.html" if c=="alignment" else ("read-alignment/index.html" if c=="read-alignment" else None)),
+                      "link": ("alignment/index.html" if c=="alignment" else ("read-alignment/index.html" if c=="read-alignment" else ("variant-calling/index.html" if c=="variant-calling" else None))),
                       "skills": sorted(d for d in os.listdir(os.path.join(BIO,c)) if os.path.isdir(os.path.join(BIO,c, d)) and not d.startswith('.'))} for c,n in items]
     })
 TREE_JSON = __import__("json").dumps(TREE, ensure_ascii=False)
@@ -493,6 +493,15 @@ ra += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同
 ra += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
 ra = page("../", "read-alignment", ra)
 
+# ---------- variant-calling 总览 ----------
+vc = '<div class="crumb"><a href="../index.html">实验室首页</a> › variant-calling</div>'
+vc += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>variant-calling</h1><p class="sub">变异检出家族 - 1 个 skill，已完成 1 个深度试用</p></div>'
+vc += '<div class="sklist">'
+vc += '<a href="variant-calling.html"><span>variant-calling</span><span class="tag tag-done">DONE 015</span></a>'
+vc += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
+vc += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
+vc = page("../", "variant-calling", vc)
+
 def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_blocks, cat="alignment"):
     c = '<div class="crumb"><a href="%sindex.html">实验室首页</a> › <a href="%s/index.html">%s</a> › %s</div>' % (prefix, cat, cat, crumb)
     c += '<div class="masthead"><div class="sec-kicker">%s</div><h1>%s</h1><p class="sub">%s</p></div>' % (sec_kicker, h1, sec_one)
@@ -562,16 +571,24 @@ p014 = skill_page("../", "star", "star-alignment", "DEEP DIVE 11",
                  meta014.get("标题", "star-alignment"),
                  meta014.get("副标题", ""), body014, [], cat="read-alignment")
 
+# ---------- variant-calling（015）----------
+NOTE015 = BASE + "/content/笔记/015-bioSkills真实试用-variant-calling.md"
+body015, meta015, need015 = load_note(NOTE015)
+p015 = skill_page("../", "varcall", "variant-calling", "DEEP DIVE 12",
+                 meta015.get("标题", "variant-calling"),
+                 meta015.get("副标题", ""), body015, [], cat="variant-calling")
+
 # ---------- 写出 ----------
 shutil.rmtree(SITE, ignore_errors=True)
-os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment"); os.makedirs(SITE + "/read-alignment")
+os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment"); os.makedirs(SITE + "/read-alignment"); os.makedirs(SITE + "/variant-calling")
 for _src in sorted(set(need004 + need005 + need006 + need007 + need008 + need009 + need010
-                       + need011 + need012 + need013 + need014)):
+                       + need011 + need012 + need013 + need014 + need015)):
     shutil.copy(_src, ASSETS + "/" + os.path.basename(_src))
 with open(SITE + "/style.css", "w", encoding="utf-8") as f: f.write(STYLE)
 with open(SITE + "/index.html", "w", encoding="utf-8") as f: f.write(idx)
 with open(SITE + "/alignment/index.html", "w", encoding="utf-8") as f: f.write(al)
 with open(SITE + "/read-alignment/index.html", "w", encoding="utf-8") as f: f.write(ra)
+with open(SITE + "/variant-calling/index.html", "w", encoding="utf-8") as f: f.write(vc)
 with open(SITE + "/alignment/pairwise-alignment.html", "w", encoding="utf-8") as f: f.write(p004)
 with open(SITE + "/alignment/msa-statistics.html", "w", encoding="utf-8") as f: f.write(p005)
 with open(SITE + "/alignment/alignment-trimming.html", "w", encoding="utf-8") as f: f.write(p006)
@@ -583,6 +600,7 @@ with open(SITE + "/read-alignment/bowtie2-alignment.html", "w", encoding="utf-8"
 with open(SITE + "/read-alignment/bwa-alignment.html", "w", encoding="utf-8") as f: f.write(p012)
 with open(SITE + "/read-alignment/hisat2-alignment.html", "w", encoding="utf-8") as f: f.write(p013)
 with open(SITE + "/read-alignment/star-alignment.html", "w", encoding="utf-8") as f: f.write(p014)
+with open(SITE + "/variant-calling/variant-calling.html", "w", encoding="utf-8") as f: f.write(p015)
 print("站点已生成 -> " + SITE)
 for root, _, files in os.walk(SITE):
     for fn in sorted(files):
