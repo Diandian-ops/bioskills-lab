@@ -2,7 +2,7 @@
 META
 标题: bioSkills structural-alignment：结构比对工具链复现（Superimposer / TM-align / Foldseek）
 系列: bioSkills
-配图: ![](../素材/010-structural-alignment/010-fig.png)
+配图: ![](../../素材/alignment/010-structural-alignment/010-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/structural-alignment)
 发布顺序: 010
 /META
@@ -66,10 +66,10 @@ foldmason easy-msa structures/*.pdb result tmp/           # 结构 MSA
 ### 环境 / 数据
 
 - Python 3.13 / Biopython 1.88（managed venv）；Foldseek 10.941cd33（conda env `foldseek`）；TM-align 20220412（源码编译，macOS 需把 `#include <malloc.h>` 改为 `<malloc/malloc.h>`）
-- 数据：RCSB 下载 `content/素材/010-structural-alignment/pdbs/{1ubq,1ubi,1fmb}.pdb`
+- 数据：RCSB 下载 `content/素材/alignment/010-structural-alignment/pdbs/{1ubq,1ubi,1fmb}.pdb`
   - 1ubq / 1ubi：ubiquitin（同家族，76 个 CA）
   - 1fmb：另一折叠，作为跨折叠对照
-- 复现脚本：`content/素材/010-structural-alignment/run_structural_alignment.py`；结果：`structural_results.json`；配图：`010-fig.png`
+- 复现脚本：`content/素材/alignment/010-structural-alignment/run_structural_alignment.py`；结果：`structural_results.json`；配图：`010-fig.png`
 
 ### 标准输出
 
@@ -102,7 +102,7 @@ easy-cluster (all-vs-all, TM>0.5): rc=0
   1ubi -> 1ubq        # 归入 1ubq 簇
 ```
 
-![010 structural-alignment：两两 TM-score 矩阵](../素材/010-structural-alignment/010-fig.png)
+![010 structural-alignment：两两 TM-score 矩阵](../../素材/alignment/010-structural-alignment/010-fig.png)
 
 ### 坑实测 / 文档不一致
 

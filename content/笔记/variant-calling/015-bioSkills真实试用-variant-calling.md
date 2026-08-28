@@ -4,7 +4,7 @@ skill: variant-calling
 trial: "015"
 category: "bioSkills 真实试用"
 tags: ["bioSkills", "bcftools", "variant-calling", "mpileup", "SNP", "INDEL", "VCF", "真实试用"]
-cover: "content/素材/015-variant-calling/fig2_allelic_depth.png"
+cover: "content/素材/variant-calling/015-variant-calling/fig2_allelic_depth.png"
 date: "2026-08-28"
 status: "full-real"
 note: "完整复现 SKILL.md 标准命令 (rc=0)，9 个变异位点 (8 SNP + 1 INDEL)。"
@@ -143,11 +143,11 @@ bcftools mpileup -Ou -f mpileup.ref.fa -a FORMAT/DP,FORMAT/AD mpileup.1.bam \
 - BAQ：默认开启有益（抑制 indel 附近假阳性 SNP），仅在已知比对质量可靠且需最大化灵敏度时考虑 `-B` 关闭。
 - 排查 0 变异：按顺序查覆盖度 → 过滤严度 → 参考一致性（最常见根因）。
 
-![变异类型构成](../素材/015-variant-calling/fig1_type_counts.png)
+![变异类型构成](../../素材/variant-calling/015-variant-calling/fig1_type_counts.png)
 
-![各位点 REF vs ALT 等位基因深度](../素材/015-variant-calling/fig2_allelic_depth.png)
+![各位点 REF vs ALT 等位基因深度](../../素材/variant-calling/015-variant-calling/fig2_allelic_depth.png)
 
-![变异在 chr17:1-4200 上的位置分布](../素材/015-variant-calling/fig3_position_track.png)
+![变异在 chr17:1-4200 上的位置分布](../../素材/variant-calling/015-variant-calling/fig3_position_track.png)
 
 ## 6 小结
 

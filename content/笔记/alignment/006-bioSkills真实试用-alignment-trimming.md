@@ -2,7 +2,7 @@
 META
 标题: bioSkills alignment-trimming：ClipKIT 默认修剪模式的行为
 系列: bioSkills
-配图: ![](../素材/006-trimming/006-fig.png)
+配图: ![](../../素材/alignment/006-trimming/006-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/alignment-trimming)
 发布顺序: 006
 /META
@@ -139,7 +139,7 @@ Trimmed:  20 列（砍掉第 13 列，gap 比例 0.75）
 
 ClipKIT 自动识别 `.aln` 为 clustal 格式，无需额外参数。删除 1 列（4.8%）落在 SKILL.md 说的"安全修剪区"（<20% 列被删，对树几乎无影响）。
 
-![](../素材/006-trimming/006-fig.png)
+![](../../素材/alignment/006-trimming/006-fig.png)
 
 上图：逐列状态色块，第 13 列（gap 0.75）标红为 trim，其余 20 列 kept。基于 `--log` 真实数据，零夹带。
 

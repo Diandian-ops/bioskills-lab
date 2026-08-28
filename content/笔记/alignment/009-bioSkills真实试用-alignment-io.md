@@ -2,7 +2,7 @@
 META
 标题: bioSkills alignment-io：比对文件格式的读写、转换与注释掉失
 系列: bioSkills
-配图: ![](../素材/009-alignment-io/009-fig.png)
+配图: ![](../../素材/alignment/009-alignment-io/009-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/alignment-io)
 发布顺序: 009
 /META
@@ -99,7 +99,7 @@ subs = mod.substitutions         # Array property (4,4) on 4-seq sample
 
 - Python 3.13 / Biopython 1.88 / numpy 2.1.3 / pandas 3.0.5 / matplotlib 3.11.1（managed venv）
 - 数据：`content/库/bioSkills/alignment/alignment-io/examples/sample_alignment.aln`（CLUSTAL，4 条序列 × 21 列）
-- 复现脚本：`content/素材/009-alignment-io/run_alignment_io.py`；完整日志：`run_alignment_io.log`
+- 复现脚本：`content/素材/alignment/009-alignment-io/run_alignment_io.py`；完整日志：`run_alignment_io.log`
 
 ### 标准输出
 
@@ -146,7 +146,7 @@ aln[:, 5:15] -> 10 列的新 MSA
 
 实锤：只有 Stockholm 自己保留完整注释；其余格式均掉失，NEXUS 仅保留 GS。若注释是下游流程的输入，应保留 Stockholm 主文件。
 
-![009 alignment-io：注释存活矩阵](../素材/009-alignment-io/009-fig.png)
+![009 alignment-io：注释存活矩阵](../../素材/alignment/009-alignment-io/009-fig.png)
 
 #### 3. MAF 负链坐标转换
 

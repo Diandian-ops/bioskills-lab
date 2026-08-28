@@ -2,7 +2,7 @@
 META
 标题: bioSkills pairwise-alignment：默认参数下的 gap 与一致性计算
 系列: bioSkills
-配图: ![](../素材/004-pairwise/004-fig-gappitrap.png) ![](../素材/004-pairwise/004-fig-pid.png)
+配图: ![](../../素材/alignment/004-pairwise/004-fig-gappitrap.png) ![](../../素材/alignment/004-pairwise/004-fig-pid.png)
 参考仓库: GPTomics/bioSkills (alignment/pairwise-alignment)
 发布顺序: 004
 /META
@@ -157,7 +157,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 这就是 skill 警告的配置偏差：**看起来分数更好，实际上比对质量更差**。
 
-![](../素材/004-pairwise/004-fig-gappitrap.png)
+![](../../素材/alignment/004-pairwise/004-fig-gappitrap.png)
 
 ### Percent Identity 四口径
 
@@ -174,7 +174,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 
 报 PID 必须说清口径。Biopython `.counts()` 近似 PID2（排除 gap）。如果两个人用不同口径报同一比对的 identity，数字对不上不是算错了，而是定义不同。
 
-![](../素材/004-pairwise/004-fig-pid.png)
+![](../../素材/alignment/004-pairwise/004-fig-pid.png)
 
 ---
 

@@ -2,7 +2,7 @@
 META
 标题: bioSkills msa-statistics：蛋白序列信息量的背景模型
 系列: bioSkills
-配图: ![](../素材/005-msa-statistics/005-fig.png)
+配图: ![](../../素材/alignment/005-msa-statistics/005-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/msa-statistics)
 发布顺序: 005
 /META
@@ -150,7 +150,7 @@ Shannon熵/列: min=0.000 max=4.322 mean=1.374
 完全保守列(H=0): 18 个 (11.4%)
 ```
 
-![](../素材/005-msa-statistics/005-fig.png)
+![](../../素材/alignment/005-msa-statistics/005-fig.png)
 
 上图（两面板）：
 ① 上方：真实 globin MSA 逐列熵（蓝）与 KL 信息量（红）剖面——保守核心区与变异区交替，符合球蛋白折叠模式

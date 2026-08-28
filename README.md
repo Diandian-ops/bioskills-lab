@@ -14,19 +14,25 @@
 RedBook/
 ├── README.md                  # 本文件：总索引 + 命名规范（每加一篇在此追加一行）
 ├── content/                   # 【源】所有不可再生内容，单一事实源
-│   ├── 笔记/                  # 正式成稿的笔记（按编号命名，md 驱动站点 + 小红书）
-│   │   ├── 001-生信AI工作流笔记.md
+│   ├── 笔记/                  # 正式成稿的笔记（md 驱动站点 + 小红书），按 bioSkills 分类分子目录
+│   │   ├── 001-生信AI工作流笔记.md                          # 早期杂项（不归类，保持扁平）
 │   │   ├── 002-bioSkills使用体验.md
 │   │   ├── 003-bioSkills拆解01-alignment专题.md
-│   │   ├── 004-bioSkills真实试用-pairwise-alignment.md     # 完整试用版
-│   │   ├── 004-bioSkills小红书-pairwise-alignment.md       # 引流精简版
-│   │   ├── 005-bioSkills真实试用-msa-statistics.md         # 完整试用版
-│   │   └── 005-bioSkills小红书-msa-statistics.md           # 引流精简版
-│   ├── 素材/                  # 图片按所属笔记分文件夹，互不打扰
+│   │   ├── alignment/         # 序列比对家族：004-010（真实试用 + 小红书两文件）
+│   │   │   ├── 004-bioSkills真实试用-pairwise-alignment.md
+│   │   │   ├── 004-bioSkills小红书-pairwise-alignment.md
+│   │   │   └── ...（005-010 同构，每个编号两文件）
+│   │   ├── read-alignment/    # 读长比对家族：011-014
+│   │   │   ├── 011-bioSkills真实试用-bowtie2-alignment.md
+│   │   │   └── ...（012-014 同构）
+│   │   └── variant-calling/   # 变异检出家族：015
+│   │       └── 015-bioSkills真实试用-variant-calling.md
+│   ├── 素材/                  # 图片按「分类/编号主题」分文件夹，互不打扰
 │   │   ├── 002-bioSkills/
 │   │   ├── 003-alignment/
-│   │   ├── 004-pairwise/
-│   │   └── 005-msa-statistics/
+│   │   ├── alignment/         # 004-010 素材
+│   │   ├── read-alignment/    # 011-014 素材
+│   │   └── variant-calling/   # 015 素材
 │   └── 库/                    # 参考仓库 / 外部资源（本地 clone）
 │       ├── bioSkills/         # GPTomics/bioSkills (562 skills, 65 categories, 本地统计)
 │       │   # 上游: https://github.com/GPTomics/bioSkills
@@ -38,7 +44,8 @@ RedBook/
 │   ├── 004-pairwise-redo/     # pairwise-alignment 严格复现脚本
 │   └── 005-msa-statistics/    # msa-statistics 严格复现脚本
 └── output/                      # 【纯产物】一条命令可重建，删了不心疼
-    └── bioSkills-site/        # 多文件静态站点（index/alignment/004/005 + assets 三图）
+    ├── bioSkills-site/        # 多文件静态站点（index + alignment/read-alignment/variant-calling 三类 + assets）
+    └── xhs-cards/             # 小红书卡片产物（按分类分子目录：alignment/ read-alignment/ variant-calling/）
 ```
 
 > ⚠️ **源 / 产物不可混居**：`build_lab_site.py` 重生成时会先 `rmtree(output/bioSkills-site)` 再重建。所有源都在 `content/` 与 `pipeline/`，绝不在 `output/` 内，否则会被误删。
@@ -54,7 +61,7 @@ RedBook/
 | 真实试用 | `编号-bioSkills真实试用-<skill>.md`（完整深挖版） | `004-bioSkills真实试用-pairwise-alignment.md` |
 | 引流精简 | `编号-bioSkills小红书-<skill>.md`（封面卡 + 实测，3–6 卡） | `004-bioSkills小红书-pairwise-alignment.md` |
 
-> 笔记内引用图片用相对路径，例如 `../素材/004-pairwise/xxx.png`，移动文件后记得同步改路径。
+> 笔记内引用图片用相对路径。笔记位于 `content/笔记/<分类>/` 下时，引用为 `../../素材/<分类>/00X-主题/xxx.png`（退两层到仓库根再进 素材/<分类>）；正文文字提及素材路径用 `content/素材/<分类>/00X-主题/`。移动文件后记得同步改路径。
 
 ---
 
@@ -65,10 +72,18 @@ RedBook/
 | 001 | 生信 × AI 工作流 | 生信×AI | 可发 | [content/笔记/001-生信AI工作流笔记.md](content/笔记/001-生信AI工作流笔记.md) | content/素材/001-生信AI/（早期 AI 插画，已弃用） |
 | 002 | bioSkills 使用体验 | skills 体验与架构 | 可发 | [content/笔记/002-bioSkills使用体验.md](content/笔记/002-bioSkills使用体验.md) | content/素材/002-bioSkills/ |
 | 003 | bioSkills 拆解 · alignment（图文版） | skills 专项拆解 | 可发(配4张真实数据图) | [content/笔记/003-bioSkills拆解01-alignment专题.md](content/笔记/003-bioSkills拆解01-alignment专题.md) | content/素材/003-alignment/ (4张) |
-| 004 | bioSkills 真实试用 · pairwise-alignment（完整） | skills 专项拆解 | 已入站点 | [content/笔记/004-bioSkills真实试用-pairwise-alignment.md](content/笔记/004-bioSkills真实试用-pairwise-alignment.md) | content/素材/004-pairwise/ |
-| 004 | bioSkills 小红书 · pairwise-alignment（引流） | skills 专项拆解 | 引流精简 | [content/笔记/004-bioSkills小红书-pairwise-alignment.md](content/笔记/004-bioSkills小红书-pairwise-alignment.md) | content/素材/004-pairwise/ |
-| 005 | bioSkills 真实试用 · msa-statistics（完整） | skills 专项拆解 | 已入站点 | [content/笔记/005-bioSkills真实试用-msa-statistics.md](content/笔记/005-bioSkills真实试用-msa-statistics.md) | content/素材/005-msa-statistics/ |
-| 005 | bioSkills 小红书 · msa-statistics（引流） | skills 专项拆解 | 引流精简 | [content/笔记/005-bioSkills小红书-msa-statistics.md](content/笔记/005-bioSkills小红书-msa-statistics.md) | content/素材/005-msa-statistics/ |
+| 004 | pairwise-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/004-bioSkills真实试用-pairwise-alignment.md) · [小红书](content/笔记/alignment/004-bioSkills小红书-pairwise-alignment.md) | content/素材/alignment/004-pairwise/ |
+| 005 | msa-statistics | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/005-bioSkills真实试用-msa-statistics.md) · [小红书](content/笔记/alignment/005-bioSkills小红书-msa-statistics.md) | content/素材/alignment/005-msa-statistics/ |
+| 006 | alignment-trimming | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/006-bioSkills真实试用-alignment-trimming.md) · [小红书](content/笔记/alignment/006-bioSkills小红书-alignment-trimming.md) | content/素材/alignment/006-trimming/ |
+| 007 | multiple-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/007-bioSkills真实试用-multiple-alignment.md) · [小红书](content/笔记/alignment/007-bioSkills小红书-multiple-alignment.md) | content/素材/alignment/007-multiple-alignment/ |
+| 008 | msa-parsing | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/008-bioSkills真实试用-msa-parsing.md) · [小红书](content/笔记/alignment/008-bioSkills小红书-msa-parsing.md) | content/素材/alignment/008-msa-parsing/ |
+| 009 | alignment-io | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/009-bioSkills真实试用-alignment-io.md) · [小红书](content/笔记/alignment/009-bioSkills小红书-alignment-io.md) | content/素材/alignment/009-alignment-io/ |
+| 010 | structural-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/alignment/010-bioSkills真实试用-structural-alignment.md) · [小红书](content/笔记/alignment/010-bioSkills小红书-structural-alignment.md) | content/素材/alignment/010-structural-alignment/ |
+| 011 | bowtie2-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/read-alignment/011-bioSkills真实试用-bowtie2-alignment.md) · [小红书](content/笔记/read-alignment/011-bioSkills小红书-bowtie2-alignment.md) | content/素材/read-alignment/011-bowtie2-alignment/ |
+| 012 | bwa-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/read-alignment/012-bioSkills真实试用-bwa-alignment.md) · [小红书](content/笔记/read-alignment/012-bioSkills小红书-bwa-alignment.md) | content/素材/read-alignment/012-bwa-alignment/ |
+| 013 | hisat2-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/read-alignment/013-bioSkills真实试用-hisat2-alignment.md) · [小红书](content/笔记/read-alignment/013-bioSkills小红书-hisat2-alignment.md) | content/素材/read-alignment/013-hisat2-alignment/ |
+| 014 | star-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/read-alignment/014-bioSkills真实试用-star-alignment.md) · [小红书](content/笔记/read-alignment/014-bioSkills小红书-star-alignment.md) | content/素材/read-alignment/014-star-alignment/ |
+| 015 | variant-calling | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/015-bioSkills真实试用-variant-calling.md) · [小红书](content/笔记/variant-calling/015-bioSkills小红书-variant-calling.md) | content/素材/variant-calling/015-variant-calling/ |
 
 **系列规划**
 - `skills 使用体验`：从 bioSkills 仓库出发，逐个 skill 真跑、记录 AI 实际产出。**alignment 已发(003, 图文版)**；004/005 已深究成完整试用笔记并入站点。下期预告：variant-calling（体细胞变异）实测。
@@ -88,13 +103,13 @@ RedBook/
 
 ## 如何新增一篇
 
-1. 在 `content/笔记/` 新建 `00X-主题.md`（编号取当前最大 +1）。
-2. 在 `content/素材/` 新建同名文件夹 `00X-主题/`，放该篇图片。
-3. 笔记内用相对路径引用图片：`../素材/00X-主题/封面.png`。
+1. 在 `content/笔记/<分类>/` 新建 `00X-bioSkills真实试用-<skill>.md` + `00X-bioSkills小红书-<skill>.md`（编号取当前最大 +1；分类沿用 bioSkills 顶层分类名，如 `alignment` / `read-alignment` / `variant-calling`）。
+2. 在 `content/素材/<分类>/` 新建同名文件夹 `00X-<主题>/`，放该篇图片（两文件制式：深拆版 + 小红书精简版共用同组素材）。
+3. 笔记内用相对路径引用图片：`../../素材/<分类>/00X-主题/封面.png`（笔记在分类子目录下，需退两层到仓库根再进 素材/<分类>）；正文文字提及素材用 `content/素材/<分类>/00X-主题/`。
 4. 文案固定结构：**痛点切入 → 我的解法/体验 → 可抄命令或截图 → 避坑提醒**。不堆互动话术（关注引导 / 下期预告 / 评论区抛问题），只讲内容本身。
 5. 发布前把正文里 `@XXX` 换成你的账号；封面在小红书编辑页加一行大字标题。
-6. 回来在上方「笔记索引」表追加一行。
-7. 重生成站点：`python pipeline/build_lab_site.py`（managed venv，已装 `markdown`）。
+6. 回来在上方「笔记索引」表追加一行（含分类路径）。
+7. 重生成站点：`python pipeline/build_lab_site.py`（managed venv，已装 `markdown`）。站点按 `TRIALS` 配置自动扫描 `content/笔记/<分类>/`，无需手动改映射。
 
 ---
 

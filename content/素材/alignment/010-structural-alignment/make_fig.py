@@ -8,7 +8,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-BASE = "/Users/zhangdiandian/RedBook/content/素材/010-structural-alignment"
+BASE = "/Users/zhangdiandian/RedBook/content/素材/alignment/010-structural-alignment"
 res = json.loads(open(f"{BASE}/structural_results.json").read())
 
 labels = ["1ubq", "1ubi", "1fmb"]

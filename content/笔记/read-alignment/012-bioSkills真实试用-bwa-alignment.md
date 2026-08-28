@@ -68,7 +68,7 @@ bwa-mem2 mem -t 8 -R '@RG...' reference.fa r1 r2 | \
 ### 4.1 环境
 
 - 工具：conda `bioaligners` 环境（`-c bioconda -c conda-forge bowtie2 bwa hisat2 bwa-mem2`），bwa-mem2 2.3；samtools 用本机 anaconda 1.21。
-- 复现脚本：`content/素材/012-bwa-alignment/run_bwa.py`（全部子进程真实调用）。
+- 复现脚本：`content/素材/read-alignment/012-bwa-alignment/run_bwa.py`（全部子进程真实调用）。
 
 ### 4.2 数据
 
@@ -100,7 +100,7 @@ bwa-mem2 mem -t 8 -R '@RG...' reference.fa r1 r2 | \
 - SV 流程用 `-Y` 不用 `-M`；可复现/等效流程加 `-K 100000000` 固定每批插入大小估计。
 - bwa 与 bwa-mem2 索引工具要配对，别混用。
 
-![012 bwa @RG 硬契约/MAPQ60/去重顺序/K 可复现 实测小结](../素材/012-bwa-alignment/012-fig.png)
+![012 bwa @RG 硬契约/MAPQ60/去重顺序/K 可复现 实测小结](../../素材/read-alignment/012-bwa-alignment/012-fig.png)
 
 ## 六、小结
 

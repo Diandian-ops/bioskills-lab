@@ -18,7 +18,7 @@ from pathlib import Path
 
 from Bio.PDB import PDBParser, Superimposer
 
-BASE = Path("/Users/zhangdiandian/RedBook/content/素材/010-structural-alignment")
+BASE = Path("/Users/zhangdiandian/RedBook/content/素材/alignment/010-structural-alignment")
 PD = BASE / "pdbs"
 TMALIGN = BASE / "tools" / "TMalign"
 FOLDSEEK = "/Applications/anaconda3/envs/foldseek/bin/foldseek"

@@ -2,7 +2,7 @@
 META
 标题: bioSkills msa-parsing：解析 MSA、提取保守性与 gap 分布
 系列: bioSkills
-配图: ![](../素材/008-msa-parsing/008-fig.png)
+配图: ![](../../素材/alignment/008-msa-parsing/008-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/msa-parsing)
 发布顺序: 008
 /META
@@ -137,7 +137,7 @@ bioSkills 仓库自带示例 `content/库/bioSkills/alignment/alignment-io/examp
 
 ### 标准配置输出
 
-完整复现脚本 `content/素材/008-msa-parsing/run_msa_parsing.py`，原样运行关键结果：
+完整复现脚本 `content/素材/alignment/008-msa-parsing/run_msa_parsing.py`，原样运行关键结果：
 
 ```text
 [Loading] 4 sequences, 21 columns  (format=clustal)
@@ -159,7 +159,7 @@ bioSkills 仓库自带示例 `content/库/bioSkills/alignment/alignment-io/examp
 [MI / APC] L=21 < 100 -> APC 过校正警示; 原始 MI 全 0（样本无共变）
 ```
 
-![](../素材/008-msa-parsing/008-fig.png)
+![](../../素材/alignment/008-msa-parsing/008-fig.png)
 
 ### 4 条近 identical 序列下加权指标退化
 

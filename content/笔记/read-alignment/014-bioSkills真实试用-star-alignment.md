@@ -4,7 +4,7 @@ skill: read-alignment/star-alignment
 trial: "014"
 category: "bioSkills 真实试用"
 tags: ["bioSkills", "STAR", "RNA-seq", "splice-aware", "比对", "真实试用"]
-cover: "content/素材/014-star-alignment/014-fig.png"
+cover: "content/素材/read-alignment/014-star-alignment/014-fig.png"
 date: "2026-08-27"
 status: "partial-real"
 note: "genomeGenerate 真实跑通；比对步骤因沙箱环境限制未执行（详见 4.4）。"
@@ -102,7 +102,7 @@ Number of input reads |   0
 - 输入压缩：STAR 不自动解压，`.gz` 必须 `--readFilesCommand zcat`。
 - 读组：用 `--outSAMattrRGline`（空格分隔），否则 GATK 缺 @RG。
 
-![014 STAR 跨比对器 MAPQ 标度与 genomeGenerate 参数小结](../素材/014-star-alignment/014-fig.png)
+![014 STAR 跨比对器 MAPQ 标度与 genomeGenerate 参数小结](../../素材/read-alignment/014-star-alignment/014-fig.png)
 
 ## 6 小结
 

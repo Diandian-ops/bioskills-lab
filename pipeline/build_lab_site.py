@@ -7,10 +7,6 @@ import html, os, shutil, re, markdown as _md
 # 这样脚本在本地 Mac 与 CI(ubuntu) 上都能跑，不再硬编码绝对路径
 BASE = os.environ.get("REDBOOK_BASE") or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BIO = BASE + "/content/库/bioSkills"
-IMG004 = BASE + "/content/素材/004-pairwise"
-IMG005 = BASE + "/content/素材/005-msa-statistics"
-EXP004 = BASE + "/pipeline/004-pairwise-redo"
-EXP005 = BASE + "/pipeline/005-msa-statistics"
 SITE = BASE + "/output/bioSkills-site"
 ASSETS = SITE + "/assets"
 
@@ -466,41 +462,40 @@ idx += map_sec
 idx += '<footer><p>所有数据均来自真实运行，代码可在对应 pipeline/ 目录复现。单篇图文版已发小红书。</p><p>bioSkills 真实试用实验室 - 持续更新中</p></footer>'
 idx = page("", "index", idx)
 
-# ---------- alignment 总览 ----------
-al = '<div class="crumb"><a href="../index.html">实验室首页</a> › alignment</div>'
-al += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>alignment</h1><p class="sub">序列比对家族 - 7 个 skill，已完成 7 个深度试用</p></div>'
-al += '<div class="sklist">'
-al += '<a href="pairwise-alignment.html"><span>pairwise-alignment</span><span class="tag tag-done">DONE 004</span></a>'
-al += '<a href="msa-statistics.html"><span>msa-statistics</span><span class="tag tag-done">DONE 005</span></a>'
-al += '<a href="alignment-trimming.html"><span>alignment-trimming</span><span class="tag tag-done">DONE 006</span></a>'
-al += '<a href="multiple-alignment.html"><span>multiple-alignment</span><span class="tag tag-done">DONE 007</span></a>'
-al += '<a href="msa-parsing.html"><span>msa-parsing</span><span class="tag tag-done">DONE 008</span></a>'
-al += '<a href="alignment-io.html"><span>alignment-io</span><span class="tag tag-done">DONE 009</span></a>'
-al += '<a href="structural-alignment.html"><span>structural-alignment</span><span class="tag tag-done">DONE 010</span></a>'
-al += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
-al += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
-al = page("../", "alignment", al)
-
-# ---------- read-alignment 总览 ----------
-ra = '<div class="crumb"><a href="../index.html">实验室首页</a> › read-alignment</div>'
-ra += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>read-alignment</h1><p class="sub">读长比对家族 - 4 个 skill，已完成 4 个深度试用</p></div>'
-ra += '<div class="sklist">'
-ra += '<a href="bowtie2-alignment.html"><span>bowtie2-alignment</span><span class="tag tag-done">DONE 011</span></a>'
-ra += '<a href="bwa-alignment.html"><span>bwa-alignment</span><span class="tag tag-done">DONE 012</span></a>'
-ra += '<a href="hisat2-alignment.html"><span>hisat2-alignment</span><span class="tag tag-done">DONE 013</span></a>'
-ra += '<a href="star-alignment.html"><span>star-alignment</span><span class="tag tag-done">DONE 014</span></a>'
-ra += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
-ra += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
-ra = page("../", "read-alignment", ra)
-
-# ---------- variant-calling 总览 ----------
-vc = '<div class="crumb"><a href="../index.html">实验室首页</a> › variant-calling</div>'
-vc += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>variant-calling</h1><p class="sub">变异检出家族 - 1 个 skill，已完成 1 个深度试用</p></div>'
-vc += '<div class="sklist">'
-vc += '<a href="variant-calling.html"><span>variant-calling</span><span class="tag tag-done">DONE 015</span></a>'
-vc += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
-vc += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
-vc = page("../", "variant-calling", vc)
+# ---------- 分类总览页（按 TRIALS 配置自动生成，消除硬编码）----------
+CAT_META = {
+    "alignment": "序列比对家族",
+    "read-alignment": "读长比对家族",
+    "variant-calling": "变异检出家族",
+}
+TRIALS = [
+    # cat, num, skill(站点文件名), kicker, active(sidebar 高亮)
+    ("alignment",       "004", "pairwise-alignment",   "DEEP DIVE 01", "pairwise"),
+    ("alignment",       "005", "msa-statistics",       "DEEP DIVE 02", "msa"),
+    ("alignment",       "006", "alignment-trimming",   "DEEP DIVE 03", "trimming"),
+    ("alignment",       "007", "multiple-alignment",   "DEEP DIVE 04", "multalign"),
+    ("alignment",       "008", "msa-parsing",          "DEEP DIVE 05", "msaparse"),
+    ("alignment",       "009", "alignment-io",         "DEEP DIVE 06", "alnio"),
+    ("alignment",       "010", "structural-alignment", "DEEP DIVE 07", "struct"),
+    ("read-alignment",  "011", "bowtie2-alignment",    "DEEP DIVE 08", "bowtie2"),
+    ("read-alignment",  "012", "bwa-alignment",        "DEEP DIVE 09", "bwa"),
+    ("read-alignment",  "013", "hisat2-alignment",     "DEEP DIVE 10", "hisat2"),
+    ("read-alignment",  "014", "star-alignment",       "DEEP DIVE 11", "star"),
+    ("variant-calling", "015", "variant-calling",      "DEEP DIVE 12", "varcall"),
+]
+def cat_page(cat):
+    items = pages.get(cat, [])
+    n = len(items)
+    h = '<div class="crumb"><a href="../index.html">实验室首页</a> › %s</div>' % cat
+    h += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>%s</h1><p class="sub">%s - %d 个 skill，已完成 %d 个深度试用</p></div>' % (cat, CAT_META.get(cat, cat), n, n)
+    h += '<div class="sklist">'
+    for skill, _ in items:
+        nums = [t[1] for t in TRIALS if t[0] == cat and t[2] == skill]
+        num = nums[0] if nums else "?"
+        h += '<a href="%s.html"><span>%s</span><span class="tag tag-done">DONE %s</span></a>' % (skill, skill, num)
+    h += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
+    h += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
+    return page("../", cat, h)
 
 def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_blocks, cat="alignment"):
     c = '<div class="crumb"><a href="%sindex.html">实验室首页</a> › <a href="%s/index.html">%s</a> › %s</div>' % (prefix, cat, cat, crumb)
@@ -513,94 +508,35 @@ def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_b
     c += '<footer><p><a href="%s/index.html">← 返回 %s 分支</a></p></footer>' % (cat, cat)
     return page(prefix, active, c)
 
-NOTE004 = BASE + "/content/笔记/004-bioSkills真实试用-pairwise-alignment.md"
-NOTE005 = BASE + "/content/笔记/005-bioSkills真实试用-msa-statistics.md"
-NOTE006 = BASE + "/content/笔记/006-bioSkills真实试用-alignment-trimming.md"
-NOTE007 = BASE + "/content/笔记/007-bioSkills真实试用-multiple-alignment.md"
-body004, meta004, need004 = load_note(NOTE004)
-p004 = skill_page("../", "pairwise", "pairwise-alignment", "DEEP DIVE 01",
-                 meta004.get("标题", "pairwise-alignment"),
-                 meta004.get("副标题", ""), body004, [])
-body005, meta005, need005 = load_note(NOTE005)
-p005 = skill_page("../", "msa", "msa-statistics", "DEEP DIVE 02",
-                 meta005.get("标题", "msa-statistics"),
-                 meta005.get("副标题", ""), body005, [])
-body006, meta006, need006 = load_note(NOTE006)
-p006 = skill_page("../", "trimming", "alignment-trimming", "DEEP DIVE 03",
-                 meta006.get("标题", "alignment-trimming"),
-                 meta006.get("副标题", ""), body006, [])
-body007, meta007, need007 = load_note(NOTE007)
-p007 = skill_page("../", "multalign", "multiple-alignment", "DEEP DIVE 04",
-                 meta007.get("标题", "multiple-alignment"),
-                 meta007.get("副标题", ""), body007, [])
-NOTE008 = BASE + "/content/笔记/008-bioSkills真实试用-msa-parsing.md"
-body008, meta008, need008 = load_note(NOTE008)
-p008 = skill_page("../", "msaparse", "msa-parsing", "DEEP DIVE 05",
-                 meta008.get("标题", "msa-parsing"),
-                 meta008.get("副标题", ""), body008, [])
-NOTE009 = BASE + "/content/笔记/009-bioSkills真实试用-alignment-io.md"
-body009, meta009, need009 = load_note(NOTE009)
-p009 = skill_page("../", "alnio", "alignment-io", "DEEP DIVE 06",
-                 meta009.get("标题", "alignment-io"),
-                 meta009.get("副标题", ""), body009, [])
-NOTE010 = BASE + "/content/笔记/010-bioSkills真实试用-structural-alignment.md"
-body010, meta010, need010 = load_note(NOTE010)
-p010 = skill_page("../", "struct", "structural-alignment", "DEEP DIVE 07",
-                 meta010.get("标题", "structural-alignment"),
-                 meta010.get("副标题", ""), body010, [])
+# ---------- 笔记加载（按 TRIALS 配置扫描 content/笔记/<cat>/）----------
+import glob as _glob
+pages = {}
+all_need = []
+for cat, num, skill, kicker, active in TRIALS:
+    cand = _glob.glob(BASE + ("/content/笔记/%s/%s-bioSkills真实试用-*.md" % (cat, num)))
+    if not cand:
+        print("[WARN] 未找到笔记: %s/%s" % (cat, num)); continue
+    body, meta, need = load_note(cand[0])
+    all_need += need
+    pages.setdefault(cat, []).append((skill, skill_page("../", active, skill, kicker,
+                                        meta.get("标题", skill), meta.get("副标题", ""), body, [], cat=cat)))
+al = cat_page("alignment")
+ra = cat_page("read-alignment")
+vc = cat_page("variant-calling")
 
-# ---------- read-alignment 家族（011-014）----------
-NOTE011 = BASE + "/content/笔记/011-bioSkills真实试用-bowtie2-alignment.md"
-body011, meta011, need011 = load_note(NOTE011)
-p011 = skill_page("../", "bowtie2", "bowtie2-alignment", "DEEP DIVE 08",
-                 meta011.get("标题", "bowtie2-alignment"),
-                 meta011.get("副标题", ""), body011, [], cat="read-alignment")
-NOTE012 = BASE + "/content/笔记/012-bioSkills真实试用-bwa-alignment.md"
-body012, meta012, need012 = load_note(NOTE012)
-p012 = skill_page("../", "bwa", "bwa-alignment", "DEEP DIVE 09",
-                 meta012.get("标题", "bwa-alignment"),
-                 meta012.get("副标题", ""), body012, [], cat="read-alignment")
-NOTE013 = BASE + "/content/笔记/013-bioSkills真实试用-hisat2-alignment.md"
-body013, meta013, need013 = load_note(NOTE013)
-p013 = skill_page("../", "hisat2", "hisat2-alignment", "DEEP DIVE 10",
-                 meta013.get("标题", "hisat2-alignment"),
-                 meta013.get("副标题", ""), body013, [], cat="read-alignment")
-NOTE014 = BASE + "/content/笔记/014-bioSkills真实试用-star-alignment.md"
-body014, meta014, need014 = load_note(NOTE014)
-p014 = skill_page("../", "star", "star-alignment", "DEEP DIVE 11",
-                 meta014.get("标题", "star-alignment"),
-                 meta014.get("副标题", ""), body014, [], cat="read-alignment")
-
-# ---------- variant-calling（015）----------
-NOTE015 = BASE + "/content/笔记/015-bioSkills真实试用-variant-calling.md"
-body015, meta015, need015 = load_note(NOTE015)
-p015 = skill_page("../", "varcall", "variant-calling", "DEEP DIVE 12",
-                 meta015.get("标题", "variant-calling"),
-                 meta015.get("副标题", ""), body015, [], cat="variant-calling")
-
-# ---------- 写出 ----------
+# ---------- 写出（按 pages 配置动态生成）----------
 shutil.rmtree(SITE, ignore_errors=True)
-os.makedirs(SITE); os.makedirs(ASSETS); os.makedirs(SITE + "/alignment"); os.makedirs(SITE + "/read-alignment"); os.makedirs(SITE + "/variant-calling")
-for _src in sorted(set(need004 + need005 + need006 + need007 + need008 + need009 + need010
-                       + need011 + need012 + need013 + need014 + need015)):
+os.makedirs(SITE); os.makedirs(ASSETS)
+for cat in pages:
+    os.makedirs(SITE + "/" + cat)
+for _src in sorted(set(all_need)):
     shutil.copy(_src, ASSETS + "/" + os.path.basename(_src))
 with open(SITE + "/style.css", "w", encoding="utf-8") as f: f.write(STYLE)
 with open(SITE + "/index.html", "w", encoding="utf-8") as f: f.write(idx)
-with open(SITE + "/alignment/index.html", "w", encoding="utf-8") as f: f.write(al)
-with open(SITE + "/read-alignment/index.html", "w", encoding="utf-8") as f: f.write(ra)
-with open(SITE + "/variant-calling/index.html", "w", encoding="utf-8") as f: f.write(vc)
-with open(SITE + "/alignment/pairwise-alignment.html", "w", encoding="utf-8") as f: f.write(p004)
-with open(SITE + "/alignment/msa-statistics.html", "w", encoding="utf-8") as f: f.write(p005)
-with open(SITE + "/alignment/alignment-trimming.html", "w", encoding="utf-8") as f: f.write(p006)
-with open(SITE + "/alignment/multiple-alignment.html", "w", encoding="utf-8") as f: f.write(p007)
-with open(SITE + "/alignment/msa-parsing.html", "w", encoding="utf-8") as f: f.write(p008)
-with open(SITE + "/alignment/alignment-io.html", "w", encoding="utf-8") as f: f.write(p009)
-with open(SITE + "/alignment/structural-alignment.html", "w", encoding="utf-8") as f: f.write(p010)
-with open(SITE + "/read-alignment/bowtie2-alignment.html", "w", encoding="utf-8") as f: f.write(p011)
-with open(SITE + "/read-alignment/bwa-alignment.html", "w", encoding="utf-8") as f: f.write(p012)
-with open(SITE + "/read-alignment/hisat2-alignment.html", "w", encoding="utf-8") as f: f.write(p013)
-with open(SITE + "/read-alignment/star-alignment.html", "w", encoding="utf-8") as f: f.write(p014)
-with open(SITE + "/variant-calling/variant-calling.html", "w", encoding="utf-8") as f: f.write(p015)
+for cat in pages:
+    with open(SITE + "/%s/index.html" % cat, "w", encoding="utf-8") as f: f.write(cat_page(cat))
+    for skill, html in pages[cat]:
+        with open(SITE + "/%s/%s.html" % (cat, skill), "w", encoding="utf-8") as f: f.write(html)
 print("站点已生成 -> " + SITE)
 for root, _, files in os.walk(SITE):
     for fn in sorted(files):

@@ -2,7 +2,7 @@
 META
 标题: bioSkills multiple-alignment：MAFFT L-INS-i 构建多序列比对
 系列: bioSkills
-配图: ![](../素材/007-multiple-alignment/007-fig.png)
+配图: ![](../../素材/alignment/007-multiple-alignment/007-fig.png)
 参考仓库: GPTomics/bioSkills (alignment/multiple-alignment)
 发布顺序: 007
 /META
@@ -138,7 +138,7 @@ Overall gap fraction: 35.3%
 
 两种调用（文档原命 `mafft --localpair --maxiterate 1000` 与仓库 `run_msa.py`）产物逐字节一致（`aligned.fasta` 与 `aligned_linsi.fasta` 均 387 字节，`diff` 报告 IDENTICAL）。
 
-![](../素材/007-multiple-alignment/007-fig.png)
+![](../../素材/alignment/007-multiple-alignment/007-fig.png)
 
 上图：3 条序列 × 102 列的 gap 分布热力图（红=gap）。基于 `aligned.fasta` 真实数据，零夹带。35.3% 的整体 gap 比例直观体现了合成非同源序列被强制对齐的后果——这正是 skill「When NOT to Run MSA」一节警告的现象。
 

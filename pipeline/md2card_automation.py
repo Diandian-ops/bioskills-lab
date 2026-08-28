@@ -14,8 +14,9 @@ md2card_automation.py — 用 Playwright 驱动本地 md2card 工作台，把 bi
                                          [--assets DIR] [--out output/xhs-cards] [--url URL]
 
 产物（ZIP 下载后已清理，只留 PNG）：
-  <out>/<slug>/<theme>-<cover>[-hd]/01.png, 02.png, ...
-  例：output/xhs-cards/005-bioSkills真实试用-msa-statistics/notebook-standalone-hd/01.png
+  <out>/<分类>/<slug>/<theme>-<cover>[-hd]/01.png, 02.png, ...
+  例：output/xhs-cards/alignment/005-bioSkills真实试用-msa-statistics/notebook-standalone-hd/01.png
+  （分类从笔记路径 content/笔记/<分类>/<md> 自动推导；001-003 无分类则落到 <out>/<slug>/）
 """
 import argparse
 import os
@@ -48,7 +49,13 @@ def find_assets_dir(md_path: str, explicit: str | None) -> str | None:
         return explicit if os.path.isdir(explicit) else None
     note_dir = os.path.dirname(os.path.abspath(md_path))
     slug = slugify(md_path)
-    assets_root = os.path.abspath(os.path.join(note_dir, "..", "素材"))
+    # 分类 = 笔记所在子目录名（content/笔记/<cat>/<md> -> cat）；
+    # 若笔记直接放在 content/笔记/ 下（早期 001-003），则无分类层。
+    cat = os.path.basename(note_dir)
+    # 笔记在 content/笔记/<cat>/<md>，退两层到 content/，再进 素材
+    assets_root = os.path.abspath(os.path.join(note_dir, "..", "..", "素材"))
+    if cat and cat != "笔记" and os.path.isdir(os.path.join(assets_root, cat)):
+        assets_root = os.path.join(assets_root, cat)
     if not os.path.isdir(assets_root):
         return None
     m = re.match(r"^(\d+)", slug)
@@ -80,7 +87,13 @@ def run(md_path, theme, density, cover, canvas, hd, assets, out, url):
 
     slug = slugify(md_path)
     variant = f"{theme}-{cover}" + ("-hd" if hd else "")
-    out_dir = os.path.abspath(os.path.join(out, slug, variant))
+    # 分类层：从笔记所在子目录推导，使产物落到 output/xhs-cards/<cat>/<slug>/<variant>
+    cat = os.path.basename(os.path.dirname(md_path))
+    out_parts = [out]
+    if cat and cat != "笔记":
+        out_parts.append(cat)
+    out_parts += [slug, variant]
+    out_dir = os.path.abspath(os.path.join(*out_parts))
     os.makedirs(out_dir, exist_ok=True)
 
     with sync_playwright() as p:

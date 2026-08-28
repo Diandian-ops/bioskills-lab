@@ -76,7 +76,7 @@ bowtie2 -p 8 --very-sensitive --local --dovetail -X 2000 \
 ### 4.1 环境
 
 - 工具：conda 新建 `bioaligners` 环境（`-c bioconda -c conda-forge bowtie2 bwa hisat2`），bowtie2/bowtie2-build 2.5.5；samtools 用本机 anaconda 1.21。
-- 复现脚本：`content/素材/011-bowtie2-alignment/run_bowtie2.py`（全部走子进程真实调用，无模拟）。
+- 复现脚本：`content/素材/read-alignment/011-bowtie2-alignment/run_bowtie2.py`（全部走子进程真实调用，无模拟）。
 
 ### 4.2 数据
 
@@ -108,7 +108,7 @@ bowtie2 -p 8 --very-sensitive --local --dovetail -X 2000 \
 - `-x` 永远传索引 basename（构建时 `bowtie2-build ref ref_index` 的 `ref_index` 那一段），不要带 `.bt2` 后缀或具体分片文件。
 - 带接头污染的 reads 优先 `--local` 或先剪切再 end-to-end，不要硬上 end-to-end。
 
-![011 bowtie2 跨模式 MAPQ 标度与适配器污染对比](../素材/011-bowtie2-alignment/011-fig.png)
+![011 bowtie2 跨模式 MAPQ 标度与适配器污染对比](../../素材/read-alignment/011-bowtie2-alignment/011-fig.png)
 
 ## 六、小结
 

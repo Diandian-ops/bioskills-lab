@@ -7,7 +7,8 @@ trial2xhs.py — bioSkills 笔记 → 小红书出图 的编排器（human-in-th
   1) Gate 机检：先跑 gate_lint 拦下机械违规（ERROR 级不让进出图）
   2) md2card 出图：lint 通过后用 Playwright 驱动本地 md2card 工作台，
      按标准化默认（notebook 主题 / standalone 独立封面 / --hd 2160x2880）出图，
-     产物落 output/xhs-cards/<slug>/notebook-standalone-hd/
+     产物落 output/xhs-cards/<分类>/<slug>/notebook-standalone-hd/
+     （分类从笔记路径 content/笔记/<分类>/<md> 自动推导；001-003 无分类则落到 <out>/<slug>/）
 
 设计原则（对齐用户判定）：
   - 只自动化「格式/质量门槛 + 出图」，不自动化「选题 / 写内容 / 发帖」，
@@ -111,7 +112,12 @@ def main():
     base = re.sub(r"\.(md|markdown|txt)$", "", base, flags=re.I)
     base = re.sub(r"[^\w\u4e00-\u9fff-]+", "_", base).strip("_") or "note"
     variant = f"{args.theme}-{args.cover}" + ("-hd" if args.hd else "")
-    out_dir = os.path.join(OUT_ROOT, base, variant)
+    cat = os.path.basename(os.path.dirname(os.path.abspath(md)))
+    out_parts = [OUT_ROOT]
+    if cat and cat != "笔记":
+        out_parts.append(cat)
+    out_parts += [base, variant]
+    out_dir = os.path.join(*out_parts)
     print(f"\n[✓] 完成。产物目录：\n    {out_dir}")
     sys.exit(0)
 

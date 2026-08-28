@@ -68,7 +68,7 @@ hisat2 -p 8 -x hisat2_index --rna-strandness RF --dta -1 r1.fq.gz -2 r2.fq.gz | 
 ### 4.1 环境
 
 - 工具：conda `bioaligners` 环境（`-c bioconda -c conda-forge bowtie2 bwa hisat2 bwa-mem2`），hisat2 2.2.3；samtools 用本机 anaconda 1.21。
-- 复现脚本：`content/素材/013-hisat2-alignment/run_hisat2.py`（全部子进程真实调用）。
+- 复现脚本：`content/素材/read-alignment/013-hisat2-alignment/run_hisat2.py`（全部子进程真实调用）。
 
 ### 4.2 数据
 
@@ -101,7 +101,7 @@ hisat2 -p 8 -x hisat2_index --rna-strandness RF --dta -1 r1.fq.gz -2 r2.fq.gz | 
 - 链特异性按建库化学设（dUTP/TruSeq → RF），否则计数约减半。
 - 比对时设 `--rna-strandness` 与 `@RG`；长内含子基因按需调大 `--max-intronlen`。
 
-![013 hisat2 剪接 CIGAR/两趟法/XS 标签/MAPQ60 实测小结](../素材/013-hisat2-alignment/013-fig.png)
+![013 hisat2 剪接 CIGAR/两趟法/XS 标签/MAPQ60 实测小结](../../素材/read-alignment/013-hisat2-alignment/013-fig.png)
 
 ## 六、小结
 
