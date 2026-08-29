@@ -23,3 +23,9 @@ content/库/md2card/
 
 # WorkBuddy 临时产物（预览/输出缓存，不进版本库）
 .workbuddy/artifacts/
+
+# 真跑工作区（015 起）：保留中间产物供本地复现，不入库；
+# 可独立复现的最小集已落在 content/素材/<cat>/00X-*/（含 make_figs.py / repro_transcript.txt）。
+# 注：004–006 早期工作区已入库，故只忽略 015 及之后。
+pipeline/01[5-9]-*/
+pipeline/02[0-9]-*/

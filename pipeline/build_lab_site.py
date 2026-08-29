@@ -121,7 +121,18 @@ READ_ALIGN_SUBS = [("bowtie2", "bowtie2-alignment", "read-alignment/bowtie2-alig
                   ("hisat2", "hisat2-alignment", "read-alignment/hisat2-alignment.html"),
                   ("star", "star-alignment", "read-alignment/star-alignment.html")]
 VARCALL_SUBS = [("varcall", "variant-calling", "variant-calling/variant-calling.html"),
-                ("vcfbasics", "vcf-basics", "variant-calling/vcf-basics.html")]
+                ("vcfbasics", "vcf-basics", "variant-calling/vcf-basics.html"),
+                ("vcfnorm", "variant-normalization", "variant-calling/variant-normalization.html"),
+                ("vcstats", "vcf-statistics", "variant-calling/vcf-statistics.html"),
+                ("vcfmanip", "vcf-manipulation", "variant-calling/vcf-manipulation.html"),
+                ("filtering", "filtering-best-practices", "variant-calling/filtering-best-practices.html"),
+                ("annot", "variant-annotation", "variant-calling/variant-annotation.html"),
+                ("gatkvc", "gatk-variant-calling", "variant-calling/gatk-variant-calling.html"),
+                ("jointcall", "joint-calling", "variant-calling/joint-calling.html"),
+                ("svcall", "structural-variant-calling", "variant-calling/structural-variant-calling.html"),
+                ("consensus", "consensus-sequences", "variant-calling/consensus-sequences.html"),
+                ("clinical", "clinical-interpretation", "variant-calling/clinical-interpretation.html"),
+                ("deepvariant", "deepvariant", "variant-calling/deepvariant.html")]
 # 同一套「family 子页」机制同时服务 alignment / read-alignment / variant-calling，避免对 category 名硬编码
 FAMILY_SUBS = {"alignment": ALIGN_SUBS, "read-alignment": READ_ALIGN_SUBS,
                "variant-calling": VARCALL_SUBS}
@@ -486,6 +497,17 @@ TRIALS = [
     ("read-alignment",  "014", "star-alignment",       "DEEP DIVE 11", "star"),
     ("variant-calling", "015", "variant-calling",      "DEEP DIVE 12", "varcall"),
     ("variant-calling", "016", "vcf-basics",           "DEEP DIVE 13", "vcfbasics"),
+    ("variant-calling", "017", "variant-normalization", "DEEP DIVE 14", "vcfnorm"),
+    ("variant-calling", "018", "vcf-statistics",        "DEEP DIVE 15", "vcstats"),
+    ("variant-calling", "019", "vcf-manipulation",      "DEEP DIVE 16", "vcfmanip"),
+    ("variant-calling", "020", "filtering-best-practices", "DEEP DIVE 17", "filtering"),
+    ("variant-calling", "021", "variant-annotation",    "DEEP DIVE 18", "annot"),
+    ("variant-calling", "022", "gatk-variant-calling",  "DEEP DIVE 19", "gatkvc"),
+    ("variant-calling", "023", "joint-calling",         "DEEP DIVE 20", "jointcall"),
+    ("variant-calling", "024", "structural-variant-calling", "DEEP DIVE 21", "svcall"),
+    ("variant-calling", "025", "consensus-sequences",   "DEEP DIVE 22", "consensus"),
+    ("variant-calling", "026", "clinical-interpretation", "DEEP DIVE 23", "clinical"),
+    ("variant-calling", "027", "deepvariant",           "DEEP DIVE 24", "deepvariant"),
 ]
 def cat_page(cat):
     items = pages.get(cat, [])

@@ -1,0 +1,47 @@
+===== 1) 远程提取 ClinVar chr22:23.0-23.2Mb =====
+clinvar records:        0
+===== 2) ClinVar 关键 INFO 字段定义 =====
+##INFO=<ID=CLNDN,Number=.,Type=String,Description="ClinVar's preferred disease name for the concept specified by disease identifiers in CLNDISDB">
+##INFO=<ID=CLNDNINCL,Number=.,Type=String,Description="For included Variant : ClinVar's preferred disease name for the concept specified by disease identifiers 
+##INFO=<ID=CLNDISDB,Number=.,Type=String,Description="Tag-value pairs of disease database name and identifier submitted for germline classifications, e.g. OMIM:
+##INFO=<ID=CLNREVSTAT,Number=.,Type=String,Description="ClinVar review status of germline classification for the Variation ID">
+##INFO=<ID=CLNSIG,Number=.,Type=String,Description="Aggregate germline classification for this single variant; multiple values are separated by a vertical bar">
+===== 3) 样例记录 =====
+===== 4) CLNSIG 分布 =====
+===== 5) CLNREVSTAT（星级）分布 =====
+===== 扫描 ClinVar chr22 全部位点 =====
+chr22 ClinVar 记录数:    96854
+===== 最密的 200kb 窗口 (Top 6) =====
+21200000	5550
+29000000	4785
+50800000	4551
+50600000	3551
+51000000	3240
+30000000	2638
+===== 1) 提取 ClinVar 窗口 22:21200000-21400000 =====
+clinvar_win records:     5550
+===== 2) 提取 1000G 同窗口 + 子集 5 样本 + 规范化 =====
+kg_win records:     6599
+Lines   total/split/joined/realigned/mismatch_removed/dup_removed/skipped:	6599/48/0/16/0/0/0
+kg5.norm records:     6652
+===== 3) bcftools annotate 挂载 ClinVar 字段 =====
+annotated records:     6652
+带 CLNSIG 的记录数: 6652
+===== 4) CLNREVSTAT 星级分布（在 1000G 位点上） =====
+ 168 criteria_provided,_multiple_submitters,_no_conflicts
+ 157 criteria_provided,_single_submitter
+  24 criteria_provided,_conflicting_classifications
+   3 reviewed_by_expert_panel
+===== 5) CLNSIG 分布 =====
+  99 Uncertain_significance
+  98 Benign
+  84 Likely_benign
+  43 Benign/Likely_benign
+  24 Conflicting_classifications_of_pathogenicity
+   4 Likely_pathogenic
+===== 6) 精确注释命中数 =====
+    6652
+===== 7) 按星级分层（是否可作证据） =====
+===== 8) grpmax vs 全局 AF（用 1000G 五大人群 AF 演示） =====
+DONE
+===== 9) AF 与 ClinVar 分类的关系 =====

@@ -9,11 +9,10 @@
   - legend 不得压住数据点
 数据点位置一律保持真实值，不做 jitter。
 """
-import os
+import os, subprocess
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from cyvcf2 import VCF
 
 BRICK = "#b5482f"
 CELADON = "#2f7d72"
@@ -22,21 +21,26 @@ OUT = os.path.dirname(os.path.abspath(__file__))  # 图与脚本平铺，与 008
 VCF_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "variants.vcf.gz")
 
 # ---- 取数：GQ 由 PL 推导（SKILL.md: GQ = 两个最小 PL 之差，上限 99）----
+# 用 bcftools query 取字段（与其余素材脚本一致，避免 cyvcf2 依赖）
+def _bcft(*args):
+    return subprocess.run(["bcftools"] + list(args),
+                          capture_output=True, text=True).stdout
+
+_FMT = '%POS\t%QUAL\t%INFO/DP\t[%AD]\t[%PL]\t[%DP]\t%TYPE\n'
 rows = []
-v = VCF(VCF_PATH)
-for var in v:
-    pl = var.format("PL")[0].tolist()
+for line in _bcft("query", "-f", _FMT, VCF_PATH).strip().splitlines():
+    pos_s, qual_s, info_dp_s, ad_s, pl_s, fmt_dp_s, vtype = line.split("\t")
+    pl = [int(x) for x in pl_s.split(",")]
     s = sorted(pl)
     gq = min(s[1] - s[0], 99)
-    ad = var.format("AD")[0].tolist()
+    ad = [int(x) for x in ad_s.split(",")]
     rows.append(dict(
-        pos=var.POS, gt="0/1", pl=pl, idx0=pl.index(min(pl)), gq=gq,
-        qual=var.QUAL, ad=ad, sum_ad=sum(ad),
-        fmt_dp=int(var.format("DP")[0][0]), info_dp=var.INFO.get("DP"),
+        pos=int(pos_s), gt="0/1", pl=pl, idx0=pl.index(min(pl)), gq=gq,
+        qual=float(qual_s), ad=ad, sum_ad=sum(ad),
+        fmt_dp=int(fmt_dp_s), info_dp=int(info_dp_s),
         ab=(ad[1] / (ad[0] + ad[1])) if (ad[0] + ad[1]) else 0.0,
-        vtype=var.var_type,
+        vtype=vtype.lower(),
     ))
-v.close()
 
 
 def _hit(a, b, pad=1.0):

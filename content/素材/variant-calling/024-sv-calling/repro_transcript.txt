@@ -1,0 +1,29 @@
+=== 024 structural-variant-calling 真实跑（bcftools 表示法部分） ===
+数据源: 1000G Phase3 chr22:17.0-17.2 Mb (GRCh37/hs37d5), 5431 记录
+
+1) SVTYPE 分布
+   CNV 3, DEL 2
+
+2) SV 长度过滤的表示法陷阱
+   bcftools view -i 'SVLEN >= 50'            -> 0 条
+   bcftools view -i 'ABS(SVLEN) >= 50'       -> 0 条
+   bcftools view -i 'INFO/END-POS+1 >= 50'   -> 5 条
+   bcftools view -i 'INFO/END-POS >= 50'     -> 5 条
+   原因: 本 callset 的 SVLEN 完全未填充（header 注明 SVLEN 只对 MEI 类 SV 计算），
+        缺失字段时 ABS() 也救不回来，必须改用 END-POS（+1 取决于口径）。
+
+3) SV 记录明细（POS 是最后一个未受影响的锚定碱基）
+   POS=17006397 END=17022734 CNV  长度 END-POS=16337   END-POS+1=16338
+   POS=17026339 END=17027748 DEL  长度 1409 / 1410   CIPOS=-76,50   (非精确)
+   POS=17034911 END=17076240 CNV  长度 41329 / 41330
+   POS=17071709 END=17306387 CNV  长度 234678 / 234679 (跨越提取窗口右边界)
+   POS=17107196 END=17108416 DEL  长度 1220 / 1221    CIPOS=-366,0   (非精确)
+
+4) 断点精度信号
+   2 条 DEL 带 CIPOS（-76,50 与 -366,0）-> 断点非精确，由 RP/深度推导
+   3 条 CNV 无 CIPOS
+   含 CIPOS 记录数 = 2 ; 含 END 记录数 = 5
+
+5) 工具可用性（本环境）
+   delly / manta / sniffles / SURVIVOR / truvari / glnexus : 均未安装
+   -> SV 调用与合并部分未做真跑

@@ -1,0 +1,95 @@
+===== 1) 下载 Ensembl GRCh37 chr22 GFF3 =====
+size: 868053 bytes
+===== GFF3 头部 =====
+##gff-version   3
+##sequence-region   22 1 51304566
+#!genome-build  GRCh37.p13
+#!genome-version GRCh37
+#!genome-date 2009-02
+===== 转 bgzip + tabix 索引 =====
+size: 910749
+===== 统计转录本数量 =====
+700
+1827
+15863
+===== 排序 GFF3（保留 ## 头） =====
+tabix OK
+-rw-r--r--@ 1 zhangdiandian  staff   875K Aug 28 21:30 chr22.gff3.bgz.gz
+-rw-r--r--@ 1 zhangdiandian  staff   2.1K Aug 28 21:30 chr22.gff3.bgz.gz.tbi
+===== 2) 子集 5 样本 =====
+sub5 records:        0
+===== 3) 注释前规范化（norm -m-any） =====
+[E::hts_open_format] Failed to open file "sub5.vcf.gz" : No such file or directory
+Failed to read from sub5.vcf.gz: No such file or directory
+norm records:        0
+===== 4) bcftools csq 后果注释 =====
+[E::hts_open_format] Failed to open file "sub5.norm.vcf.gz" : No such file or directory
+Failed to read from sub5.norm.vcf.gz: No such file or directory
+csq exit=0
+csq lines: 
+===== csq 输出样例 =====
+===== 2) 子集 5 样本 =====
+sub5 records:     5431
+===== 3) 规范化 =====
+         (the command `bcftools reheader` can be used to fix the header)
+Lines   total/split/joined/realigned/mismatch_removed/dup_removed/skipped:	5431/40/0/11/0/0/0
+norm records:     5471
+===== 4) csq =====
+Note: truncated transcript ENST00000465611 with incomplete CDS (this is very common)
+Indexed 4459 transcripts, 27134 exons, 15863 CDSs, 6356 UTRs
+Warning: 33887 warnings were suppressed, increase verbosity to see them all
+Calling...
+Warning: The support for symbolic ALT insertions is experimental.
+csq lines:     1501
+# This file was produced by: bcftools +csq(1.24+htslib-1.24)
+# The command line was:	bcftools +csq -f https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz -g chr22.gff3.bgz.gz -p a -O t -o csq.txt sub5.norm.vcf.gz
+# LOG	[2]Message
+===== 5) 后果类型分布（按转录本块统计） =====
+1476 non_coding
+  10 synonymous
+  10 missense
+   1 5_prime_utr
+===== 6) 涉及基因数 / 转录本数 =====
+      12
+===== 7) 唯一变异位点数（CHROM:POS） =====
+     290
+===== 8) 远程提取 23.0-23.2Mb（基因密集区） =====
+dense records:     8143
+===== 9) 子集 5 样本 + 规范化 =====
+Lines   total/split/joined/realigned/mismatch_removed/dup_removed/skipped:	8143/111/0/10/0/0/0
+norm records:     8261
+===== 10) csq on dense region =====
+Warning: 33887 warnings were suppressed, increase verbosity to see them all
+Calling...
+Warning: The support for symbolic ALT insertions is experimental.
+csq_dense lines:      242
+===== 后果分布（密集区） =====
+  59 missense
+  52 intron
+  50 non_coding
+  34 5_prime_utr
+  25 synonymous
+   7 splice_region
+   6 stop_gained&frameshift
+   5 start_lost
+===== 唯一基因数 =====
+      21
+===== 唯一位点数 =====
+      84
+===== 11) 每个位点命中的转录本块数分布（多转录本歧义） =====
+总位点: 84
+1 个转录本块 : 39 个位点
+2 个转录本块 : 15 个位点
+3 个转录本块 : 1 个位点
+4 个转录本块 : 5 个位点
+5 个转录本块 : 7 个位点
+6 个转录本块 : 13 个位点
+7 个转录本块 : 1 个位点
+8 个转录本块 : 2 个位点
+10 个转录本块 : 1 个位点
+===== 12) 单倍型维度（csq 按 样本×单倍型 输出） =====
+  49 HG00096
+  62 HG00097
+  29 HG00100
+  25 HG00101
+  73 HG00102

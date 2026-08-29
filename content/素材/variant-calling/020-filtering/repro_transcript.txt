@@ -1,0 +1,18 @@
+===== 1) QUAL / FILTER 无信号（整合集特征） =====
+QUAL unique values:        1 (all=100)
+FILTER all PASS: 5431
+===== 2) soft vs hard filter on AF =====
+soft-labelled LowAF count: 4492
+after view -f PASS (retained):      939
+hard-dropped retained:      939
+===== 3) type split: SNPs vs indels filtered separately =====
+snps:     5114 | indels:      319
+===== 4) Ti/Tv validation (filter impact) =====
+Ti/Tv all       : 1.95
+Ti/Tv AF>=0.01  : 2.12
+Ti/Tv SNPs-only : 1.95
+===== 5) extreme DP filter (INFO/DP percentiles) =====
+DP p05=8999  median=17852  p95=23297
+after DP window (0.3x-2x median) retained:     5356
+Ti/Tv after DP window: 1.95
+DONE

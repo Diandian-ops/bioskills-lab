@@ -1,0 +1,45 @@
+# 017 variant-normalization 复现记录 (repro_transcript)
+# 数据源: 1000 Genomes Phase3 整合基因型集 chr22 (GRCh37/hs37d5)
+# 工作切片: chr22 17.0-17.2 Mb (5431 records, 2504 samples)
+# 工具: bcftools 1.24 / samtools 1.21 / bgzip / matplotlib(conda py3.12)
+
+## 0) 数据获取（远程 range 提取，避免下载整条基因组）
+bcftools view -r 22:17000000-17200000 \
+  https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/\
+  ALL.chr22.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz \
+  -Oz -o region_17.vcf.gz && bcftools index region_17.vcf.gz
+
+## 1) 多等位拆分 -m-（真实位点 22:17020038 C->A,T）
+bcftools norm -m- demo_multi.vcf.gz -Oz -o demo_multi.split.vcf.gz
+# 前: 22 17020038 . C A,T   AF=0.000399361,0.0772764
+# 后: 22 17020038 . C A  AF=0.000399361
+#     22 17020038 . C T  AF=0.0772764   (Number=A 正确归位)
+
+## 2) MNP 原子化 --atomize（真实位点 22:17139297 GTGTA->ATGTA,G）
+bcftools norm --atomize demo_mnp.vcf, gz -Oz -o demo_mnp.atom.vcf.gz
+# 后: 22 17139297 . G     A,*     (G->A SNP)
+#     22 17139297 . GTGTA G,*     (GTGTA->G 缺失)
+
+## 3) 左对齐幂等性（参考用远程 hs37d5 URL，带 .fai/.gzi range 提取）
+REF_URL="https://ftp.1000genomes.ebi.ac.uk/vol1/ftp/technical/reference/phase2_reference_assembly_sequence/hs37d5.fa.gz"
+bcftools norm -f "$REF_URL" region_17.vcf.gz -Oz -o region_17.norm.vcf.gz
+# exit=0 ; 记录 5431 -> 5431 ; md5 前后完全一致 a5bef bd26cb39bedacf371a50b48aca5
+
+## 4) REF 不匹配陷阱 -c e / -c w
+# bad.vcf: 22 17020038 . G A  (真实参考为 C)
+bcftools norm -f "$REF_URL" -c e bad.vcf -Oz -o bad.norm.vcf.gz
+# exit=255 -> [E] Reference allele mismatch at 22:17020038 .. REF_SEQ:'C' vs VCF:'G'
+bcftools norm -f "$REF_URL" -c w bad.vcf -Oz -o bad.warn.vcf.gz
+# exit=0 -> [W] REF_MISMATCH  ？22 17020038 G C
+
+## 5) 区段变异构成（真实统计）
+# 总 5431 = SNP-only 5091 + INDEL-only 300 + 多等位 40 ; INDEL 标记 319 ; SV/CNV 5
+
+## 坑
+# - 本地参考切片 >22:17000000-17200000 会被重排为 1-based，与 VCF 全局坐标错位，
+#   导致 REF_SEQ 为空；须用全局坐标参考（远程 URL 或整条 contig）。
+# - -f 参考必须有 .fai/.gzi 索引，否则报 sequence not found。
+
+## 出图
+# python make_figs.py  -> fig1_variant_counts.png, fig2_split_af.png
+# 出图自检 (check_figs.py): TOTAL FAILS = 0

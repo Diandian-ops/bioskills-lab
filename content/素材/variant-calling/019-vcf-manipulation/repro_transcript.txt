@@ -1,0 +1,34 @@
+===== 1) subset samples: keep 5 =====
+subset5 samples:        5
+subset5 records:     5431
+===== 2) exclude samples (-s ^) =====
+excl2 samples:     2502
+===== 3) split by sample-group then merge (union samples) =====
+g1 samples:     1252 | g2 samples:     1252 | merged samples:        0
+===== 4) isec: raw vs norm (set operations need identical representation) =====
+raw-records:     5431 | norm-records:     5471
+isec partitions:
+  0000.vcf.gz:       40
+  0001.vcf.gz:       80
+  0002.vcf.gz:     5391
+  0003.vcf.gz:     5391
+===== 5) fill-tags: stale AC/AN after subsetting samples =====
+BEFORE (subset5, stale AC/AN from 2504-sample originals):
+AFTER (recomputed for 5 samples):
+===== 6) reheader rename sample (show header change) =====
+renamed head sample: SAMPLE_A
+DONE
+===== 3) merge union-samples (FIX) =====
+g1:     1252 | g2:     1252 | merged:     2504 | records:     5431
+===== 5) fill-tags stale AC/AN (FIX) =====
+BEFORE (subset5, AC/AN reflect original 2504 samples):
+AC=0;AF=0.000599042;AN=10;NS=2504;DP=10731;EAS_AF=0.001;AMR_AF=0.0014;AFR_AF=0;EUR_AF=0;SAS_AF=0.001;AA=t|||;VT=SNP
+AFTER (recomputed for 5 samples via fill-tags):
+AC=0;AF=0;AN=10;NS=2504;DP=10731;EAS_AF=0.001;AMR_AF=0.0014;AFR_AF=0;EUR_AF=0;SAS_AF=0.001;AA=t|||;VT=SNP
+DONE2
+===== 5b) stale AC/AN trap via -I (do NOT update) =====
+first record INFO (still says AN=5008 from 2504 samples, but only 5 samples present):
+AC=3;AF=0.000599042;AN=5008;NS=2504;DP=10731;EAS_AF=0.001;AMR_AF=0.0014;AFR_AF=0;EUR_AF=0;SAS_AF=0.001;AA=t|||;VT=SNP
+after fill-tags (AN recomputed to 10 for 5 samples):
+AC=0;AF=0;AN=10;NS=2504;DP=10731;EAS_AF=0.001;AMR_AF=0.0014;AFR_AF=0;EUR_AF=0;SAS_AF=0.001;AA=t|||;VT=SNP
+DONE3

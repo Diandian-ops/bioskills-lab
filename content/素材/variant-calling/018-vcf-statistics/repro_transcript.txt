@@ -1,0 +1,50 @@
+# 018 vcf-statistics 复现记录 (repro transcript)
+
+数据源（真实公开数据，非玩具数据）：
+- 1000 Genomes Phase3 chr22（GRCh37 / hs37d5）
+- 切片 chr22:17.0-17.2 Mb，经 bcftools view -r 抽取
+- 文件：chr22_slice.vcf.gz（含 2504 样本基因型）
+- 工具：bcftools 1.24（系统 PATH）；Python 3.10（anaconda3）
+
+## 数据概要（bcftools stats）
+```
+number of samples:        2504
+number of records:        5431
+number of SNPs:           5114
+number of indels:         319
+number of others (SV/CNV):5
+number of multiallelic:   40  (其中 multiallelic SNP 18)
+```
+
+## Ti/Tv（TSTV 段）
+```
+TSTV  0  3391  1741  1.95  3379  1733  1.95
+# 转换 transitions=3391, 颠换 transversions=1741, overall Ti/Tv=1.95
+```
+
+## Singleton（SiS 段，id=0 总体）
+```
+SiS  0  2041  1324  717  0  0  0  0
+# singleton 总数 2041（其中 transition 1324 / transversion 717 → singleton Ti/Tv≈1.85）
+```
+
+## 每样本 het / non-ref-hom 比值（bcftools stats -s - → PSC 段）
+- 样本数：2504
+- 比值 min=0.021  max=19.077  mean=1.840  median=1.671
+- 每样本缺失基因型均值：0.0（2504 样本均在该 2Mb 区段全覆盖）
+
+## 出图命令
+```
+cd content/素材/variant-calling/018-vcf-statistics
+python make_figs.py        # 读取同目录 chr22_slice.vcf.gz，生成 fig1 / fig2
+```
+
+## 出图自检（bioSkills-figure-quality/check_figs.py）
+```
+TOTAL FAILS = 0
+```
+
+## 说明
+- 选区 chr22:17.0-17.2 Mb 仅为示例切片，Ti/Tv=1.95 接近 WGS 期望（~2.0-2.1），略低因 chr22 整体 CpG 密度偏低。
+- het/hom-alt 比值在 2504 样本间跨度大（0.02–19），反映的是祖先异质性而非单一 cutoff 可解释——与本 skill「祖先依赖、不可全局一刀切」论断一致。
+- 未覆盖：novel/known（需 dbSNP）、缺失率迭代、HWE 精确检验、contamination（需 BAM）、relatedness（需 peddy/somalier）。这些未演示，未造数据补演。

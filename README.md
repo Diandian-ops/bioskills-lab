@@ -25,15 +25,15 @@ RedBook/
 │   │   ├── read-alignment/    # 读长比对家族：011-014
 │   │   │   ├── 011-bioSkills真实试用-bowtie2-alignment.md
 │   │   │   └── ...（012-014 同构）
-│   │   └── variant-calling/   # 变异检出家族：015-016
+│   │   └── variant-calling/   # 变异检出家族：015-027
 │   │       ├── 015-bioSkills真实试用-variant-calling.md
-│   │       └── 016-bioSkills真实试用-vcf-basics.md
+│   │       └── ...（016-027 同构，每个编号两文件）
 │   ├── 素材/                  # 图片按「分类/编号主题」分文件夹，互不打扰
 │   │   ├── 002-bioSkills/
 │   │   ├── 003-alignment/
 │   │   ├── alignment/         # 004-010 素材
 │   │   ├── read-alignment/    # 011-014 素材
-│   │   └── variant-calling/   # 015-016 素材
+│   │   └── variant-calling/   # 015-027 素材
 │   └── 库/                    # 参考仓库 / 外部资源（本地 clone）
 │       ├── bioSkills/         # GPTomics/bioSkills (562 skills, 65 categories, 本地统计)
 │       │   # 上游: https://github.com/GPTomics/bioSkills
@@ -86,6 +86,17 @@ RedBook/
 | 014 | star-alignment | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/read-alignment/014-bioSkills真实试用-star-alignment.md) · [小红书](content/笔记/read-alignment/014-bioSkills小红书-star-alignment-正文.md) | content/素材/read-alignment/014-star-alignment/ |
 | 015 | variant-calling | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/015-bioSkills真实试用-variant-calling.md) · [小红书](content/笔记/variant-calling/015-bioSkills小红书-variant-calling-正文.md) | content/素材/variant-calling/015-variant-calling/ |
 | 016 | vcf-basics | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/016-bioSkills真实试用-vcf-basics.md) · [小红书](content/笔记/variant-calling/016-bioSkills小红书-vcf-basics-正文.md) | content/素材/variant-calling/016-vcf-basics/ |
+| 017 | variant-normalization | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/017-bioSkills真实试用-variant-normalization.md) · [小红书](content/笔记/variant-calling/017-bioSkills小红书-variant-normalization-正文.md) | content/素材/variant-calling/017-variant-normalization/ |
+| 018 | vcf-statistics | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/018-bioSkills真实试用-vcf-statistics.md) · [小红书](content/笔记/variant-calling/018-bioSkills小红书-vcf-statistics-正文.md) | content/素材/variant-calling/018-vcf-statistics/ |
+| 019 | vcf-manipulation | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/019-bioSkills真实试用-vcf-manipulation.md) · [小红书](content/笔记/variant-calling/019-bioSkills小红书-vcf-manipulation-正文.md) | content/素材/variant-calling/019-vcf-manipulation/ |
+| 020 | filtering-best-practices | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/020-bioSkills真实试用-filtering-best-practices.md) · [小红书](content/笔记/variant-calling/020-bioSkills小红书-filtering-best-practices-正文.md) | content/素材/variant-calling/020-filtering/ |
+| 021 | variant-annotation | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/021-bioSkills真实试用-variant-annotation.md) · [小红书](content/笔记/variant-calling/021-bioSkills小红书-variant-annotation-正文.md) | content/素材/variant-calling/021-annotation/ |
+| 022 | gatk-variant-calling | 概念稿（GATK/BAM 缺失） | 已入站点 | [真实试用](content/笔记/variant-calling/022-bioSkills真实试用-gatk-variant-calling.md) · [小红书](content/笔记/variant-calling/022-bioSkills小红书-gatk-variant-calling-正文.md) | —（无真跑产物） |
+| 023 | joint-calling | 概念稿（GATK/GLnexus 缺失） | 已入站点 | [真实试用](content/笔记/variant-calling/023-bioSkills真实试用-joint-calling.md) · [小红书](content/笔记/variant-calling/023-bioSkills小红书-joint-calling-正文.md) | —（无真跑产物） |
+| 024 | structural-variant-calling | 真跑（表示法）+ 概念（调用器） | 已入站点 | [真实试用](content/笔记/variant-calling/024-bioSkills真实试用-structural-variant-calling.md) · [小红书](content/笔记/variant-calling/024-bioSkills小红书-structural-variant-calling-正文.md) | content/素材/variant-calling/024-sv-calling/ |
+| 025 | consensus-sequences | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/025-bioSkills真实试用-consensus-sequences.md) · [小红书](content/笔记/variant-calling/025-bioSkills小红书-consensus-sequences-正文.md) | content/素材/variant-calling/025-consensus/ |
+| 026 | clinical-interpretation | skills 专项拆解 | 已入站点 | [真实试用](content/笔记/variant-calling/026-bioSkills真实试用-clinical-interpretation.md) · [小红书](content/笔记/variant-calling/026-bioSkills小红书-clinical-interpretation-正文.md) | content/素材/variant-calling/026-clinical/ |
+| 027 | deepvariant | 概念稿（docker 守护进程未运行、无 BAM） | 已入站点 | [真实试用](content/笔记/variant-calling/027-bioSkills真实试用-deepvariant.md) · [小红书](content/笔记/variant-calling/027-bioSkills小红书-deepvariant-正文.md) | —（无真跑产物） |
 
 **系列规划**
 - `skills 使用体验`：从 bioSkills 仓库出发，逐个 skill 真跑、记录 AI 实际产出。**alignment 已发(003, 图文版)**；004/005 已深究成完整试用笔记并入站点。下期预告：variant-calling（体细胞变异）实测。
