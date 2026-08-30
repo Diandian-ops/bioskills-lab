@@ -130,6 +130,34 @@ RedBook/
 
 换到新机器后按本节顺序做。**第 0 步先自检**，别急着装。
 
+### TL;DR 新机 5 分钟上手（复制一次、按顺序跑完即可）
+
+> 前提：已装 `git` 与 `conda`（无 conda 见下方第 3 步的 `winget`/`pip` 替代路线）。
+> 下面整段在 **Windows PowerShell** 里一次粘贴执行，中途不用停。
+
+```powershell
+# 0. 关 autocrlf（必须在 clone 之前，否则二进制文件会被改写损坏）
+git config --global core.autocrlf false
+
+# 1. 拉主仓（已含全部笔记 / 素材 / 出图，约 18MB，无需打包拷贝）
+git clone https://github.com/Diandian-ops/bioskills-lab.git RedBook
+cd RedBook
+
+# 2. 拉外部参考仓（建站必需，已被 gitignore 排除，需单独 clone）
+git clone https://github.com/GPTomics/bioSkills.git content/库/bioSkills
+
+# 3. 装依赖（conda 一条命令；非 conda 见下方第 3 步）
+conda install -c conda-forge python=3.12 bcftools samtools matplotlib markdown -y
+
+# 4. 验证：FAIL=0 即就绪，随后重生成站点
+python pipeline/check_env.py
+python pipeline/build_lab_site.py
+```
+
+跑完 `check_env.py` 看到 `FAIL=0` 就成功了；`build_lab_site.py` 会在 `output/bioSkills-site/` 生成站点。
+唯一外部依赖是 `content/库/bioSkills`，丢了重跑第 2 步即可，主仓本身零硬依赖。
+若 `010–014` 在真机 Windows 报管道相关错，改走 WSL2（Linux 环境，与 mac 行为一致最稳）。
+
 ### 0. 环境自检（换机第一步，装依赖之前就能跑）
 
 ```bash
@@ -217,6 +245,7 @@ cd /tmp && python <仓库>/content/素材/variant-calling/018-vcf-statistics/mak
 
 ## 更新记录
 
+- 2026-08-30（换机 Runbook 浓缩）：在「换机复现」章节顶部新增「TL;DR 新机 5 分钟上手」小节——把主仓 clone、关 autocrlf、外部仓 clone、conda 装依赖、自检+建站压成单个 PowerShell 代码块，可一次粘贴执行；同步标注唯一外部依赖为 `content/库/bioSkills`、010–014 真机 Windows 异常时改 WSL2。
 - 2026-08-25（卡片导出链路全清理）：删除已停用的卡片导出用户级 skill 目录；清理 3 个相关 skill（`bioSkills-trial-pipeline`/`bioSkills-lab-site`/`redbook-bio-note-writer`）中全部卡片导出引用（S4 标注「不再自动导出」、META 剥离改由 S3/手动）；删除 003 历史遗留的卡片导出版笔记；清理 `build_lab_site.py` 注释与 README 目录树/S4 引用。全仓零该链路残留。
 - 2026-08-25（目录治理收尾）：① 源/产物分层固化——顶层收敛为 `content/`(源: 库/笔记/素材) · `pipeline/`(构建脚本+复现实验) · `output/`(纯产物 bioSkills-site)；② 删除早前卡片导出工具全部遗留 ZIP/解压目录/预览图，环境纯净；③ 清理零依赖死物（早期 AI 插画、未发布草稿、规划存档、死代码）；④ 原 `实验/` 改名为 `pipeline/`（装的是正式构建脚本，非"实验"）；⑤ 原 `笔记/素材/库` 收拢进 `content/`，全文引用同步。端到端重生成验证通过（站点重建 + 三图正确拷入 `assets/`）。
 - 2026-08-25（卡片导出尾巴收口）：① `bioSkills-trial-pipeline/SKILL.md` 的 4 处 S4 引用改写为"已停用"，不再声称调卡片导出 skill 出 ZIP；② 删除 `content/库` 下的卡片导出 clone（114MB 外部 git clone，可重建）；README 目录树移除该目录行。删后重跑站点构建成功，证明零硬依赖。
