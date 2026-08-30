@@ -15,11 +15,39 @@ import os
 import re
 import subprocess
 import json
+import shutil
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-BT2 = "/Applications/anaconda3/envs/bioaligners/bin/bowtie2"
-BUILD = "/Applications/anaconda3/envs/bioaligners/bin/bowtie2-build"
-SAM = "/Applications/anaconda3/bin/samtools"
+
+
+def tool(env_var, name, legacy=()):
+    """定位外部二进制：环境变量 > PATH > 旧版绝对路径（历史 mac 安装）。
+
+    跨平台：不写死 /Applications/anaconda3/... 这类 macOS 路径，
+    Windows 原生（conda）同样能靠 PATH 或环境变量定位。
+    """
+    p = os.environ.get(env_var)
+    if p and os.path.exists(p):
+        return p
+    p = shutil.which(name)
+    if p:
+        return p
+    for lp in legacy:
+        if os.path.exists(lp):
+            return lp
+    raise SystemExit(
+        "[missing-tool] 未找到 %s。请安装后用环境变量指定路径：\n"
+        "    set %s=C:\\path\\to\\%s          (Windows)\n"
+        "    export %s=/path/to/%s           (macOS/Linux)"
+        % (name, env_var, name, env_var, name))
+
+
+BT2 = tool("BOWTIE2", "bowtie2",
+           ("/Applications/anaconda3/envs/bioaligners/bin/bowtie2",))
+BUILD = tool("BOWTIE2_BUILD", "bowtie2-build",
+             ("/Applications/anaconda3/envs/bioaligners/bin/bowtie2-build",))
+SAM = tool("SAMTOOLS", "samtools",
+           ("/Applications/anaconda3/bin/samtools",))
 
 REF = f"{BASE}/reference.fa"
 IDX = f"{BASE}/reference_index"          # basename（正确用法）
@@ -156,8 +184,11 @@ print("[9] multi-mapping -k 5 ...")
 out_sam = f"{BASE}/multimap.sam"
 r = sh(f"{BT2} -k 5 -p 8 -x {IDX} -1 {R1} -2 {R2} -S {out_sam} 2>{BASE}/multimap.log")
 # 统计被报告多次的 read（secondary 数）
-sec = sh(f"{SAM} view -f 256 {out_sam} 2>/dev/null | wc -l").stdout.strip()
-results["multimap_k5"] = {"rc": r.returncode, "secondary_alignments": int(sec or 0)}
+# 原为 `samtools view -f 256 <sam> 2>/dev/null | wc -l`。
+# wc 属 Unix coreutils，Windows 原生没有，改为 Python 计数（语义等价：非空行数）。
+raw_sec = sh(f"{SAM} view -f 256 {out_sam} 2>{os.devnull}").stdout
+sec = sum(1 for l in raw_sec.splitlines() if l)
+results["multimap_k5"] = {"rc": r.returncode, "secondary_alignments": sec}
 print("    secondary(二次) alignments:", results["multimap_k5"]["secondary_alignments"])
 
 # ---------- 10. MAPQ 上限：e2e vs local 实测 ----------

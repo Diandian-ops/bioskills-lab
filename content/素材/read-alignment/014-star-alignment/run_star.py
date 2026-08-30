@@ -17,12 +17,39 @@ ENVIRONMENT NOTE (recorded honestly, not fabricated):
   loading work (they use ifstream, not the broken read path). So genomeGenerate below is a
   REAL result; the alignment steps record the 0-reads signature as the honest outcome.
 """
-import os, re, subprocess, json
+import os, re, shutil, subprocess, json
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-STAR = "/Applications/anaconda3/envs/bioaligners/bin/STAR"
-SAM = "/Applications/anaconda3/bin/samtools"
-WGSIM = "/Applications/anaconda3/bin/wgsim"
+
+
+def tool(env_var, name, legacy=()):
+    """定位外部二进制：环境变量 > PATH > 旧版绝对路径（历史 mac 安装）。
+
+    跨平台：不写死 /Applications/anaconda3/... 这类 macOS 路径，
+    Windows 原生（conda）同样能靠 PATH 或环境变量定位。
+    """
+    p = os.environ.get(env_var)
+    if p and os.path.exists(p):
+        return p
+    p = shutil.which(name)
+    if p:
+        return p
+    for lp in legacy:
+        if os.path.exists(lp):
+            return lp
+    raise SystemExit(
+        "[missing-tool] 未找到 %s。请安装后用环境变量指定路径：\n"
+        "    set %s=C:\\path\\to\\%s          (Windows)\n"
+        "    export %s=/path/to/%s           (macOS/Linux)"
+        % (name, env_var, name, env_var, name))
+
+
+STAR = tool("STAR", "STAR",
+            ("/Applications/anaconda3/envs/bioaligners/bin/STAR",))
+SAM = tool("SAMTOOLS", "samtools",
+           ("/Applications/anaconda3/bin/samtools",))
+WGSIM = tool("WGSIM", "wgsim",
+             ("/Applications/anaconda3/bin/wgsim",))
 IDX = f"{BASE}/star_index"
 RES = {}
 

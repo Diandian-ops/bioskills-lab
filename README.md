@@ -126,6 +126,95 @@ RedBook/
 
 ---
 
+## 换机复现（macOS ⇄ Windows）
+
+换到新机器后按本节顺序做。**第 0 步先自检**，别急着装。
+
+### 0. 环境自检（换机第一步，装依赖之前就能跑）
+
+```bash
+python pipeline/check_env.py
+```
+
+纯标准库实现，不依赖任何三方包。它会检查 Python 版本、`matplotlib`/`markdown`、
+`bcftools`/`samtools`/`bgzip`/`tabix`、外部 clone 是否存在、`core.autocrlf` 设置、
+素材脚本是否误引用了不入库的 `pipeline/`。
+
+- 退出码 `0` = 环境就绪；`WARN` 不影响复现。
+- 退出码 `1` = 有阻塞项，每条都会给出可直接执行的修复命令。
+
+### 1. 拉仓库
+
+```bash
+git clone https://github.com/Diandian-ops/bioskills-lab.git RedBook
+cd RedBook
+```
+
+### 2. 重建外部 clone（**最易漏的一步**）
+
+```bash
+git clone https://github.com/GPTomics/bioSkills.git content/库/bioSkills
+```
+
+`content/库/` 下的三个外部仓库都不在本仓库的版本控制内（已 gitignore）。
+其中 **bioSkills 是建站必需**——`build_lab_site.py` 要用它生成侧栏的分类/技能树，
+缺了会直接崩（现已改为友好提示并给出上面这条 clone 命令）。
+`md2card` 与 `obsidian-wechat-converter` 仅为历史参考资源，缺失不影响建站。
+
+### 3. 装依赖
+
+原生 Windows（conda，已验证 `bcftools` 有 win-64 构建）：
+
+```powershell
+conda install -c conda-forge python=3.12 bcftools samtools matplotlib markdown
+```
+
+macOS：
+
+```bash
+brew install bcftools samtools
+pip install -r requirements.txt
+```
+
+`requirements.txt` 给的是下界而非精确钉版，避免 Windows 上因缺少对应 wheel 装不上；
+注释里记了 macOS 上验证通过的具体版本。
+
+### 4. Windows 必做：关掉自动换行转换
+
+```powershell
+git config --global core.autocrlf false
+```
+
+本仓库入库了 **152 个二进制文件**（gz 7.8MB / fq 6.3MB / bam 4.3MB / png 3.9MB /
+fa 1.2MB / ht2 8 个）。`core.autocrlf=true` 会让 Git 在 checkout 时改写换行，
+二进制被误判为文本就会直接损坏（BAM/gz 变成打不开的坏文件）。
+仓库已带 `.gitattributes` 显式声明这些类型为 `binary` 做兜底，但全局开关仍建议关掉。
+
+### 5. 验证复现
+
+```bash
+python pipeline/check_env.py          # 关键看 FAIL=0（未装 samtools 等会有 WARN，不影响复现）
+python pipeline/build_lab_site.py     # 重生成站点（28 页 / 34 图）
+python pipeline/gate_lint.py content/笔记/variant-calling/018-bioSkills真实试用-vcf-statistics.md
+```
+
+出图可逐个复现，素材目录自带数据、零网络依赖，从任意工作目录都能跑：
+
+```bash
+cd /tmp && python <仓库>/content/素材/variant-calling/018-vcf-statistics/make_figs.py
+```
+
+### 已知平台差异
+
+| 项 | 说明 |
+|---|---|
+| 素材脚本 016–026 | 已验证零网络依赖、从任意 cwd 可跑；VCF 解析统一用 `bcftools query`（不用 `cyvcf2`） |
+| 脚本 010–014 | 原写死 `/Applications/anaconda3/...`，已改为「环境变量 > PATH > 旧路径兜底」；`cut`/`wc`/`grep` 等 Unix coreutils 已换成 Python 等价实现；`-R` 单引号与 `2>/dev/null` 已按 cmd.exe 语义修正。**未在真机 Windows 上跑通验证**，若管道行为仍有差异，改用 WSL2 |
+| 022 / 023 / 027 | 概念稿，需 GATK / DeepVariant / Docker，与平台无关 |
+| `pipeline/<编号>-*/` | 015 及之后的真跑工作区**不入库**（`.gitignore` 已忽略），可复现的最小集全在 `content/素材/` |
+
+---
+
 ## 更新记录
 
 - 2026-08-25（卡片导出链路全清理）：删除已停用的卡片导出用户级 skill 目录；清理 3 个相关 skill（`bioSkills-trial-pipeline`/`bioSkills-lab-site`/`redbook-bio-note-writer`）中全部卡片导出引用（S4 标注「不再自动导出」、META 剥离改由 S3/手动）；删除 003 历史遗留的卡片导出版笔记；清理 `build_lab_site.py` 注释与 README 目录树/S4 引用。全仓零该链路残留。

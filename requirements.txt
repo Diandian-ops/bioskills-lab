@@ -1,0 +1,18 @@
+# RedBook / bioSkills 真实试用实验室 — Python 依赖
+#
+# 验证环境（macOS, 2026-08-30）：Python 3.12.3 + matplotlib 3.10.3 + markdown 3.4.1
+#
+# 说明：
+#   - 这里给的是**下界**而非精确钉版。精确 == 会在 Windows 上因缺少对应 wheel 而装不上；
+#     需要严格复现时按注释里的已验证版本指定即可。
+#   - bcftools / samtools / bgzip / tabix 不是 Python 包，见 README「换机复现」章节，
+#     用 conda-forge 安装（Windows 原生同样可用）。
+#
+# 安装：
+#   pip install -r requirements.txt
+
+# build_lab_site.py 用（静态站渲染）
+markdown>=3.4.1
+
+# 各 content/素材/**/make_figs.py 用（真实数据出图）
+matplotlib>=3.10.3

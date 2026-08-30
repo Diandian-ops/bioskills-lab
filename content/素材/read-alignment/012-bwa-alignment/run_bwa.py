@@ -10,17 +10,47 @@
   - 索引错配负向测试：bwa-mem2 用 bwa 原版索引 -> 报错
 结果写入 bwa_results.json。
 """
-import os, re, subprocess, json, hashlib
+import os, re, shutil, subprocess, json, hashlib
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-MEM2 = "/Applications/anaconda3/envs/bioaligners/bin/bwa-mem2"
-BWA = "/Applications/anaconda3/envs/bioaligners/bin/bwa"
-SAM = "/Applications/anaconda3/bin/samtools"
+
+
+def tool(env_var, name, legacy=()):
+    """定位外部二进制：环境变量 > PATH > 旧版绝对路径（历史 mac 安装）。
+
+    跨平台：不在代码里写死 /Applications/anaconda3/... 这类 macOS 路径，
+    Windows 原生（conda）同样能靠 PATH 或环境变量定位。
+    """
+    p = os.environ.get(env_var)
+    if p and os.path.exists(p):
+        return p
+    p = shutil.which(name)
+    if p:
+        return p
+    for lp in legacy:
+        if os.path.exists(lp):
+            return lp
+    raise SystemExit(
+        "[missing-tool] 未找到 %s。请安装后用环境变量指定路径：\n"
+        "    set %s=C:\\path\\to\\%s          (Windows)\n"
+        "    export %s=/path/to/%s           (macOS/Linux)"
+        % (name, env_var, name, env_var, name))
+
+
+MEM2 = tool("BWA_MEM2", "bwa-mem2",
+            ("/Applications/anaconda3/envs/bioaligners/bin/bwa-mem2",))
+BWA = tool("BWA", "bwa",
+           ("/Applications/anaconda3/envs/bioaligners/bin/bwa",))
+SAM = tool("SAMTOOLS", "samtools",
+           ("/Applications/anaconda3/bin/samtools",))
 REF = f"{BASE}/reference.fa"
 PREFIX = f"{BASE}/reference.fa"   # bwa-mem2 index 默认以参考名为索引前缀
 R1 = f"{BASE}/reads_1.fq"
 R2 = f"{BASE}/reads_2.fq"
-RG = r"'@RG\tID:s1\tSM:s1\tPL:ILLUMINA\tLB:lib1'"
+# 注意：不再用外层单引号包裹。POSIX shell 靠单引号保留 \t，
+# 但 Windows cmd.exe 不识别单引号，会把引号一起传给 bwa-mem2。
+# 该串本身不含空格，两种 shell 下裸写都安全。
+RG = r"@RG\tID:s1\tSM:s1\tPL:ILLUMINA\tLB:lib1"
 
 
 def sh(cmd, **kw):
@@ -32,7 +62,12 @@ def head_has_rg(bam):
 
 
 def md5_aln(bam):
-    out = sh(f"{SAM} view -F 4 {bam} | cut -f1-9").stdout
+    # 原为 `samtools view -F 4 <bam> | cut -f1-9`。
+    # cut 属 Unix coreutils，Windows 原生环境没有，故改为 Python 内截取（语义等价）：
+    # 取每行前 9 个字段；不足 9 段时 cut 也是原样输出，join 行为一致。
+    raw = sh(f"{SAM} view -F 4 {bam}").stdout
+    lines = ["\t".join(l.split("\t")[:9]) for l in raw.splitlines() if l]
+    out = "".join(l + "\n" for l in lines)
     return hashlib.md5(out.encode()).hexdigest()
 
 
@@ -89,8 +124,11 @@ r = sh(f"{MEM2} mem -t 8 -R {RG} {PREFIX} {R1} {R2} 2>{BASE}/md.log | "
        f"{SAM} collate -@4 -O -u - | {SAM} fixmate -m -@4 -u - - | "
        f"{SAM} sort -@4 -u - | {SAM} markdup -@4 - {bam_dup}")
 sh(f"{SAM} index {bam_dup}")
-mc = sh(f"{SAM} view {bam_dup} | grep -m1 'MC:Z' | wc -l").stdout.strip()
-results["markdup"] = {"rc": r.returncode, "has_MC_tag": int(mc or 0) > 0,
+# 原为 `samtools view <bam> | grep -m1 'MC:Z' | wc -l`：
+# grep/wc 同样不是 Windows 原生命令。语义是「是否存在至少一行含 MC:Z」。
+raw_dup = sh(f"{SAM} view {bam_dup}").stdout
+has_mc = any("MC:Z" in l for l in raw_dup.splitlines())
+results["markdup"] = {"rc": r.returncode, "has_MC_tag": has_mc,
                       "dup_flagged": flag_count(bam_dup, 1024)}
 print("   has MC tag:", results["markdup"]["has_MC_tag"], "dup flagged:", results["markdup"]["dup_flagged"])
 

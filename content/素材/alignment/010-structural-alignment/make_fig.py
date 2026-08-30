@@ -4,11 +4,13 @@ Convention: TM > 0.5 = same fold -> red (中国股票/相似度上行=红); low 
 White background, dark text (light theme).
 """
 import json
+import os
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-BASE = "/Users/zhangdiandian/RedBook/content/素材/alignment/010-structural-alignment"
+# 目录内自引用，不写死机器相关的绝对路径（换机/换系统同样可用）
+BASE = os.path.dirname(os.path.abspath(__file__))
 res = json.loads(open(f"{BASE}/structural_results.json").read())
 
 labels = ["1ubq", "1ubi", "1fmb"]

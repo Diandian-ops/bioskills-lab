@@ -12,16 +12,40 @@ All inputs are real downloaded PDBs from RCSB:
   1fmb.pdb  (different fold)      — negative / cross-fold control
 """
 import json
+import os
 import re
+import shutil
 import subprocess
 from pathlib import Path
 
 from Bio.PDB import PDBParser, Superimposer
 
-BASE = Path("/Users/zhangdiandian/RedBook/content/素材/alignment/010-structural-alignment")
+# 目录内自引用，不写死机器相关的绝对路径（换机/换系统同样可用）
+BASE = Path(__file__).resolve().parent
 PD = BASE / "pdbs"
 TMALIGN = BASE / "tools" / "TMalign"
-FOLDSEEK = "/Applications/anaconda3/envs/foldseek/bin/foldseek"
+
+
+def tool(env_var, name, legacy=()):
+    """定位外部二进制：环境变量 > PATH > 旧版绝对路径（历史 mac 安装）。"""
+    p = os.environ.get(env_var)
+    if p and os.path.exists(p):
+        return p
+    p = shutil.which(name)
+    if p:
+        return p
+    for lp in legacy:
+        if os.path.exists(lp):
+            return lp
+    raise SystemExit(
+        "[missing-tool] 未找到 %s。请安装后用环境变量指定路径：\n"
+        "    set %s=C:\\path\\to\\%s          (Windows)\n"
+        "    export %s=/path/to/%s           (macOS/Linux)"
+        % (name, env_var, name, env_var, name))
+
+
+FOLDSEEK = tool("FOLDSEEK", "foldseek",
+                ("/Applications/anaconda3/envs/foldseek/bin/foldseek",))
 
 PDBS = {"1ubq": "1ubq.pdb", "1ubi": "1ubi.pdb", "1fmb": "1fmb.pdb"}
 

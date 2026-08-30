@@ -10,12 +10,39 @@
   - -x 传 .ht2 文件名负向测试
 结果写入 hisat2_results.json。
 """
-import os, re, subprocess, json
+import os, re, shutil, subprocess, json
 
 BASE = os.path.dirname(os.path.abspath(__file__))
-H2 = "/Applications/anaconda3/envs/bioaligners/bin/hisat2"
-BUILD = "/Applications/anaconda3/envs/bioaligners/bin/hisat2-build"
-SAM = "/Applications/anaconda3/bin/samtools"
+
+
+def tool(env_var, name, legacy=()):
+    """定位外部二进制：环境变量 > PATH > 旧版绝对路径（历史 mac 安装）。
+
+    跨平台：不写死 /Applications/anaconda3/... 这类 macOS 路径，
+    Windows 原生（conda）同样能靠 PATH 或环境变量定位。
+    """
+    p = os.environ.get(env_var)
+    if p and os.path.exists(p):
+        return p
+    p = shutil.which(name)
+    if p:
+        return p
+    for lp in legacy:
+        if os.path.exists(lp):
+            return lp
+    raise SystemExit(
+        "[missing-tool] 未找到 %s。请安装后用环境变量指定路径：\n"
+        "    set %s=C:\\path\\to\\%s          (Windows)\n"
+        "    export %s=/path/to/%s           (macOS/Linux)"
+        % (name, env_var, name, env_var, name))
+
+
+H2 = tool("HISAT2", "hisat2",
+          ("/Applications/anaconda3/envs/bioaligners/bin/hisat2",))
+BUILD = tool("HISAT2_BUILD", "hisat2-build",
+             ("/Applications/anaconda3/envs/bioaligners/bin/hisat2-build",))
+SAM = tool("SAMTOOLS", "samtools",
+           ("/Applications/anaconda3/bin/samtools",))
 REF = f"{BASE}/reference.fa"
 IDX = f"{BASE}/hisat2_index"   # basename
 R1 = f"{BASE}/reads_1.fq"

@@ -51,6 +51,17 @@ def load_note(md_path):
     return html, meta, needed
 
 
+# content/库/bioSkills 是外部仓库（被 .gitignore 忽略），换机后必须重新 clone。
+# 缺了它下面 os.listdir(BIO) 只会抛一个看不懂原因的 FileNotFoundError，
+# 这里提前拦住并给出可执行的修复命令。
+if not os.path.isdir(BIO):
+    raise SystemExit(
+        "\n[缺少外部依赖] 未找到 bioSkills 源码目录：\n    %s\n\n"
+        "该目录是外部仓库，不在本仓库的版本控制内（已 gitignore），换机后需重新 clone：\n"
+        "    git clone https://github.com/GPTomics/bioSkills.git %s\n\n"
+        "克隆后重跑；也可先执行 `python pipeline/check_env.py` 做一次完整环境自检。\n"
+        % (BIO, os.path.join("content", "库", "bioSkills")))
+
 cats = []
 for name in sorted(os.listdir(BIO)):
     p = os.path.join(BIO, name)
