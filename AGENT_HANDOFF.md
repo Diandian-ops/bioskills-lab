@@ -10,7 +10,7 @@
 ## 前置条件（先确认）
 - Windows 11，已装 `git`（建议 2.40+）
 - 已装 `conda`（Miniconda / Anaconda 任一；没有先去装 Miniconda）
-- 能联网（要 clone 两个 GitHub 仓库 + conda 装包）
+- 能联网（要 clone 主仓 + 3 个外部仓库：bioSkills / md2card / obsidian-wechat-converter + conda 装包）
 - 用 **PowerShell** 执行下方命令（不是 cmd）
 
 ## 一次性执行（复制整段到 PowerShell 粘贴，中途不用停）
@@ -34,12 +34,24 @@ python pipeline/check_env.py
 
 # 5. 重生成站点（产物在 output/bioSkills-site/）
 python pipeline/build_lab_site.py
+
+# 6. 小红书出图链路（可选；要做小红书发布才需要）
+git clone https://github.com/haodongcui/md2card.git content/库/md2card
+git clone https://github.com/DavidLam-oss/obsidian-wechat-converter.git content/库/obsidian-wechat-converter
+conda install -c conda-forge nodejs -y
+pip install playwright pillow
+playwright install chromium
+# 后台启动 md2card 工作台（出图时必须运行）
+Start-Process -WorkingDirectory "content/库/md2card" npm -ArgumentList "install","run","dev"
+python pipeline/check_env.py --xhs   # 应 FAIL=0
+python pipeline/trial2xhs.py content/笔记/variant-calling/018-bioSkills真实试用-vcf-statistics.md
 ```
 
 ## 成功标准（必须全部满足才算完成）
 1. 第 4 步 `python pipeline/check_env.py` 输出 **`FAIL=0`**（`WARN` 可忽略，不影响复现）。
 2. 第 5 步 `build_lab_site.py` 无报错退出，生成 `output/bioSkills-site/`。
 3. 站点页数与图数符合预期（参考基线：28 页 / 34 图）。
+4. （可选）第 6 步 `check_env.py --xhs` 输出 `FAIL=0`，且 `trial2xhs.py` 成功在 `output/xhs-cards/` 下生成 PNG。
 
 ## 可选深度验证（建议做一次，确认素材可独立复现）
 ```powershell
@@ -50,6 +62,7 @@ python <RedBook仓库路径>/content/素材/variant-calling/018-vcf-statistics/m
 
 ## 故障兜底
 - **`010–014` 六个脚本在真机 Windows 报管道相关错**：不要改代码，直接改用 **WSL2**（Linux 环境，与开发机 mac 行为一致，最稳）。在 WSL2 里重新走上面流程即可。
+- **第 6 步 md2card dev server 在 Win11 起不来 / 出图黑屏**：不要改 `md2card_automation.py`（已做跨平台路径处理），改用 **WSL2** 跑整个第 6 步（Linux 环境最稳）。
 - **conda 装包慢/失败**：换 `winget install bcftools samtools` + `pip install matplotlib markdown`（Python 用系统或微软商店版）。
 - **`content/库/bioSkills` clone 失败/太慢**：它只是建站必需，站点浏览和笔记阅读不依赖它。可先跳过第 2 步；但 `build_lab_site.py` 会提示缺它，补回即可。
 - **`core.autocrlf` 忘了提前关导致二进制损坏**：删除整个仓库目录重新 clone（这次先关 autocrlf）。
@@ -62,5 +75,6 @@ python <RedBook仓库路径>/content/素材/variant-calling/018-vcf-statistics/m
 ## 完成后汇报
 - `check_env.py` 的完整输出（尤其 FAIL / WARN 计数）
 - `build_lab_site.py` 是否成功、生成了几页几图
+- （若做了第 6 步）`check_env.py --xhs` 输出与 `trial2xhs.py` 是否生成了 PNG
 - 是在原生 PowerShell 还是 WSL2 下完成
 - 任何与上面「成功标准」不符的偏差

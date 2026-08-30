@@ -13,8 +13,9 @@
   4. 全部路径用 os.path / pathlib —— 不假设 "/" 分隔符。
 
 用法：
-    python pipeline/check_env.py            # 离线自检（默认）
+    python pipeline/check_env.py            # 离线自检（默认，含小红书链路 WARN）
     python pipeline/check_env.py --network  # 额外探测 htslib 远程数据读取能力
+    python pipeline/check_env.py --xhs      # 严格门禁：小红书出图链路缺失即 FAIL
 
 退出码：
     0  无 FAIL（可复现；WARN 不影响）
@@ -22,6 +23,7 @@
 """
 
 import argparse
+import importlib
 import os
 import subprocess
 import sys
@@ -141,15 +143,78 @@ def check_external_clones():
             FAIL, "外部 clone bioSkills", "缺失",
             "build_lab_site.py 会在此崩溃。执行：\n"
             "        git clone https://github.com/GPTomics/bioSkills.git content/库/bioSkills"))
+    return res
 
-    # 这两个不影响站点构建，只是历史参考资源
-    for name in ("md2card", "obsidian-wechat-converter"):
+
+def _pw_browsers_path():
+    """Playwright 浏览器缓存目录（按平台；可被环境变量覆盖）。"""
+    env = os.environ.get("PLAYWRIGHT_BROWSERS_PATH")
+    if env:
+        return env
+    if os.name == "nt":
+        return os.path.join(os.path.expandvars("%LOCALAPPDATA%"), "ms-playwright")
+    if sys.platform == "darwin":
+        return os.path.expanduser("~/Library/Caches/ms-playwright")
+    return os.path.expanduser("~/.cache/ms-playwright")
+
+
+def _has_chromium():
+    base = _pw_browsers_path()
+    if not os.path.isdir(base):
+        return False
+    return any(d.startswith("chromium") for d in os.listdir(base))
+
+
+def check_xhs_deps(strict=False):
+    """小红书出图链路（md→图文）依赖：md2card dev server + playwright + chromium。
+
+    默认非阻塞（缺失判 WARN，不影响建站）；--xhs 时升级为 FAIL，
+    作为「能否跑 trial2xhs.py」的严格门禁。
+    """
+    res = []
+    # 外部 clone
+    for name, url in (
+        ("md2card", "https://github.com/haodongcui/md2card.git"),
+        ("obsidian-wechat-converter",
+         "https://github.com/DavidLam-oss/obsidian-wechat-converter.git"),
+    ):
         p = os.path.join(ROOT, "content", "库", name)
-        if os.path.isdir(p):
-            res.append(Result(PASS, "外部 clone %s" % name, "已就绪", ""))
+        if os.path.isdir(p) and os.listdir(p):
+            res.append(Result(PASS, "xhs 外部 clone %s" % name, "已就绪", ""))
         else:
-            res.append(Result(WARN, "外部 clone %s" % name, "缺失（不影响建站）",
-                              "如需使用再从上游 clone"))
+            res.append(Result(
+                WARN, "xhs 外部 clone %s" % name, "缺失",
+                "git clone %s content/库/%s" % (url, name)))
+
+    # node / npm（md2card dev server 需要）
+    for tool in ("node", "npm"):
+        r = _tool_version(tool)
+        if r.status == FAIL:
+            r.status = WARN
+            r.detail = "未找到（md2card dev server 需要）"
+            r.hint = ("conda install -c conda-forge nodejs   或   "
+                      "winget install OpenJS.NodeJS")
+        res.append(r)
+
+    # playwright 模块
+    try:
+        importlib.import_module("playwright")
+        res.append(Result(PASS, "xhs playwright", "已安装", ""))
+    except ImportError:
+        res.append(Result(
+            WARN, "xhs playwright", "未安装",
+            "pip install playwright pillow && playwright install chromium"))
+
+    # chromium 浏览器
+    if _has_chromium():
+        res.append(Result(PASS, "xhs chromium", "已安装", ""))
+    else:
+        res.append(Result(WARN, "xhs chromium", "未安装", "playwright install chromium"))
+
+    if strict:
+        for r in res:
+            if r.status == WARN:
+                r.status = FAIL
     return res
 
 
@@ -226,6 +291,9 @@ def main():
     ap = argparse.ArgumentParser(description="RedBook 跨平台环境自检")
     ap.add_argument("--network", action="store_true",
                     help="额外探测 htslib 远程数据读取能力（需要联网，较慢）")
+    ap.add_argument("--xhs", action="store_true",
+                    help="严格门禁：把小红书出图链路(node/npm/playwright/chromium/md2card)"
+                         "的依赖从 WARN 升级为 FAIL，用于确认能跑 trial2xhs.py")
     args = ap.parse_args()
 
     results = []
@@ -236,6 +304,7 @@ def main():
     results.append(check_gitattributes())
     results.append(check_autocrlf())
     results.append(check_material_scripts())
+    results.extend(check_xhs_deps(strict=args.xhs))
     if args.network:
         results.append(check_network_htslib())
 

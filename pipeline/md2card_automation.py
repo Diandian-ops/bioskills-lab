@@ -29,9 +29,17 @@ import glob
 from playwright.sync_api import sync_playwright
 
 VENV = os.path.expanduser("~/.workbuddy/binaries/python/envs/default")
-if os.path.exists(os.path.join(VENV, "bin", "python")):
-    os.environ.setdefault("PLAYWRIGHT_BROWSERS_PATH",
-                          os.path.expanduser("~/Library/Caches/ms-playwright"))
+# 跨平台定位 venv 可执行文件与 Playwright 浏览器缓存目录：
+#   macOS/Linux venv 用 bin/python；Windows 用 Scripts/python.exe
+#   浏览器缓存：macOS ~/Library/Caches/ms-playwright；Windows %LOCALAPPDATA%/ms-playwright；Linux ~/.cache/ms-playwright
+if os.name == "nt":
+    _venv_py = os.path.join(VENV, "Scripts", "python.exe")
+    _pw_cache = os.path.join(os.path.expandvars("%LOCALAPPDATA%"), "ms-playwright")
+else:
+    _venv_py = os.path.join(VENV, "bin", "python")
+    _pw_cache = os.path.expanduser("~/Library/Caches/ms-playwright")
+if os.path.exists(_venv_py):
+    os.environ.setdefault("PLAYWRIGHT_BROWSERS_PATH", _pw_cache)
 
 DENSITY_TEXT = {"relaxed": "舒展", "balanced": "技术平衡", "compact": "紧凑"}
 COVER_TEXT = {"integrated": "融合首页", "standalone": "独立封面", "none": "无封面"}

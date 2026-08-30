@@ -152,10 +152,22 @@ conda install -c conda-forge python=3.12 bcftools samtools matplotlib markdown -
 # 4. 验证：FAIL=0 即就绪，随后重生成站点
 python pipeline/check_env.py
 python pipeline/build_lab_site.py
+
+# 5. 小红书出图链路（可选；要做小红书发布才需要）
+git clone https://github.com/haodongcui/md2card.git content/库/md2card
+git clone https://github.com/DavidLam-oss/obsidian-wechat-converter.git content/库/obsidian-wechat-converter
+conda install -c conda-forge nodejs -y
+pip install playwright pillow
+playwright install chromium
+# 后台启动 md2card 工作台（出图时必须运行）
+Start-Process -WorkingDirectory "content/库/md2card" npm -ArgumentList "install","run","dev"
+python pipeline/check_env.py --xhs   # 应 FAIL=0
+python pipeline/trial2xhs.py content/笔记/variant-calling/018-bioSkills真实试用-vcf-statistics.md
 ```
 
 跑完 `check_env.py` 看到 `FAIL=0` 就成功了；`build_lab_site.py` 会在 `output/bioSkills-site/` 生成站点。
-唯一外部依赖是 `content/库/bioSkills`，丢了重跑第 2 步即可，主仓本身零硬依赖。
+建站唯一外部依赖是 `content/库/bioSkills`，丢了重跑第 2 步即可，主仓本身零硬依赖。
+要做小红书发布，再走第 5 步（md2card 出图链路），`check_env.py --xhs` 应 `FAIL=0`。
 若 `010–014` 在真机 Windows 报管道相关错，改走 WSL2（Linux 环境，与 mac 行为一致最稳）。
 
 ### 0. 环境自检（换机第一步，装依赖之前就能跑）
@@ -166,7 +178,7 @@ python pipeline/check_env.py
 
 纯标准库实现，不依赖任何三方包。它会检查 Python 版本、`matplotlib`/`markdown`、
 `bcftools`/`samtools`/`bgzip`/`tabix`、外部 clone 是否存在、`core.autocrlf` 设置、
-素材脚本是否误引用了不入库的 `pipeline/`。
+素材脚本是否误引用了不入库的 `pipeline/`（加 `--xhs` 还会检查小红书出图链路依赖）。
 
 - 退出码 `0` = 环境就绪；`WARN` 不影响复现。
 - 退出码 `1` = 有阻塞项，每条都会给出可直接执行的修复命令。
@@ -187,7 +199,7 @@ git clone https://github.com/GPTomics/bioSkills.git content/库/bioSkills
 `content/库/` 下的三个外部仓库都不在本仓库的版本控制内（已 gitignore）。
 其中 **bioSkills 是建站必需**——`build_lab_site.py` 要用它生成侧栏的分类/技能树，
 缺了会直接崩（现已改为友好提示并给出上面这条 clone 命令）。
-`md2card` 与 `obsidian-wechat-converter` 仅为历史参考资源，缺失不影响建站。
+`md2card` 与 `obsidian-wechat-converter` 是小红书出图链路（md→图文）的依赖，建站不需要，但要做小红书发布必须 clone（见第 5/6 步）。
 
 ### 3. 装依赖
 
@@ -232,6 +244,39 @@ python pipeline/gate_lint.py content/笔记/variant-calling/018-bioSkills真实�
 cd /tmp && python <仓库>/content/素材/variant-calling/018-vcf-statistics/make_figs.py
 ```
 
+### 6. 小红书出图链路（md → 图文，Win11 同样可复现）
+
+只有「发布到小红书」才需要这条链路；建站 / 笔记浏览不依赖它。它比建站多三样东西：
+外部 clone `md2card` + `obsidian-wechat-converter`、`node`/`npm` 跑 md2card 工作台、
+Python 侧 `playwright` + `chromium` 浏览器。
+
+```powershell
+# 外部 clone（gitignore，需单独 clone）
+git clone https://github.com/haodongcui/md2card.git content/库/md2card
+git clone https://github.com/DavidLam-oss/obsidian-wechat-converter.git content/库/obsidian-wechat-converter
+
+# node/npm（md2card dev server 需要）
+conda install -c conda-forge nodejs -y
+
+# playwright + chromium（出图需要）
+pip install playwright pillow
+playwright install chromium
+
+# 起 md2card 工作台（出图时必须后台运行）
+Start-Process -WorkingDirectory "content/库/md2card" npm -ArgumentList "install","run","dev"
+
+# 严格自检：应 FAIL=0
+python pipeline/check_env.py --xhs
+
+# 出图示例（自动推导分类、生成 3:4 多卡 PNG 到 output/xhs-cards/）
+python pipeline/trial2xhs.py content/笔记/variant-calling/018-bioSkills真实试用-vcf-statistics.md
+```
+
+> `check_env.py` 默认把 xhs 依赖判为 WARN（不阻塞建站）；加 `--xhs` 才升级为 FAIL，
+> 用于确认「能跑 trial2xhs.py」。`md2card_automation.py` 已做跨平台路径处理
+> （venv 的 `bin/python`↔`Scripts/python.exe`、`~/Library/Caches/ms-playwright`↔`%LOCALAPPDATA%/ms-playwright`），
+> 原生 Windows 与 WSL2 均可。
+
 ### 已知平台差异
 
 | 项 | 说明 |
@@ -245,6 +290,7 @@ cd /tmp && python <仓库>/content/素材/variant-calling/018-vcf-statistics/mak
 
 ## 更新记录
 
+- 2026-08-30（小红书出图链路补进换机文档）：确认 `md2card`/`obsidian-wechat-converter` 与 `md2card_automation.py` 是「转小红书」依赖；修正第 2 步误导措辞；新增第 5 步(TL;DR) 与第 6 步(小红书出图链路)——含 clone 命令、nodejs、`playwright`+`chromium`、后台起 dev server、`trial2xhs.py` 用法、`check_env.py --xhs` 门禁；`md2card_automation.py` 跨平台路径已修；`check_env.py` 新增 xhs 自检（默认 WARN、`--xhs` 升 FAIL）。
 - 2026-08-30（换机 Runbook 浓缩）：在「换机复现」章节顶部新增「TL;DR 新机 5 分钟上手」小节——把主仓 clone、关 autocrlf、外部仓 clone、conda 装依赖、自检+建站压成单个 PowerShell 代码块，可一次粘贴执行；同步标注唯一外部依赖为 `content/库/bioSkills`、010–014 真机 Windows 异常时改 WSL2。
 - 2026-08-25（卡片导出链路全清理）：删除已停用的卡片导出用户级 skill 目录；清理 3 个相关 skill（`bioSkills-trial-pipeline`/`bioSkills-lab-site`/`redbook-bio-note-writer`）中全部卡片导出引用（S4 标注「不再自动导出」、META 剥离改由 S3/手动）；删除 003 历史遗留的卡片导出版笔记；清理 `build_lab_site.py` 注释与 README 目录树/S4 引用。全仓零该链路残留。
 - 2026-08-25（目录治理收尾）：① 源/产物分层固化——顶层收敛为 `content/`(源: 库/笔记/素材) · `pipeline/`(构建脚本+复现实验) · `output/`(纯产物 bioSkills-site)；② 删除早前卡片导出工具全部遗留 ZIP/解压目录/预览图，环境纯净；③ 清理零依赖死物（早期 AI 插画、未发布草稿、规划存档、死代码）；④ 原 `实验/` 改名为 `pipeline/`（装的是正式构建脚本，非"实验"）；⑤ 原 `笔记/素材/库` 收拢进 `content/`，全文引用同步。端到端重生成验证通过（站点重建 + 三图正确拷入 `assets/`）。
