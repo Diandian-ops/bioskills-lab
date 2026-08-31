@@ -3,7 +3,7 @@
 <!--
 META
 用途: 013 hisat2-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: RNA 比对选 HISAT2 省内存
+标题建议: RNA 比对工具 HISAT2 概览
 /META
 -->
 

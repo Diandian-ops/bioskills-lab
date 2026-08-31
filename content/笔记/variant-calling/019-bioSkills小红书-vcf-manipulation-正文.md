@@ -1,3 +1,9 @@
+<!--
+META
+标题建议: VCF 拼接合并与 bcftools 操作
+/ META
+-->
+
 # VCF 拼接合并：bcftools 组合操作的三个真坑
 
 （编号 019 · 真实数据：1000G Phase3 chr22 / 2504 样本 / 5431 位点）

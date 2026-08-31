@@ -1,3 +1,9 @@
+<!--
+META
+标题建议: DeepVariant 过滤与 BQSR 处理
+/ META
+-->
+
 # DeepVariant 两条铁律：别叠 GATK 过滤，别做 BQSR
 
 （编号 027 · 本篇为概念稿：本机 docker 守护进程未运行、无 BAM 与本地参考，未做真跑）

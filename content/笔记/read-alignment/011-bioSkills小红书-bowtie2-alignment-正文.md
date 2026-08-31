@@ -3,7 +3,7 @@
 <!--
 META
 用途: 011 bowtie2-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: bowtie2 比对模式选错掉一半
+标题建议: bowtie2 比对模式与适用场景
 /META
 -->
 

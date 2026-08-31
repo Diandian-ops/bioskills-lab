@@ -3,7 +3,7 @@
 <!--
 META
 用途: 012 bwa-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: bwa 比对别忘 read group
+标题建议: bwa 比对的 read group 设置
 /META
 -->
 

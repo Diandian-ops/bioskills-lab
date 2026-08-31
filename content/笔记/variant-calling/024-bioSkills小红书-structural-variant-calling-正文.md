@@ -1,3 +1,9 @@
+<!--
+META
+标题建议: SV 过滤与 SVLEN 字段处理
+/ META
+-->
+
 # SV 过滤：SVLEN 缺失时，ABS() 也救不回来
 
 （编号 024 · 真实数据：1000G Phase3 chr22，5 个真实 SV 记录 = 3 CNV + 2 DEL）

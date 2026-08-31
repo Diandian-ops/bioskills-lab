@@ -3,7 +3,7 @@
 <!--
 META
 用途: 010 structural-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: 结构比对：TM-align 实测
+标题建议: 结构比对 TM-align 用法概览
 /META
 -->
 

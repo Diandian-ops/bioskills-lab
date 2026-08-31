@@ -1,7 +1,7 @@
 <!--
 META
 用途: 007 multiple-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: MAFFT别用auto 超200就降级
+标题建议: MAFFT 自动策略与大规模比对
 / META
 -->
 

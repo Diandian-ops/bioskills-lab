@@ -1,7 +1,7 @@
 <!--
 META
 用途: 006 alignment-trimming 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: 比对修剪：ClipKIT 默认只砍1列
+标题建议: 比对修剪 ClipKIT 的默认行为
 / META
 -->
 
