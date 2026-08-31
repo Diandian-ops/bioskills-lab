@@ -24,3 +24,4 @@ MQRankSum、ReadPosRankSum 这类秩和检验比较的是 ref 读 vs alt 读，*
 另外：SNP 和 indel 必须分开过滤（indel 的 FS 放宽到 200、ReadPosRankSum 收紧到 -20）；过滤优先用软过滤 `-s 标签`，保留 FILTER 列便于回溯。
 
 **结论**：过滤不是「指标越严越好」，而是按数据规模选方法、位点/基因型两层分开做、过滤后回看 Ti/Tv 验证。
+#生信 #生物信息学 #变异过滤 #QUAL #bioSkills

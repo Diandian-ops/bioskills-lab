@@ -18,3 +18,4 @@ META
 ③ 峰实验要打开碎片几何旗标：--no-mixed --no-discordant 只留一致配对，ATAC 再加 --dovetail -X 2000 接纳短碎片跨核小体配对。这些旗标决定下游峰调用器看到的坐标，比核心比对更影响结果。
 
 结论：bowtie2 比对 = 为峰实验选对模式与几何旗标。不确定时 ChIP 用 --very-sensitive 配 --no-mixed --no-discordant 再 -q 30；ATAC 切 --local --dovetail -X 2000。MAPQ 阈值跟着比对器走，别套 BWA 的 60。
+#生信 #生物信息学 #bowtie2 #短读长比对 #bioSkills

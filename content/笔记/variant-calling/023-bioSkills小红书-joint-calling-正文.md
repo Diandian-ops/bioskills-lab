@@ -34,3 +34,4 @@ META
 参考吞吐（Yun 等，2504 样本 chr22）：GLnexus 合并 0.84 h vs GATK 6.83 h；DeepVariant gVCF 占用 2.20 TB vs GATK 15.16 TB。
 
 **结论**：队列矩阵的每个单元格都该由证据填充，而不是由假设填充。拿到 callset 先数一眼缺失基因型，就能判断它到底是不是联合基因型的产物。
+#生信 #生物信息学 #联合基因型 #队列分析 #bioSkills

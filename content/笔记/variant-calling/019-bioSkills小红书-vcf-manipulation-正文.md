@@ -18,3 +18,4 @@ META
 `bcftools view -s` 默认会重算 AC/AN，但一旦用 `-I` 或别的方式绕过，统计量就停在原始样本数。实测：抽 5 个样本后，首记录仍显示 `AN=5008`（原 2504 样本），实际应为 `10`（5×2）。一行修复：`bcftools +fill-tags -- -t AC,AN,AF`。子集后下游 allele frequency 会被旧基数污染，这一步不能省。
 
 **结论**：vcf-manipulation 的核心是「统一表示 + 统一样本名/ contig」后再组合；规范化与 fill-tags 是避免静默错误的前置条件。
+#生信 #生物信息学 #VCF #bcftools #bioSkills

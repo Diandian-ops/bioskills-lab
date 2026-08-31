@@ -18,3 +18,4 @@ META
 ③ `--dta` 只给转录本组装用，普通计数别开。这个模式刻意抑制短锚定的 junction 读长，是给 StringTie / Cufflinks 组装用的；直接拿去做 featureCounts / htseq 计数会丢掉可用 junction 读长。链特异性也要按建库化学设（dUTP/TruSeq 用 RF），设错计数约减半。
 
 结论：内存受限的 RNA 比对优先 HISAT2（~7 GB 图索引）；需要原生基因计数、融合检测或最高新 junction 灵敏度才上 STAR。allele-robust 映射用 SNP 图索引；`--dta` 仅用于组装流程；链特异性务必按建库设对。
+#生信 #生物信息学 #HISAT2 #RNA比对 #bioSkills

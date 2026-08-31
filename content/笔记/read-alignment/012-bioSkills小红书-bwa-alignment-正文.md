@@ -18,3 +18,4 @@ META
 ③ 去重顺序错了会静默标错。正确顺序是 collate（按名）→ fixmate -m（写 MC 标签）→ sort（坐标）→ markdup。fixmate 不带 -m 或拿坐标序 BAM 直接 markdup，重复标记会悄悄出错；SV 流程还要用 -Y 保留分裂读长全程序列，别用 -M（会把 SV 证据降级藏起来）。
 
 结论：bwa 比对 = 为下游变异调用写对契约。比对即注入 @RG；人类数据用 GRCh38 + decoy；去重严格走 collate→fixmate -m→sort→markdup；SV 用 -Y 不用 -M；要可复现加 -K 100000000。
+#生信 #生物信息学 #bwa #短读长比对 #bioSkills

@@ -17,3 +17,4 @@ VCF 是最常见、也最容易读错的文件格式。同一个文件里 QUAL �
 第三，header 没声明的字段，bcftools 会直接报错而不是静默返回空。查 %INFO/AF 和 %GQ 都遇到 `Error: no such tag defined in the VCF header`，退出码 255。AF 用 `bcftools +fill-tags -- -t AF` 补齐（单样本杂合位点补出来是 0.5，等于 AC/AN），GQ 则从 PL 推导：GQ 就是两个最小 PL 值之差。还有一处细节：PL 里最小值 0 所在的下标就是 caller 判定的基因型，多等位拆分后要按 `k*(k+1)/2+j` 重新取值，不能按下标位置切。
 
 读 VCF 字段前先确认两件事——这个字段是位点级还是每样本级，它在 header 里的 Number 是 A / R / G / . 中的哪一个。层级和 Number 定下来，字段的含义才定下来。
+#生信 #生物信息学 #VCF #基因型 #bioSkills

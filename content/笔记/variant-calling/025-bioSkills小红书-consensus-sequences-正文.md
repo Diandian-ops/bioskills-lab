@@ -27,3 +27,4 @@ VCF 里有 `<INS:ME:ALU>` 这类符号等位时，consensus 直接失败：`Symb
 另一件更要紧的：VCF 沉默的位置一律照抄参考碱基，**包括覆盖度为零的位置**——「没测到」和「确证是参考」在输出里长得一样。必须按深度做 mask，而且 `samtools depth` **一定要加 `-a`**，否则零覆盖位置根本不进 BED，永远不会被 mask 掉。
 
 **结论**：consensus 是二倍体的有损投影。用前先定相、先 norm、排符号等位、按深度 mask；相位敏感的分析就别用单条 consensus，保留 VCF 或两条定相单倍型。
+#生信 #生物信息学 #consensus #定相 #bioSkills

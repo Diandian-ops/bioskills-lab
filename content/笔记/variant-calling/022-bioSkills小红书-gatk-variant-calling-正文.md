@@ -27,3 +27,4 @@ HaplotypeCaller 丢弃局部对齐，在有信号区域做**局部 de-novo 组�
 另外：本数据不含 `<NON_REF>`（0 条），说明它是联合基因型之后的**最终 VCF**，不是 GVCF 中间体——`<NON_REF>` 已经在基因分型阶段被消解成真实 ALT 了。
 
 **结论**：HC 的价值在重组装与参考置信度模型；但拿到 callset 先查 QUAL 分布——恒定的 QUAL 意味着所有按 QUAL 的过滤都不起作用。
+#生信 #生物信息学 #GATK #HaplotypeCaller #bioSkills

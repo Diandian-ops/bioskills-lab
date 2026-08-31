@@ -26,3 +26,4 @@ GPU 只加速 `call_variants`（CNN 推理）这一阶段；`make_examples` 与 
 顺带一条读文献的提醒：DeepVariant 在 GIAB 上训练，又习惯在 GIAB 上做基准，所以那个「F1 = 0.999」有一部分是在度量对真值集的记忆。要看留出样本（在 HG002 上测）和困难区域/CMRG 分层，而不是一个全局数字。
 
 **结论**：DeepVariant 的价值在 indel 与困难区域；代价是必须改掉从 GATK 带来的两个肌肉记忆——不要后置过滤，不要前置 BQSR。
+#生信 #生物信息学 #DeepVariant #变异检出 #bioSkills

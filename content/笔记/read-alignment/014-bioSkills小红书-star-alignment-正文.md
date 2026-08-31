@@ -15,3 +15,4 @@ RNA 比对一旦选错参数，下游计数和变异 call 会静默出错。STAR
 补充两个边界：STAR 不自动解压，`.gz` 输入必须配 `--readFilesCommand zcat`；GATK 要读组，用 `--outSAMattrRGline` 空格分隔填 ID/SM/PL/LB，否则缺 @RG。
 
 STAR 把剪接连接、两趟法、MAPQ 和链特异性都打包好了，但参数不是默认就安全——上面三点核对过再跑，能少返工很多。
+#生信 #生物信息学 #STAR #RNA比对 #bioSkills
