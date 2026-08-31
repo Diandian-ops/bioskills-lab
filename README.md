@@ -46,7 +46,12 @@ RedBook/
 │   └── 005-msa-statistics/    # msa-statistics 严格复现脚本
 └── output/                      # 【纯产物】一条命令可重建，删了不心疼
     ├── bioSkills-site/        # 多文件静态站点（index + alignment/read-alignment/variant-calling 三类 + assets）
-    └── xhs-cards/             # 小红书卡片产物（按分类分子目录：alignment/ read-alignment/ variant-calling/）
+    └── xhs-site/              # 小红书发布台
+        ├── index.html         # 入口：file:// 双击浏览，或 launch_console.bat 起 8899 服务
+        ├── launch_console.bat # 一键起服务 + 打开浏览器
+        ├── scripts/           # 构建/运行工具（build_xhs_console.py, serve_console.py, md2card_patch.py）
+        ├── xhs-cards/         # 卡片图 <cat>/<slug>/<theme>-standalone-hd/*.png
+        └── logs/              # 跑批日志
 ```
 
 > ⚠️ **源 / 产物不可混居**：`build_lab_site.py` 重生成时会先 `rmtree(output/bioSkills-site)` 再重建。所有源都在 `content/` 与 `pipeline/`，绝不在 `output/` 内，否则会被误删。
@@ -268,7 +273,7 @@ Start-Process -WorkingDirectory "content/库/md2card" npm -ArgumentList "install
 # 严格自检：应 FAIL=0
 python pipeline/check_env.py --xhs
 
-# 出图示例（自动推导分类、生成 3:4 多卡 PNG 到 output/xhs-cards/）
+# 出图示例（自动推导分类、生成 3:4 多卡 PNG 到 output/xhs-site/xhs-cards/）
 python pipeline/trial2xhs.py content/笔记/variant-calling/018-bioSkills真实试用-vcf-statistics.md
 ```
 
