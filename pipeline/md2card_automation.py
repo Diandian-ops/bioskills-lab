@@ -11,11 +11,11 @@ md2card_automation.py — 用 Playwright 驱动本地 md2card 工作台，把 bi
 用法：
   python pipeline/md2card_automation.py <note.md> [--theme notebook] [--density balanced]
                                          [--cover standalone] [--canvas 3:4] [--hd]
-                                         [--assets DIR] [--out output/xhs-cards] [--url URL]
+                                         [--assets DIR] [--out output/xhs-site/xhs-cards] [--url URL]
 
 产物（ZIP 下载后已清理，只留 PNG）：
   <out>/<分类>/<slug>/<theme>-<cover>[-hd]/01.png, 02.png, ...
-  例：output/xhs-cards/alignment/005-bioSkills真实试用-msa-statistics/notebook-standalone-hd/01.png
+  例：output/xhs-site/xhs-cards/alignment/005-bioSkills真实试用-msa-statistics/notebook-standalone-hd/01.png
   （分类从笔记路径 content/笔记/<分类>/<md> 自动推导；001-003 无分类则落到 <out>/<slug>/）
 """
 import argparse
@@ -43,6 +43,11 @@ if os.path.exists(_venv_py):
 
 DENSITY_TEXT = {"relaxed": "舒展", "balanced": "技术平衡", "compact": "紧凑"}
 COVER_TEXT = {"integrated": "融合首页", "standalone": "独立封面", "none": "无封面"}
+
+
+def strip_frontmatter(text: str) -> str:
+    """去掉 YAML frontmatter，防止 md2card 把它当正文渲染。"""
+    return re.sub(r"^---\s*\n.*?\n---\s*\n", "", text, count=1, flags=re.S)
 
 
 def slugify(path: str) -> str:
@@ -95,7 +100,7 @@ def run(md_path, theme, density, cover, canvas, hd, assets, out, url):
 
     slug = slugify(md_path)
     variant = f"{theme}-{cover}" + ("-hd" if hd else "")
-    # 分类层：从笔记所在子目录推导，使产物落到 output/xhs-cards/<cat>/<slug>/<variant>
+    # 分类层：从笔记所在子目录推导，使产物落到 output/xhs-site/xhs-cards/<cat>/<slug>/<variant>
     cat = os.path.basename(os.path.dirname(md_path))
     out_parts = [out]
     if cat and cat != "笔记":
@@ -103,6 +108,14 @@ def run(md_path, theme, density, cover, canvas, hd, assets, out, url):
     out_parts += [slug, variant]
     out_dir = os.path.abspath(os.path.join(*out_parts))
     os.makedirs(out_dir, exist_ok=True)
+
+    # 剥除 YAML frontmatter 后再喂给 md2card，避免 title/skill/trial 等元数据被渲染到卡片
+    raw_md = open(md_path, encoding="utf-8").read()
+    clean_md = strip_frontmatter(raw_md)
+    tmp_md = os.path.join(out_dir, f".{slug}.nometa.md")
+    with open(tmp_md, "w", encoding="utf-8") as f:
+        f.write(clean_md)
+    print(f"[*] 已生成去 frontmatter 临时稿: {tmp_md}")
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -119,7 +132,7 @@ def run(md_path, theme, density, cover, canvas, hd, assets, out, url):
 
         # 1) 导入 Markdown（触发 loadFile -> 自动弹图片绑定对话框）
         md_input = page.locator('label.recommended-file-button input[type="file"]')
-        md_input.set_input_files(md_path)
+        md_input.set_input_files(tmp_md)
         print("[*] 已灌入 markdown，等待分页/图片引用解析…")
         page.wait_for_timeout(1500)
 
@@ -204,6 +217,11 @@ def run(md_path, theme, density, cover, canvas, hd, assets, out, url):
             print(f"[*] 已清理 ZIP: {zip_path}")
         except OSError:
             pass
+        # 清理 frontmatter 剥离临时稿
+        try:
+            os.remove(tmp_md)
+        except OSError:
+            pass
         browser.close()
     return 0
 
@@ -220,7 +238,7 @@ def main():
     ap.add_argument("--canvas", default="3:4", choices=["3:4", "2:3"])
     ap.add_argument("--hd", action="store_true", help="高清原图(2160x2880) 而非标准发布(1080x1440)")
     ap.add_argument("--assets", default=None, help="素材目录（默认自动探测 content/素材/<stem>）")
-    ap.add_argument("--out", default="output/xhs-cards",
+    ap.add_argument("--out", default="output/xhs-site/xhs-cards",
                    help="输出根目录，实际产物落在 <out>/<slug>/<theme>-<cover>[-hd]/")
     ap.add_argument("--url", default="http://localhost:5173/app/")
     args = ap.parse_args()

@@ -51,7 +51,7 @@ python pipeline/trial2xhs.py content/笔记/variant-calling/018-bioSkills真实�
 1. 第 4 步 `python pipeline/check_env.py` 输出 **`FAIL=0`**（`WARN` 可忽略，不影响复现）。
 2. 第 5 步 `build_lab_site.py` 无报错退出，生成 `output/bioSkills-site/`。
 3. 站点页数与图数符合预期（参考基线：28 页 / 34 图）。
-4. （可选）第 6 步 `check_env.py --xhs` 输出 `FAIL=0`，且 `trial2xhs.py` 成功在 `output/xhs-cards/` 下生成 PNG。
+4. （可选）第 6 步 `check_env.py --xhs` 输出 `FAIL=0`，且 `trial2xhs.py` 成功在 `output/xhs-site/xhs-cards/` 下生成 PNG。
 
 ## 可选深度验证（建议做一次，确认素材可独立复现）
 ```powershell
