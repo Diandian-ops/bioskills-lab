@@ -29,3 +29,7 @@ content/库/md2card/
 # 注：004–006 早期工作区已入库，故只忽略 015 及之后。
 pipeline/01[5-9]-*/
 pipeline/02[0-9]-*/
+
+# 运行噪声：比对/对齐工具（linsi 等）的 stderr 进度日志含嵌入式回车符，
+# 被 .gitattributes 当文本归一会产生无意义 churn，本地保留、不入库。
+content/素材/**/linsi_stderr.log
