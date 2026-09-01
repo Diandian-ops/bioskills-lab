@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """生成 bioSkills 真实试用实验室 - 多文件静态站点（多层级侧栏 + 内容居中 + 移动抽屉）。"""
 import html, os, shutil, re, markdown as _md
+import subprocess as _sp
+from datetime import datetime, timedelta, timezone as _tz
 
 # 项目根：优先环境变量 REDBOOK_BASE，否则按脚本位置推导（pipeline/ 的上一级）
 # 这样脚本在本地 Mac 与 CI(ubuntu) 上都能跑，不再硬编码绝对路径
@@ -9,6 +11,19 @@ BASE = os.environ.get("REDBOOK_BASE") or os.path.dirname(os.path.dirname(os.path
 BIO = BASE + "/content/库/bioSkills"
 SITE = BASE + "/output/bioSkills-site"
 ASSETS = SITE + "/assets"
+
+def git_date(rel):
+    """笔记的真实更新时间 = git 最后一次提交时间（东八区日期）。
+    文件 mtime 在 clone/checkout 后会失真，不可用。非 git 环境 / 浅克隆历史不足时返回 None，页面优雅降级不显示。"""
+    try:
+        out = _sp.check_output(["git", "log", "-1", "--format=%cI", "--", rel],
+                               cwd=BASE, stderr=_sp.DEVNULL).decode().strip()
+        if not out:
+            return None
+        dt = datetime.fromisoformat(out).astimezone(_tz(timedelta(hours=8)))
+        return dt.strftime("%Y-%m-%d")
+    except Exception:
+        return None
 
 def code(path):
     with open(path, "r", encoding="utf-8") as f:
@@ -304,6 +319,8 @@ pre code{font:13px/1.55 "Courier New",monospace;padding:14px 16px;display:block;
 .note{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:12px;padding:13px 16px;font-size:14px;color:var(--ink-soft);}
 .todo{border:1px dashed var(--accent);border-radius:12px;padding:16px 18px;background:#fdf8f5;}
 footer{margin-top:60px;border-top:1px solid var(--line);padding-top:22px;color:var(--muted);font-size:13px;}
+.upd{color:var(--muted);font-size:12.5px;margin:14px 0 0;font-family:"Courier New",monospace;letter-spacing:.02em;}
+.sklist .upd-inline{color:var(--muted);font-size:12px;font-family:"Courier New",monospace;margin-left:10px;font-weight:400;}
 .totop{position:fixed;right:22px;bottom:22px;z-index:60;width:42px;height:42px;border-radius:50%;border:none;background:var(--accent);color:#fff;font-size:18px;cursor:pointer;display:none;box-shadow:0 2px 10px rgba(0,0,0,.18);}
 /* (modal 弹窗样式已随回退移除) */
 .lb{position:fixed;inset:0;z-index:200;background:rgba(35,33,28,.82);display:none;align-items:center;justify-content:center;padding:24px;cursor:zoom-out;backdrop-filter:blur(3px);}
@@ -526,17 +543,21 @@ def cat_page(cat):
     h = '<div class="crumb"><a href="../index.html">实验室首页</a> › %s</div>' % cat
     h += '<div class="masthead"><div class="sec-kicker">CATEGORY</div><h1>%s</h1><p class="sub">%s - %d 个 skill，已完成 %d 个深度试用</p></div>' % (cat, CAT_META.get(cat, cat), n, n)
     h += '<div class="sklist">'
-    for skill, _ in items:
+    for skill, _, upd in items:
         nums = [t[1] for t in TRIALS if t[0] == cat and t[2] == skill]
         num = nums[0] if nums else "?"
-        h += '<a href="%s.html"><span>%s</span><span class="tag tag-done">DONE %s</span></a>' % (skill, skill, num)
+        upd_html = '<span class="upd-inline">更新于 %s</span>' % upd if upd else ''
+        h += '<a href="%s.html"><span>%s%s</span><span class="tag tag-done">DONE %s</span></a>' % (skill, skill, upd_html, num)
     h += '</div><div class="todo" style="margin-top:18px;"><p style="margin:0;">同一套方法论持续补完：真实数据 → 严格按 skill 复现 → 成分拆解 → 出图。每完成一个 skill，上方列表自动点亮。</p></div>'
     h += '<footer><p><a href="../index.html">← 返回实验室首页</a></p></footer>'
     return page("../", cat, h)
 
-def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_blocks, cat="alignment"):
+def skill_page(prefix, active, crumb, sec_kicker, h1, sec_one, body_html, code_blocks, cat="alignment", updated=None):
     c = '<div class="crumb"><a href="%sindex.html">实验室首页</a> › <a href="%s/index.html">%s</a> › %s</div>' % (prefix, cat, cat, crumb)
-    c += '<div class="masthead"><div class="sec-kicker">%s</div><h1>%s</h1><p class="sub">%s</p></div>' % (sec_kicker, h1, sec_one)
+    c += '<div class="masthead"><div class="sec-kicker">%s</div><h1>%s</h1><p class="sub">%s</p>' % (sec_kicker, h1, sec_one)
+    if updated:
+        c += '<p class="upd">更新于 %s</p>' % updated
+    c += '</div>'
     c += body_html
     if code_blocks:
         c += '<h2>本实验室真实复现代码</h2><p class="sec-one">以下代码来自 pipeline/ 目录，与 SKILL.md 配置严格一致，可直接复现。</p>'
@@ -555,8 +576,9 @@ for cat, num, skill, kicker, active in TRIALS:
         print("[WARN] 未找到笔记: %s/%s" % (cat, num)); continue
     body, meta, need = load_note(cand[0])
     all_need += need
+    upd = git_date(os.path.relpath(cand[0], BASE).replace("\\", "/"))
     pages.setdefault(cat, []).append((skill, skill_page("../", active, skill, kicker,
-                                        meta.get("标题", skill), meta.get("副标题", ""), body, [], cat=cat)))
+                                        meta.get("标题", skill), meta.get("副标题", ""), body, [], cat=cat, updated=upd), upd))
 al = cat_page("alignment")
 ra = cat_page("read-alignment")
 vc = cat_page("variant-calling")
@@ -572,7 +594,7 @@ with open(SITE + "/style.css", "w", encoding="utf-8") as f: f.write(STYLE)
 with open(SITE + "/index.html", "w", encoding="utf-8") as f: f.write(idx)
 for cat in pages:
     with open(SITE + "/%s/index.html" % cat, "w", encoding="utf-8") as f: f.write(cat_page(cat))
-    for skill, html in pages[cat]:
+    for skill, html, _upd in pages[cat]:
         with open(SITE + "/%s/%s.html" % (cat, skill), "w", encoding="utf-8") as f: f.write(html)
 print("站点已生成 -> " + SITE)
 for root, _, files in os.walk(SITE):
