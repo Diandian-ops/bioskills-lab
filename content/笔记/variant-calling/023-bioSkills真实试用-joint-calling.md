@@ -117,6 +117,26 @@ bcftools stats -s - chr22_slice.vcf.gz | grep '^PSC'
 
 需要同一批样本的两套 callset（逐样本调用 + 联合调用）才能对比，本环境无 BAM 且 GATK 未安装，未做真跑。
 
+## 复现难度评估（2026-09-01 环境实测）
+
+本节记录在 Windows 11 单机环境上尝试补跑本 skill 时的真实探测结果，与 022 的工具链探测共享同一环境。
+
+**工具链：GATK 侧可获取；GLnexus 侧本机不可行。**
+
+| 组件 | 状态（实测） |
+|---|---|
+| GATK 4.6.1.0 | GitHub release 直连可下（667 MB zip，实测下载成功）；`GenomicsDBImport` / `GenotypeGVCFs` 为 Java 实现，Windows 可运行 |
+| Java 17 | Adoptium/TUNA 镜像可得（190 MB，实测下载成功） |
+| GLnexus | 官方只发布 Linux 静态二进制与容器镜像，Windows 原生无；本机无 WSL/Docker（实测） |
+
+**输入数据：比 022 更重一层的结构性困难。**
+
+- 联合基因型至少需要 2–3 个样本的 gVCF，即 2–3 份独立比对文件。1000 Genomes 现仅提供 GRCh38DH 全基因组 CRAM（每样本约 8–15 GB），旧 GRCh37 BAM 路径实测 404。
+- 即便走「远程 CRAM range 切区域」路径，也要对 2–3 份 CRAM 各自完成 samtools 远程读取、参考 MD5 匹配、小区域导出，再逐样本跑 `HaplotypeCaller -ERC GVCF`，链路长度是 022 的三倍。
+- 旧 GRCh37 时代若能拿到多个单样本 BAM，`CombineGVCFs`（< 100 样本档）本来是最小可行演示；当前数据源下该捷径不存在。
+
+**结论**：`GenotypeGVCFs` 重算与「平方化矩阵」的核心论断，需要逐样本 gVCF 作为输入才能真跑；在当前公开数据源与本机环境组合下，输入获取成本远超单篇笔记的演示需求。按如实呈现原则，真跑部分仅限对既有联合基因型产物的 bcftools 特征核查（见「本次实测」节）。
+
 ## 未覆盖（诚实标注）
 
 本环境 **GATK 与 GLnexus 均未安装，且无逐样本 gVCF**，以下部分未做真跑，仅为文档口径与命令模板：

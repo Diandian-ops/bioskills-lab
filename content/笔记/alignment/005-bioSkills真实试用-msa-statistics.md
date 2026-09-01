@@ -102,7 +102,7 @@ Skill 的 `information_content()` 函数自动检测蛋白/DNA 并切换背景�
 
 **BLOSUM62 返回 numpy Array 不是 dict**
 
-`substitution_matrices.load('BLOSUM62')` 返回的是 numpy Array。用 `.get((c1,c2), 0)` 在 Array 上永远返回 0（静默出错）。必须用 `matrix[c1, c2]` 下标访问。SP-score 或 PSSM 构建中若沿用 dict 式访问，会导致所有替换对得分归零。
+`substitution_matrices.load('BLOSUM62')` 返回的是 numpy Array。用 `.get((c1,c2), 0)` 在 Array 上永远返回 0（静默出错）。必须用 `matrix[c1, c2]` 下标访问。SP-score（逐列替换得分加总，Sum-of-Pairs）或 PSSM 构建中若沿用 dict 式访问，会导致所有替换对得分归零。
 
 **其他知识封装**：
 - Shannon 熵的生物学含义：H=0 完全保守，H=log₂N 完全随机

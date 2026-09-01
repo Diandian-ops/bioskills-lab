@@ -2,7 +2,7 @@
 
 <!--
 META
-标题: bioSkills bowtie2-alignment：短读长比对的 end-to-end/local 与碎片几何旗标
+标题: bowtie2 真实试用：适配器污染下 local 软截 +49pp、ChIP/ATAC 旗标与 MAPQ 42/44
 副标题: 真实复现建索引、适配器污染软截、ChIP/ATAC 旗标与 MAPQ 上限 42/44
 标签: #生信 #生物信息学 #比对 #bowtie2 #ChIPseq #ATACseq #bioSkills
 配图: 011-fig.png

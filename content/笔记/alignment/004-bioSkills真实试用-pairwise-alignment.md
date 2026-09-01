@@ -16,7 +16,7 @@ META
 
 ## 功能定位与适用范围
 
-pairwise-alignment = **两条序列的动态规划最优比对**。内容覆盖： Biopython 的 `Bio.Align.PairwiseAligner` 类——从创建 aligner、选矩阵、设 gap penalty 到取结果、算 PID，一条龙。
+pairwise-alignment = **两条序列的动态规划最优比对**。内容覆盖： Biopython 的 `Bio.Align.PairwiseAligner` 类——从创建 aligner、选矩阵、设 gap penalty 到取结果、算 PID（序列一致度，Percent Identity），一条龙。
 
 | 属性 | 内容 |
 |------|------|
@@ -153,7 +153,7 @@ query           118 FGKEFTPPVQAAYQKVVAGVANALAHKYH 147
 | **默认（gap=0）** | **172** | **55** | **339** |
 | 推荐（-11/-1） | 149 | 9 | 286 |
 
-默认配置凭空多出 **46 个 gap**（+511%），align_len 从 149 膨胀到 172。score 反而更高（339 > 286）——因为 gap 不花钱，aligner 可以通过插入大量短 gap 来"免费"获得更多 match 分。
+默认配置凭空多出 **46 个 gap**（+511%），align_len 从 149 膨胀到 172。score 更高（339 > 286）——因为 gap 不花钱，aligner 可以通过插入大量短 gap 来"免费"获得更多 match 分。
 
 这就是 skill 警告的配置偏差：**看起来分数更好，实际上比对质量更差**。
 

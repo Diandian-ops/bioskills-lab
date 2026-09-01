@@ -110,6 +110,28 @@ gatk VariantFiltration -R reference.fa -V sample.vcf.gz -O sample.filtered.vcf.g
 
 无 BAM，无法运行 VerifyBamID2/CHARR；倍性设置需要实际调用流程，未做真跑。
 
+## 复现难度评估（2026-09-01 环境实测）
+
+本节记录在 Windows 11 单机环境上尝试补跑本 skill 时的真实探测结果，供同类环境参考。
+
+**工具链：可获取，不是障碍。**
+
+| 组件 | 状态（实测） |
+|---|---|
+| GATK 4.6.1.0 | GitHub release 直连可下（`gatk-4.6.1.0.zip` 698,893,720 字节 ≈ 667 MB，本次实测下载成功） |
+| Java | GATK 4.x 需 Java 17；Adoptium/TUNA 镜像提供 Windows x64 JDK17 zip（约 190 MB，实测下载成功） |
+| samtools/bcftools | MSYS2 mingw64 仓库有 `bcftools-1.24` 包（与既往笔记真跑版本一致）；samtools 同源可取 |
+
+**输入数据：结构性困难，是真正卡点。**
+
+- GATK 调用输入必须是排序、去重标记、索引的 BAM/CRAM 加参考 FASTA（含 `.fai`/`.dict`）。
+- 1000 Genomes 的比对文件已全面迁移至 **GRCh38DH**：每样本仅提供全基因组 low-coverage CRAM（单个样本约 8–15 GB），无染色体级子集文件。
+- 旧 GRCh37 时代的 BAM 路径实测已失效（`data/<POP>/<SAMPLE>/alignment/` 返回 404；`ftp/data/` 旧根同样不可用）。
+- 可行路径是携带 `.crai` 索引对远程 CRAM 按 range 读取、切出如 `22:17.0–17.2Mb` 的小区域——但该路径要求：本机 samtools（Windows 原生二进制需自行取 MSYS2 包）、与 CRAM 编码时序列 MD5 一致的 GRCh38DH 参考（全参考压缩包约 950 MB），且 Windows + 远程 CRAM + 参考匹配的整链路未经本机验证。
+- 本机环境实测：Windows 11 无 WSL、无 Docker，PATH 中无 samtools/bcftools（既往 bcftools 1.24 环境在 2026-08-28 之后已不在当前 PATH）。
+
+**结论**：本 skill 的调用流程在本机属于「工具可获取、输入数据难」——卡点在 BAM/CRAM 数据获取与参考匹配，而非 GATK 本身。按如实呈现原则，本篇不虚构调用输出，真跑部分仅限下游 VCF 的 bcftools 可验证核查。
+
 ## 未覆盖（诚实标注）
 
 本环境 **GATK 未安装且无比对 BAM**，以下部分未做真跑，仅为文档口径与命令模板：

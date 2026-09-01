@@ -10,7 +10,7 @@ META
 
 # 006｜bioSkills alignment-trimming：ClipKIT 默认修剪模式的行为
 
-用 bioSkills 仓库自带的示例 MSA → 原样跑 alignment-trimming skill 推荐默认模式 `kpic-smart-gap` → 严格复现并逐块拆解这个 skill 的内容成分。
+用 bioSkills 仓库自带的示例 MSA（多序列比对，Multiple Sequence Alignment）→ 原样跑 alignment-trimming skill 推荐默认模式 `kpic-smart-gap` → 严格复现并逐块拆解这个 skill 的内容成分。
 
 ---
 
