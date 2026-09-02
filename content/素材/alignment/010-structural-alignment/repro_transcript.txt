@@ -1,0 +1,75 @@
+# repro_transcript.txt — 010 structural-alignment 严格复现记录
+# 真实执行的命令 + 真实输出的精简摘抄（完整输出见同目录 tmalign_*.txt / foldseek_easy_search.txt）
+# 环境: WSL Ubuntu, conda env `bio`; TM-align 20240303; Foldseek (conda env bio)
+# 数据: content/素材/alignment/010-structural-alignment/pdbs/{1CRN,1ENH,1R69,1UBQ}.pdb
+
+================================================================
+# 0. 工作目录与数据
+================================================================
+$ cd content/素材/alignment/010-structural-alignment
+$ ls pdbs/
+1CRN.pdb  1ENH.pdb  1R69.pdb  1UBQ.pdb
+
+================================================================
+# 1. TM-align 两两结构比对（真实二进制，无 -outfmt，捕获 TM-score/RMSD/Aligned length）
+#    命令：TMalign pdbs/<A>.pdb pdbs/<B>.pdb -o <A>_<B>.sup > tmalign_<A>_<B>.txt 2>&1
+================================================================
+
+# 1a. 1UBQ vs 1CRN  (rc=0)
+$ TMalign pdbs/1UBQ.pdb pdbs/1CRN.pdb -o 1UBQ_1CRN.sup
+-- 摘抄 tmalign_1UBQ_1CRN.txt --
+Length of Structure_1: 76 residues
+Length of Structure_2: 46 residues
+Aligned length= 32, RMSD=   3.28, Seq_ID=n_identical/n_aligned= 0.031
+TM-score= 0.26816 (normalized by length of Structure_1: L=76, d0=3.08)
+TM-score= 0.36145 (normalized by length of Structure_2: L=46, d0=2.10)
+
+# 1b. 1UBQ vs 1ENH  (rc=0)
+$ TMalign pdbs/1UBQ.pdb pdbs/1ENH.pdb -o 1UBQ_1ENH.sup
+-- 摘抄 tmalign_1UBQ_1ENH.txt --
+Length of Structure_1: 76 residues
+Length of Structure_2: 54 residues
+Aligned length= 38, RMSD=   3.08, Seq_ID=n_identical/n_aligned= 0.105
+TM-score= 0.31483 (normalized by length of Structure_1: L=76, d0=3.08)
+TM-score= 0.38935 (normalized by length of Structure_2: L=54, d0=2.41)
+
+# 1c. 1UBQ vs 1R69  (rc=0)
+$ TMalign pdbs/1UBQ.pdb pdbs/1R69.pdb -o 1UBQ_1R69.sup
+-- 摘抄 tmalign_1UBQ_1R69.txt --
+Length of Structure_1: 76 residues
+Length of Structure_2: 63 residues
+Aligned length= 40, RMSD=   3.35, Seq_ID=n_identical/n_aligned= 0.075
+TM-score= 0.30552 (normalized by length of Structure_1: L=76, d0=3.08)
+TM-score= 0.33667 (normalized by length of Structure_2: L=63, d0=2.71)
+
+# 折叠相似度取两个长度归一化 TM-score 中的较大值（按较短链归一化）：
+#   1UBQ vs 1CRN  -> 0.3614   (RMSD 3.28, aligned 32)  < 0.5 不同折叠
+#   1UBQ vs 1ENH  -> 0.3893   (RMSD 3.08, aligned 38)  < 0.5 不同折叠
+#   1UBQ vs 1R69  -> 0.3367   (RMSD 3.35, aligned 40)  < 0.5 不同折叠
+
+================================================================
+# 2. Foldseek 大规模结构检索（easy-search，无外部数据库，对 4 个本地 PDB 自比）
+#    命令：foldseek easy-search pdbs/ pdbs/ fs_out/result.m8 fs_tmp/ > foldseek_easy_search.txt 2>&1
+================================================================
+$ foldseek easy-search pdbs/ pdbs/ fs_out/result.m8 fs_tmp/
+-- 摘抄 foldseek_easy_search.txt 末尾 + result.m8 头部 --
+rc=0
+result.m8 (默认 m8 列: query,target,fident,alnlen,mismatch,gapopen,qstart,qend,tstart,tend,evalue,bits):
+1R69   1R69   1.000   63   0   0   1   63   1   63   6.173E-11   452
+1ENH   1ENH   1.000   54   0   0   1   54   1   54   4.302E-10   343
+1UBQ   1UBQ   1.000   76   0   0   1   76   1   76   2.589E-18   635
+1CRN   1CRN   1.000   46   0   0   1   46   1   46   6.274E-11   357
+
+# 说明：默认 3Di+AA (alignment-type=2) 仅返回自身命中（fident=1.000），
+# 未返回任何跨结构命中 —— 与 TM-align 全部 <0.5 的结论一致（4 个结构为不同折叠）。
+# 若要检索低相似候选，应按 SKILL.md 用 --alignment-type 1（TMalign 全局）或放宽阈值。
+
+================================================================
+# 3. 结果固化
+================================================================
+$ python parse_tmalign.py   # 解析 tmalign_*.txt -> structural_results.json
+WROTE structural_results.json with 3 pairs
+
+# 诚实声明（未覆盖部分见笔记「未覆盖（诚实标注）」）：
+#   - US-align / DALI / Foldmason / Foldseek-Multimer / pLDDT 掩码 / PyMOL·ChimeraX 可视化：
+#     本环境未安装或未提供对应输入，相关命令按 SKILL.md 记录，未实际执行，不做伪造结论。

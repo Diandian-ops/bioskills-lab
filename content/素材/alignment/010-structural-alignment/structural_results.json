@@ -1,81 +1,45 @@
 {
-  "superimposer": {
-    "rmsd": 0.0908,
-    "n_aligned": 76,
-    "n_ref": 76,
-    "n_mob": 76
-  },
-  "tmalign": {
-    "1ubq|1ubi": {
-      "tm_score": 0.9991,
-      "tm1": null,
-      "tm2": null,
-      "rmsd": 0.09,
-      "aligned_len": 76,
-      "rc": 0,
-      "stderr_first": ""
+  "tool": "TM-align 20240303",
+  "reference_metric": "max of the two length-normalised TM-scores (normalised by shorter chain)",
+  "pairs": [
+    {
+      "pair": "1UBQ vs 1CRN",
+      "query": "1UBQ",
+      "target": "1CRN",
+      "len_query": 76,
+      "len_target": 46,
+      "aligned_length": 32,
+      "rmsd": 3.28,
+      "tm_score_norm_query": 0.26816,
+      "tm_score_norm_target": 0.36145,
+      "tm_score_fold_sim": 0.36145,
+      "same_fold_TM_gt_0.5": false
     },
-    "1ubq|1fmb": {
-      "tm_score": 0.4079,
-      "tm1": null,
-      "tm2": null,
-      "rmsd": 3.41,
-      "aligned_len": 56,
-      "rc": 0,
-      "stderr_first": ""
+    {
+      "pair": "1UBQ vs 1ENH",
+      "query": "1UBQ",
+      "target": "1ENH",
+      "len_query": 76,
+      "len_target": 54,
+      "aligned_length": 38,
+      "rmsd": 3.08,
+      "tm_score_norm_query": 0.31483,
+      "tm_score_norm_target": 0.38935,
+      "tm_score_fold_sim": 0.38935,
+      "same_fold_TM_gt_0.5": false
     },
-    "1ubi|1fmb": {
-      "tm_score": 0.4079,
-      "tm1": null,
-      "tm2": null,
-      "rmsd": 3.41,
-      "aligned_len": 56,
-      "rc": 0,
-      "stderr_first": ""
+    {
+      "pair": "1UBQ vs 1R69",
+      "query": "1UBQ",
+      "target": "1R69",
+      "len_query": 76,
+      "len_target": 63,
+      "aligned_length": 40,
+      "rmsd": 3.35,
+      "tm_score_norm_query": 0.30552,
+      "tm_score_norm_target": 0.33667,
+      "tm_score_fold_sim": 0.33667,
+      "same_fold_TM_gt_0.5": false
     }
-  },
-  "foldseek_search": {
-    "rc": 0,
-    "rows": [
-      {
-        "query": "1ubq",
-        "target": "1ubq",
-        "alntmscore": "1.013E+00",
-        "qtmscore": "1.000E+00",
-        "ttmscore": "1.000E+00",
-        "lddt": "1.000E+00",
-        "bits": "635",
-        "rmsd": "1.594E-02"
-      },
-      {
-        "query": "1ubq",
-        "target": "1ubi",
-        "alntmscore": "1.013E+00",
-        "qtmscore": "9.995E-01",
-        "ttmscore": "9.995E-01",
-        "lddt": "1.000E+00",
-        "bits": "581",
-        "rmsd": "9.067E-02"
-      }
-    ],
-    "stderr_first": ""
-  },
-  "foldseek_cluster": {
-    "rc": 0,
-    "rows": [
-      {
-        "member": "1fmb",
-        "rep": "1fmb"
-      },
-      {
-        "member": "1ubq",
-        "rep": "1ubq"
-      },
-      {
-        "member": "1ubq",
-        "rep": "1ubi"
-      }
-    ],
-    "stderr_first": ""
-  }
+  ]
 }

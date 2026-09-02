@@ -1,0 +1,24 @@
+
+ **********************************************************************
+ * TM-align (Version 20240303): protein and RNA structure alignment   *
+ * References: Y Zhang, J Skolnick. Nucl Acids Res 33, 2302-9 (2005)  *
+ *             S Gong, C Zhang, Y Zhang. Bioinformatics, bz282 (2019) *
+ * Please email comments and suggestions to yangzhanglab@umich.edu    *
+ **********************************************************************
+
+Name of Structure_1: pdbs/1UBQ.pdb (to be superimposed onto Structure_2)
+Name of Structure_2: pdbs/1ENH.pdb
+Length of Structure_1: 76 residues
+Length of Structure_2: 54 residues
+
+Aligned length= 38, RMSD=   3.08, Seq_ID=n_identical/n_aligned= 0.105
+TM-score= 0.31483 (normalized by length of Structure_1: L=76, d0=3.08)
+TM-score= 0.38935 (normalized by length of Structure_2: L=54, d0=2.41)
+(You should use TM-score normalized by length of the reference structure)
+
+(":" denotes residue pairs of d < 5.0 Angstrom, "." denotes other aligned residues)
+MQIFVK----TLTGK--TI--TLEVE---PS-DTIENVKAKIQDKEGIPPDQQ-R-LI-FAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG-
+          ..:::  ::  :.      .  ..::::::::::::::::::: : :: .::.                             
+------RPRTAFSSEQLARLKRE---FNEN-RYLTERRRQQLSSELGLNEAQIKIWFQNKRAK----------------------------I
+
+#Total CPU time is  0.00 seconds
