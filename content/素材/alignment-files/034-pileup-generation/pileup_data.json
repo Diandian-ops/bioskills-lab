@@ -1,0 +1,6 @@
+{
+  "pileup_positions": 11962,
+  "mean_depth": 25.414,
+  "bcf_size": 0,
+  "bcf_note": "本机 samtools 1.22.1 已将 mpileup 生成 BCF/VCF 的功能移除（提示改用 bcftools mpileup）；WSL 未装 bcftools，故 BCF 产出为 0。本文只产出文本 pileup（11962 位点，均值 25.414x），BCF/VCF 需另装 bcftools mpileup。"
+}

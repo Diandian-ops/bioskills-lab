@@ -1,0 +1,10 @@
+{
+  "bai_size": 336,
+  "csi_size": 155,
+  "idxstats_head": [
+    "contig1\t3000\t1485\t1",
+    "contig2\t3000\t1491\t3",
+    "contig3\t3000\t1490\t4",
+    "contig4\t3000\t1488\t4"
+  ]
+}

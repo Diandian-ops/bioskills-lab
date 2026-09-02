@@ -1,0 +1,8 @@
+{
+  "mapped": 5954,
+  "unmapped": 46,
+  "proper_pair": 3042,
+  "mapq_ge20": 5924,
+  "mapped_and_q20": 5924,
+  "unmapped_not_mate_unmapped": 12
+}

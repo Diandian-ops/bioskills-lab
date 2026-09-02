@@ -1,0 +1,4 @@
+{
+  "fai": "contig1\t3000\t39\t70\t71\ncontig2\t3000\t3121\t70\t71\ncontig3\t3000\t6203\t70\t71\ncontig4\t3000\t9285\t70\t71",
+  "region_seq": ">contig1:1-60\nAGACCTCGCGCCCTCCCGAACGCCTATACCATGAGTACACCCATGAGCACCAATATGAGT"
+}

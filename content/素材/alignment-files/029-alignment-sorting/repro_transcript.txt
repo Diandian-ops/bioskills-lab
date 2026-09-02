@@ -1,0 +1,17 @@
+### samtools sort (coordinate)
+$ samtools sort -o /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/sorted.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/aligned_e2e.bam
+$ samtools index /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/sorted.bam
+--- @HD sort order (input vs sorted) ---
+$ samtools view -H /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/aligned_e2e.bam | grep '@HD'
+@HD	VN:1.5	SO:coordinate
+$ samtools view -H /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/sorted.bam | grep '@HD'
+@HD	VN:1.5	SO:coordinate
+--- alignment counts (input vs sorted) ---
+$ samtools view -c /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/aligned_e2e.bam
+6000
+$ samtools view -c /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/sorted.bam
+6000
+--- name-sorted variant ---
+$ samtools sort -n -o /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/namesort.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/aligned_e2e.bam
+$ samtools view -H /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/029-alignment-sorting/namesort.bam | grep '@HD'
+@HD	VN:1.5	SO:queryname	SS:queryname:natural

@@ -1,0 +1,7 @@
+{
+  "before_softclip": 0,
+  "after_softclip": 53,
+  "primers": "contig1\t100\t200\tAMP1\t+\ncontig1\t250\t350\tAMP2\t+",
+  "total_before": 6000,
+  "total_after": 6000
+}

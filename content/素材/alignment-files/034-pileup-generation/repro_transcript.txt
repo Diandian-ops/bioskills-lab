@@ -1,0 +1,14 @@
+### samtools mpileup (text, first 5)
+contig1	3	A	1	^K.	2
+contig1	4	C	2	.^K.	22
+contig1	5	C	2	..	22
+contig1	6	T	3	..^K.	222
+contig1	7	C	3	...	222
+### positions
+pileup_positions=11962
+### mean depth
+mean_depth=25.414
+### mpileup -> BCF (correct path)
+bcf bytes:
+0
+### view BCF

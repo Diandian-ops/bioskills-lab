@@ -1,0 +1,11 @@
+### samtools faidx
+$ samtools faidx /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/036-reference-operations/reference.fa
+$ ls -la /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/036-reference-operations/reference.fa.fai
+-rwxrwxrwx 1 devah devah 94 Sep  2 20:03 /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/036-reference-operations/reference.fa.fai
+### region extraction (contig1:1-60)
+$ samtools faidx /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/036-reference-operations/reference.fa contig1:1-60
+>contig1:1-60
+AGACCTCGCGCCCTCCCGAACGCCTATACCATGAGTACACCCATGAGCACCAATATGAGT
+### samtools dict (not in samtools; picard/gatk only) -> honest note
+$ command -v samtools >/dev/null && samtools dict 2>&1 | head -1 || true
+@HD	VN:1.0	SO:unsorted

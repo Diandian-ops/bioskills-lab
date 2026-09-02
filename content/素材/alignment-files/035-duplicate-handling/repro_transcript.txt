@@ -1,0 +1,13 @@
+### markdup pipeline
+$ samtools sort -n -o /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/namesort.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/aligned_e2e.bam
+$ samtools fixmate -m /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/namesort.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/fixmate.bam
+$ samtools sort -o /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/coordsort.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/fixmate.bam
+$ samtools markdup /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/coordsort.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/markdup.bam
+$ samtools index /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/markdup.bam
+### flagstat duplicates before/after
+$ samtools flagstat /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/aligned_e2e.bam | grep -i duplicate
+0 + 0 duplicates
+0 + 0 primary duplicates
+$ samtools flagstat /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/035-duplicate-handling/markdup.bam | grep -i duplicate
+10 + 0 duplicates
+10 + 0 primary duplicates

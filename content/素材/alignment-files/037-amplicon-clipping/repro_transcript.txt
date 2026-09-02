@@ -1,0 +1,94 @@
+### build primer BED from BAM-covered contigs
+primers.bed:
+contig1	100	200	AMP1	+
+contig1	250	350	AMP2	+
+### samtools ampliconclip
+$ samtools ampliconclip -b /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/primers.bed -o /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/clipped.bam /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/aligned_e2e.bam 2>&1 | tail -3
+FILTERED: 0
+FAILED: 0
+WRITTEN: 6000
+$ samtools index /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/clipped.bam
+[E::hts_idx_push] Unsorted positions on sequence #1: 351 followed by 327
+[E::sam_index] Read 'contig1_3_426_1:0:0_1:0:0_197' with ref_name='contig1', ref_length=3000, flags=83, pos=327 cannot be indexed
+samtools index: failed to create index for "/mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/clipped.bam"
+### stats before/after (soft-clip counts)
+$ samtools stats /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/aligned_e2e.bam | grep -E '^SN'
+SN	raw total sequences:	6000	# excluding supplementary and secondary reads
+SN	filtered sequences:	0
+SN	sequences:	6000
+SN	is sorted:	1	# sorted by coordinate
+SN	1st fragments:	3000
+SN	last fragments:	3000
+SN	reads mapped:	5954
+SN	reads mapped and paired:	5942	# paired-end technology bit set + both mates mapped
+SN	reads unmapped:	46
+SN	reads properly paired:	3042	# proper-pair bit set
+SN	reads paired:	6000	# paired-end technology bit set
+SN	reads duplicated:	0	# PCR or optical duplicate bit set
+SN	reads MQ0:	0	# mapped and MQ=0
+SN	reads QC failed:	0
+SN	non-primary alignments:	0
+SN	supplementary alignments:	0
+SN	total length:	600000	# ignores clipping
+SN	total first fragment length:	300000	# ignores clipping
+SN	total last fragment length:	300000	# ignores clipping
+SN	bases mapped:	595400	# ignores clipping
+SN	bases mapped (cigar):	595400	# more accurate
+SN	bases trimmed:	0
+SN	bases duplicated:	0
+SN	mismatches:	13053	# from NM fields
+SN	error rate:	2.192308e-02	# mismatches / bases mapped (cigar)
+SN	average length:	100
+SN	average first fragment length:	100
+SN	average last fragment length:	100
+SN	maximum length:	100
+SN	maximum first fragment length:	100
+SN	maximum last fragment length:	100
+SN	average quality:	17.0
+SN	insert size average:	498.0
+SN	insert size standard deviation:	48.5
+SN	inward oriented pairs:	2971
+SN	outward oriented pairs:	0
+SN	pairs with other orientation:	0
+SN	pairs on different chromosomes:	0
+SN	percentage of properly paired reads (%):	50.7
+$ samtools stats /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/037-amplicon-clipping/clipped.bam | grep -E '^SN'
+SN	raw total sequences:	6000	# excluding supplementary and secondary reads
+SN	filtered sequences:	0
+SN	sequences:	6000
+SN	is sorted:	0	# not sorted by coordinate
+SN	1st fragments:	3000
+SN	last fragments:	3000
+SN	reads mapped:	5948
+SN	reads mapped and paired:	5936	# paired-end technology bit set + both mates mapped
+SN	reads unmapped:	52
+SN	reads properly paired:	3041	# proper-pair bit set
+SN	reads paired:	6000	# paired-end technology bit set
+SN	reads duplicated:	0	# PCR or optical duplicate bit set
+SN	reads MQ0:	0	# mapped and MQ=0
+SN	reads QC failed:	0
+SN	non-primary alignments:	0
+SN	supplementary alignments:	0
+SN	total length:	600000	# ignores clipping
+SN	total first fragment length:	300000	# ignores clipping
+SN	total last fragment length:	300000	# ignores clipping
+SN	bases mapped:	594800	# ignores clipping
+SN	bases mapped (cigar):	592148	# more accurate
+SN	bases trimmed:	0
+SN	bases duplicated:	0
+SN	mismatches:	12935	# from NM fields
+SN	error rate:	2.184420e-02	# mismatches / bases mapped (cigar)
+SN	average length:	100
+SN	average first fragment length:	100
+SN	average last fragment length:	100
+SN	maximum length:	100
+SN	maximum first fragment length:	100
+SN	maximum last fragment length:	100
+SN	average quality:	17.0
+SN	insert size average:	497.9
+SN	insert size standard deviation:	48.5
+SN	inward oriented pairs:	2965
+SN	outward oriented pairs:	0
+SN	pairs with other orientation:	0
+SN	pairs on different chromosomes:	0
+SN	percentage of properly paired reads (%):	50.7

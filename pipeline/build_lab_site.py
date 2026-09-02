@@ -539,6 +539,15 @@ TRIALS = [
     ("variant-calling", "026", "clinical-interpretation", "DEEP DIVE 23", "clinical"),
     ("variant-calling", "027", "deepvariant",           "DEEP DIVE 24", "deepvariant"),
     ("alignment-files", "028", "sam-bam-basics",       "DEEP DIVE 25", "sambambasics"),
+    ("alignment-files", "029", "alignment-sorting",     "DEEP DIVE 26", "alignmentsorting"),
+    ("alignment-files", "030", "alignment-indexing",   "DEEP DIVE 27", "alignmentindexing"),
+    ("alignment-files", "031", "alignment-filtering",   "DEEP DIVE 28", "alignmentfiltering"),
+    ("alignment-files", "032", "alignment-validation",  "DEEP DIVE 29", "alignmentvalidation"),
+    ("alignment-files", "033", "bam-statistics",        "DEEP DIVE 30", "bamstatistics"),
+    ("alignment-files", "034", "pileup-generation",     "DEEP DIVE 31", "pileupgeneration"),
+    ("alignment-files", "035", "duplicate-handling",    "DEEP DIVE 32", "duplicatehandling"),
+    ("alignment-files", "036", "reference-operations",  "DEEP DIVE 33", "referenceoperations"),
+    ("alignment-files", "037", "amplicon-clipping",     "DEEP DIVE 34", "ampliconclipping"),
 ]
 def cat_page(cat):
     items = pages.get(cat, [])

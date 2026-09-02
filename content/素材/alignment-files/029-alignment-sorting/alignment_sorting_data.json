@@ -1,0 +1,7 @@
+{
+  "input_hd": "@HD\tVN:1.5\tSO:coordinate",
+  "sorted_hd": "@HD\tVN:1.5\tSO:coordinate",
+  "input_count": 6000,
+  "sorted_count": 6000,
+  "order_changed": false
+}

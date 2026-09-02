@@ -1,0 +1,18 @@
+### samtools index (.bai)
+$ samtools index /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/aligned_e2e.bam
+### samtools index -c (.csi)  [正确：输入是 bam，自动产出 .csi]
+$ samtools index -c /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/aligned_e2e.bam
+--- index files ---
+$ ls -la /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/*.bai /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/*.csi
+-rwxrwxrwx 1 devah devah 336 Sep  2 20:03 /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/aligned_e2e.bam.bai
+-rwxrwxrwx 1 devah devah 155 Sep  2 20:03 /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/aligned_e2e.bam.csi
+--- region query via .bai ---
+$ samtools view -c /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/aligned_e2e.bam contig1
+1486
+--- idxstats ---
+$ samtools idxstats /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/030-indexing/aligned_e2e.bam | head
+contig1	3000	1485	1
+contig2	3000	1491	3
+contig3	3000	1490	4
+contig4	3000	1488	4
+*	0	0	34
