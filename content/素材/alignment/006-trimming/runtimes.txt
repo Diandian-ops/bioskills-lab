@@ -1,0 +1,7 @@
+RUNTIME input_msa 0.249
+RUNTIME clipkit_kpic 0.290
+RUNTIME clipkit_gappy 0.191
+RUNTIME trimal_auto 0.014
+RUNTIME trimal_gappy 0.013
+RUNTIME trimal_strictplus 0.011
+RUNTIME bmge 0.121

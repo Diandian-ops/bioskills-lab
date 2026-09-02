@@ -1,166 +1,121 @@
-<!--
-META
-标题: bioSkills multiple-alignment：MAFFT L-INS-i 构建多序列比对
-系列: bioSkills
-配图: ![](../../素材/alignment/007-multiple-alignment/007-fig.png)
-参考仓库: GPTomics/bioSkills (alignment/multiple-alignment)
-发布顺序: 007
-/META
--->
-
-# 007｜bioSkills multiple-alignment：MAFFT L-INS-i 构建多序列比对
-
-用 bioSkills 仓库自带的示例序列 → 原样跑 multiple-alignment skill 推荐的 MAFFT L-INS-i → 严格复现并逐块拆解这个 skill 的内容成分。
-
+---
+title: "bioSkills 真实试用 · 多序列比对 (007 / DEEP DIVE)"
+skill: multiple-alignment
+trial: "007"
+category: "bioSkills 真实试用"
+tags: ["bioSkills", "MAFFT", "MUSCLE5", "ClustalOmega", "MSA", "multiple-alignment", "alignment", "真实试用"]
+cover: "content/素材/alignment/007-multiple-alignment/fig1_alignment_length.png"
+date: "2026-09-03"
+status: "full-real"
+note: "按 SKILL.md 原命真跑 MAFFT(L-INS-i / --auto / FFT-NS-2)、MUSCLE5(-align)、ClustalOmega 于 6 条真实人类 S1 丝氨酸蛋白酶序列，比较比对长度、空位比例、成对一致性与运行时间。"
 ---
 
-## 功能定位与适用范围
+# 多序列比对实战：MAFFT / MUSCLE5 / ClustalOmega 同台（007 / DEEP DIVE）
 
-multiple-alignment = **把三条及以上同源序列比对到同一坐标系（多序列比对，MSA）的工具选型知识库**，覆盖了从渐进式到迭代优化、一致性、HMM、结构/pLM 引导等六类算法家族。内容覆盖：按数据集规模与序列分歧度选对工具与算法，而不是把"跑个 MSA"当作一个单一动作。
+## 1 功能定位与适用范围
+
+本 skill 覆盖多序列比对（MSA）的工具与算法选型：把 3 条及以上同源序列比对到同一坐标。内容不是把"跑个 MSA"当单一动作，而是按数据集规模与序列分歧度选对算法家族——渐进式、迭代优化、一致性、HMM、分治、结构/pLM 引导六类各有失效模式。
+
+| 属性 | 值 |
+|---|---|
+| 主工具 | MAFFT / MUSCLE5 / ClustalOmega（CLI），SKILL.md 另含 T-Coffee、PAL2NAL、PRANK、MACSE |
+| 输入 | 同源蛋白序列 FASTA（本试用 6 条，长度 247–304 残基） |
+| 核心输出 | 多序列比对文件（FASTA 等），供下游系统发育、保守性、选择分析 |
+| 本机实跑 | MAFFT 7.526 / MUSCLE 5.3 / ClustalOmega 1.2.4（conda `bio` 环境） |
+
+适用范围：输入为同源序列集合时，比对**构建**由其覆盖。比对**后处理**（列修剪/掩码）见同目录 `alignment-trimming`，列**统计**（保守性/熵/一致性）见 `msa-statistics`，均不在本 skill 范围内。
+
+## 2 属性表
 
 | 属性 | 内容 |
 |------|------|
-| tool_type | mixed（CLI 工具 + Python subprocess 封装）|
-| primary_tool | MAFFT |
-| 前置条件 | 需要一个含 3+ 条序列的 FASTA 文件，且序列应为同源 |
-| 核心输出 | 多序列比对文件（FASTA/CLUSTAL/PHYLIP 等），供下游系统发育、保守性分析、选择分析使用 |
+| 输入规模 | 6 条序列，平均长度 266 残基 |
+| 算法家族 | 渐进式（ClustalOmega/MAFFT FFT-NS）、迭代优化（MAFFT L-INS-i/MUSCLE5）、一致性（T-Coffee）、HMM（ClustalOmega） |
+| 默认推荐 | <200 条用 MAFFT L-INS-i；数千条用 FFT-NS-2 或 MUSCLE5 `-super5` |
+| 本机实跑命令 | `mafft --localpair --maxiterate 1000`、`mafft --auto`、`mafft --retree 2`、`muscle -align`、`clustalo -i ... -o ... --force` |
+| 实测比对长度 | 342–349 列 |
+| 实测整体空位 | 22.2%–23.8% |
+| 实测平均成对一致性 | 45.6%–46.9% |
 
-适用范围：本 skill 的输入为同源序列集合，比对**构建**由其自身覆盖；比对**后处理**（列修剪/掩码）由同目录 `alignment-trimming` skill（ClipKIT/trimAl/BMGE）覆盖，列**统计**（保守性/熵/一致性）由 `msa-statistics` skill 覆盖，均不在本 skill 范围内。
+## 3 成分拆解
 
----
+### 3.1 算法六大家族与失效模式
 
-## Skill 成分拆解
+SKILL.md 按算法本质分类，工具失败时按家族切换而非调参：渐进式（快但早期 gap 错误向下传播）、迭代优化（<2000 可纠错）、一致性（<100 精度最高但 O(N²~N⁴)）、HMM（加序列到已有 profile）、分治（>10k 异质集）、结构/pLM 引导（暗蛋白）。本试用覆盖前三类的代表实现（MAFFT 三模式、MUSCLE5 `-align`、ClustalOmega）。
 
-### 文件结构
+### 3.2 MAFFT 七模式与 `--auto` 降级
 
-multiple-alignment 是 alignment 类别下**算法覆盖最广**的 skill（6 类算法家族 + 4 大工具 + 密码子感知 + 置信度评估 + 验证清单）：
+`--auto` 按规模静默切换底层算法：<200 用 L-INS-i，200–500 用 FFT-NS-i（仅 `--maxiterate 2`），500–2000 用 FFT-NS-2，>2000 单次渐进，>5万 用 PartTree。200 条处从"迭代优化"翻转为"单次渐进"——发表级复现须显式指定算法。本试用 6 条序列 <200，`--auto` 实际选中 L-INS-i，故与显式 L-INS-i 产物逐字节一致（均 348 列、PID 46.95%），这是 `--auto` 在小数据下**不降级**的真实例证。
 
-| 文件 | 行数 | 功能 |
-|------|------|------|
-| SKILL.md | 476 行 | 主文档：算法分类表 + 工具选型表 + MAFFT 各模式 + `--auto` 静默降级 + MUSCLE5/ClustalOmega/T-Coffee + 密码子感知 + 置信度 + 验证清单 + 禁忌 |
-| examples/run_msa.py | 74 行 | 按序列数自动选工具跑 MSA（MAFFT L-INS-i / FFT-NS-2 / ClustalOmega）+ `summarize_alignment()` 统计 |
-| examples/codon_alignment.py | 37 行 | 蛋白引导密码子比对：MAFFT 先比蛋白，再用 PAL2NAL 把 CDS 反向映射回密码子 |
+### 3.3 MUSCLE5 两模式
 
-### 每个参考脚本干什么
+`-align`（PPP 后验概率渐进，≤~1000 峰值精度）与 `-super5`（mBed 分块，千万级）共用 HMM 扰动集成；`-stratified`/`-diversified` 输出 `.efa` 列级置信度。本试用仅跑 `-align`（单条 MSA）。
 
-**run_msa.py（74 行）** — skill 的核心参考脚本，封装「按数据集规模选工具」的逻辑。`select_and_run()` 数序列条数：≤200 用 MAFFT L-INS-i（`--localpair --maxiterate 1000`）、≤10000 用 MAFFT FFT-NS-2、否则 ClustalOmega。`run_mafft()` 用 `algo_flags` 字典映射 linsi/ginsi/einsi/fftns2/auto 到对应 CLI flag；`summarize_alignment()` 用 Biopython `AlignIO` 读产物，算序列数、比对列数、无 gap 列数、整体 gap 比例。注意它显式 `stderr=subprocess.PIPE` 捕获 MAFFT 的错误信息——MAFFT 把进度/错误写到 stderr，不捕获就会在非零退出时丢失可操作信息。
+### 3.4 验证清单与禁忌
 
-**codon_alignment.py（37 行）** — 封装「先比蛋白、再穿回密码子」的标准 PAML 流程：`protein_guided_codon_alignment()` 先用 MAFFT L-INS-i 比蛋白，再 `pal2nal.pl` 把 CDS 按蛋白比对映射回去，支持 fasta/paml/clustalw/codon 输出格式；非标准遗传密码用 `-codontable N` 指定。
+SKILL.md 列出发表前检查：可视化扫描、空位分布（>50% 列有空位提示问题）、平均成对一致性（蛋白 <25% 比对不可靠）、离群序列、保守模式。并明确"非同源序列 MSA 工具仍会产出比对"，须先验同源（BLAST E<1e-5）；多结构域架构不同、长度差异过大等场景全局比对产生无意义结果。本试用输入为真实同源 S1 蛋白酶（相同催化三联体），符合前提。
 
-### 它封装的工具知识（重点）
+## 4 严格复现
 
-**一、算法六大家族与失效模式**。skill 把 MSA 方法按算法本质分类，工具失败时按家族切换而非调参：渐进式（ClustalW/MAFFT FFT-NS-2，快但早期 gap 错误会传播）、迭代优化（MAFFT L-INS-i/MUSCLE3，<2000 可纠错）、一致性（T-Coffee/ProbCons，<100 精度最高但 O(N²~N⁴)）、HMM（HMMER/hmmalign，加序列到已有 profile）、分治（PASTA/MAGUS/MUSCLE5 super5，>10k 异质集）、结构/pLM 引导（Foldmason/PROMALS3D/vcMSA，<15% 一致度暗蛋白）。
+### 4.1 环境与数据
 
-**二、工具选型表**。MAFFT L-INS-i（<200，最高精度）/ FFT-NS-2（~5万，快）/ E-INS-i（长不可比内部区）；MUSCLE5 `-align`（~1000 基准最高）/ `-super5`（~10万+）；ClustalOmega（~19万，HMM profile）；T-Coffee（<200，最高精度但最慢）。**默认推荐**：<200 条用 MAFFT L-INS-i，数千条用 FFT-NS-2 或 MUSCLE5 super5，需要置信度估计用 MUSCLE5 集成（`-stratified`）。
+- 工具：conda `bio` 环境，mafft 7.526 / muscle 5.3 / clustalo 1.2.4 / biopython 1.83。
+- 输入：6 条人类 S1 丝氨酸蛋白酶（trypsin1/2/3、chymotrypsinB/C、elastase），来自 UniProt reviewed 条目（基因 PRSS1/PRSS2/PRSS3/CTRB1/CTRC/ELANE），长度 247–304 残基。它们共享催化三联体与折叠，但长度差异使比对产生可观空位。
+- 运行：`python run_tools.py`（逐条按 SKILL.md 原命执行，记录真实 wall-clock 时间与 stderr）→ `repro_transcript.txt` + `runtimes.txt`；`python run.py` 读产物算统计 → `msa_data.json`；`python make_figs.py` 出图。
 
-**三、MAFFT 七种模式与决策**。`--auto` 之外的显式模式：FFT-NS-1（仅渐进，>1万快看）、FFT-NS-2（渐进+引导树重建，默认平衡）、FFT-NS-i（迭代优化）、G-INS-i（全局配对+迭代，全长相似）、L-INS-i（局部配对+迭代，单保守域+分歧侧翼）、E-INS-i（广义仿射 gap，多保守模块分隔可变区）、Auto。**决策**：单保守域→L-INS-i；全局相似→G-INS-i；多保守块+可变连接区→E-INS-i。
+### 4.2 五工具实测对比
 
-**四、`--auto` 静默降级（审计级复现关键）**。`--auto` 按规模自动切换底层算法：<200 用 L-INS-i，200–500 用 FFT-NS-i（但只给 `--maxiterate 2` 的截断版），500–2000 用 FFT-NS-2，>2000 单次渐进，>5万 用 PartTree。200 条处会从「迭代优化」翻转为「单次渐进」——同一批数据在不同规模阈值两侧结果可能不一致。**发表级系统发育必须显式指定算法**，不能依赖 `--auto` 的内部阈值。
+| 工具（命令） | 列数 | 空位% | 无空位列 | PID | 用时 |
+|------|------|------|------|------|------|
+| MAFFT L-INS-i (`--localpair --maxiterate 1000`) | 348 | 23.56 | 228 | 46.95 | 0.259 s |
+| MAFFT `--auto` | 348 | 23.56 | 228 | 46.95 | 0.257 s |
+| MAFFT FFT-NS-2 (`--retree 2`) | 346 | 23.12 | 217 | 47.63 | 0.217 s |
+| MUSCLE5 `-align` | 349 | 23.78 | 231 | 46.63 | 0.051 s |
+| ClustalOmega `--force` | 342 | 22.22 | 226 | 45.57 | 1.245 s |
 
-**五、MUSCLE5 两种模式共享集成机制**。`-align`（PPP 后验概率渐进，≤~1000 峰值精度）与 `-super5`（mBed 聚类分块，千万级）底层共用 HMM 扰动集成。`-stratified`（默认 16 复现 = 4 HMM 种子 × 4 引导树排列）/ `-diversified`（默认 100 复现）输出 `.efa`，列级置信度 = 支持该残基对同列的复现比例。注意 `-perturb SEED` 是 HMM 扰动随机种子，不是集成选择器。
+`mafft --auto` 与显式 L-INS-i 完全一致（小数据不降级）；FFT-NS-2 略短（346 列）且 PID 略高（迭代优化在此集更稳）；MUSCLE5 列数最多（349）但 PID 与 MAFFT 接近；ClustalOmega 最慢（1.245 s）且列数最少（342）。五者差异在个位数列与约 2 个百分点 PID 内——同一数据集下主流工具结论一致。
 
-**六、密码子感知比对决策树**。编码序列做选择分析（dN/dS）必须保阅读框。干净直系同源→MAFFT 蛋白 + PAL2NAL；近期旁系（富 indel）→PRANK +F；有框移/假基因→MACSE v2；混合数据集→OMM_MACSE 流水线；HyPhy 级（BUSTED/MEME/aBSREL）→HyPhy `pre-msa.bf`/`post-msa.bf`。
+### 4.3 成对一致性矩阵（MAFFT L-INS-i）
 
-**七、置信度评估**。发表级系统发育/选择分析须先量化逐列不确定度再过滤：GUIDANCE2（per-column 可靠性 0–1，默认阈值 0.93，按 MAFFT-LINSI 标定，非 MAFFT 底座需重新标定）、T-Coffee TCS、MUSCLE5 集成、HoT（每列最优/次优比对）。**GUIDANCE2 阈值与工具绑定**——0.93 默认是按 MAFFT-LINSI 标定的，套到 MUSCLE5/PRANK 上量纲不同。
-
-### 它封装的核心 API（代码片段）
-
-skill 的 Python 示例共享「subprocess 包 CLI + AlignIO 读产物」模式：
-
-```python
-import subprocess
-from Bio import AlignIO
-
-def run_mafft(input_fasta, output_fasta, algorithm='linsi', threads=4):
-    algo_flags = {
-        'linsi': ['--localpair', '--maxiterate', '1000'],
-        'ginsi': ['--globalpair', '--maxiterate', '1000'],
-        'einsi': ['--genafpair', '--maxiterate', '1000'],
-        'fftns2': ['--retree', '2'],
-        'auto':   ['--auto'],
-    }
-    cmd = ['mafft', '--thread', str(threads)] + algo_flags[algorithm] + [input_fasta]
-    with open(output_fasta, 'w') as out:
-        subprocess.run(cmd, stdout=out, stderr=subprocess.PIPE, check=True)  # MAFFT 错误在 stderr
-
-aln = AlignIO.read(output_fasta, 'fasta')
-print('cols:', aln.get_alignment_length())
-```
-
-注意：Biopython 1.86 起移除了 `Bio.Align.Applications`，skill 明确改用 `subprocess` 直接包 CLI。
-
-### 它封装的经验与知识
-
-**经验一：引导树依赖是 MSA 的固有天花板**。所有主流工具先建引导树再沿树渐进比对，渐进阶段一旦插入 gap 就永不撤销，早期错误会向下传播。缓解：优先迭代优化模式（MAFFT `-i`/MUSCLE5）、小数据集用一致性打分（T-Coffee）、发表前列用 GUIDANCE2 或 MUSCLE5 集成量化不确定度。
-
-**经验二：`--auto` 在 200 条处翻转算法**（见上文第三/四点）——这是审计级复现最常踩的坑，必须在 pipeline manifest 里记录显式算法与 `mafft --version`。
-
-**经验三：低于 20% 蛋白一致度，序列 MSA 不可靠**。>40% 任何工具都稳；25–40% 用迭代法并 GUIDANCE2 验证；20–25% 用 profile-profile；<15–20%（随长度变化）信号淹没噪声，应转结构比对（Foldseek/TM-align）或 pLM 对齐器。
-
-**经验四：先验证同源再比**。MSA 工具对不相关序列也会产出比对，需先用 BLAST（E<1e-5）确认同源；多结构域架构不同、长度差异过大、串联重复等场景全局比对会产生无意义结果。
-
----
-
-## 严格复现（按 skill 自己的方案）
-
-### 环境
-
-| 项目 | 版本/路径 |
-|------|----------|
-| MAFFT | 7.526（`brew install mafft`，Homebrew 5，/opt/homebrew）|
-| Python | managed venv：`~/.workbuddy/binaries/python/envs/default`（Biopython 供 `AlignIO` 读产物）|
-| 未安装 | MUSCLE5 / ClustalOmega / T-Coffee / PAL2NAL 等（本机未装，成分拆解来自 SKILL.md 忠实转述，未实际执行）|
-
-### 数据来源
-
-bioSkills 仓库自带示例 `content/库/bioSkills/sequence-io/read-sequences/examples/sample.fasta`（3 条**合成**序列 seq1/seq2/seq3，非真实同源）。非自造数据，符合"完全复现、用仓库自带示例"的纪律。同时复制仓库自带 `alignment/multiple-alignment/examples/run_msa.py` 作为复现脚本。
-
-> 客观说明：合成序列之间无真实同源关系，本试用仅验证「工具链路能否跑通、产出什么形态」，其高 gap 比例恰好印证 skill 自己「When NOT to Run MSA：Non-homologous sequences」一节——真实使用须替换为同源序列。
-
-### 标准配置输出
-
-按 SKILL.md 文档原命，对 3 条序列用最高精度 L-INS-i（也是 `run_msa.py` 在 ≤200 时的自动选择）：
-
-```bash
-mafft --localpair --maxiterate 1000 sequences.fasta > aligned_linsi.fasta
-# 同时复现仓库示例：python run_msa.py  → 自动选 L-INS-i + summarize
-```
-
-实测（`run_msa.py` 的 `summarize_alignment` 输出）：
+trypsin 三 paralog 间 83.8%–89.5%，trypsin 与 chymotrypsin/elastase 间仅 32.8%–44.0%：
 
 ```
-3 sequences: using MAFFT L-INS-i (highest accuracy)
-Sequences: 3
-Alignment length: 102 columns
-Gap-free columns: 44 (43.1%)
-Overall gap fraction: 35.3%
+              try1   try2   try3   chyB   chyC   ela
+trypsin1     100.0
+trypsin2      89.5  100.0
+trypsin3      83.8   85.8  100.0
+chymotrypsinB 42.3   44.0   42.6  100.0
+chymotrypsinC 33.7   34.2   33.3   43.0  100.0
+elastase      34.0   32.8   33.6   33.5   38.2  100.0
 ```
 
-两种调用（文档原命 `mafft --localpair --maxiterate 1000` 与仓库 `run_msa.py`）产物逐字节一致（`aligned.fasta` 与 `aligned_linsi.fasta` 均 387 字节，`diff` 报告 IDENTICAL）。
+![成对一致性热图](../../素材/alignment/007-multiple-alignment/fig2_identity_heatmap.png)
 
-![](../../素材/alignment/007-multiple-alignment/007-fig.png)
+### 4.4 空位与长度剖面
 
-上图：3 条序列 × 102 列的 gap 分布热力图（红=gap）。基于 `aligned.fasta` 真实数据，零夹带。35.3% 的整体 gap 比例直观体现了合成非同源序列被强制对齐的后果——这正是 skill「When NOT to Run MSA」一节警告的现象。
+6 条序列长度 247–304 残基，比对后 348 列、整体空位 23.6%——长度差异（trypsin3 多 57 残基）制造大量空位列。逐列空位比例见下图；少数列空位达 100%（仅单条/少数条覆盖）。
 
-### 关于未跑的工具（诚实声明）
+![比对长度对比](../../素材/alignment/007-multiple-alignment/fig1_alignment_length.png)
+![逐列空位比例](../../素材/alignment/007-multiple-alignment/fig3_gap_profile.png)
 
-本机仅装了 MAFFT，本次只复现了 L-INS-i 默认模式 + `run_msa.py` 的 summarize 统计。其余方案（MUSCLE5 的 `-align`/`-super5` 及 `-stratified`/`-diversified` 集成、ClustalOmega、T-Coffee 各模式、密码子感知的 PAL2NAL/PRANK+F/MACSE/HyPhy、置信度评估的 GUIDANCE2/TCS）的成分拆解来自 SKILL.md **忠实转述**，未实际执行——严格遵循"skills 规定好了完全复现、不自己加内容"的纪律，未跑的工具不编造结果。
+## 5 实践要点
 
----
+- **`--auto` 在 200 条处翻转算法**：发表级复现须显式指定算法并记录 `mafft --version`；本例 6 条不触发降级，但不可据此推断大集合同理。
+- **引导树依赖是天花板**：渐进阶段插入的 gap 不可撤销，早期错误向下传播；小数据用迭代/一致性法，发表前用集成量化不确定度。
+- **<20% 蛋白一致性序列 MSA 不可靠**：本例 trypsin↔chymotrypsin/elastase 已跌到 33%–44%，比对核心可靠但 Loop 区彼此时比对齐质量下降，下游结论须谨慎。
+- **先验证同源再比**：MSA 工具对非同源序列也会产出比对，BLAST 先验同源是前置门槛。
+- **运行时间随工具差异大**：本例 ClustalOmega（1.245 s）比 MUSCLE5（0.051 s）慢约 24 倍，大规模数据选工具须计入耗时。
 
-## 实践要点
+## 未覆盖（诚实标注）
 
-四点超出工具自带文档的经验封装：
+以下 SKILL.md 内容未在本机逐行实测，相关结论按 SKILL.md 原文陈述：
 
-1. **`--auto` 在 200 条处翻转算法**——发表级复现必须显式指定算法并记录 `mafft --version`，不能依赖内部阈值
-2. **引导树依赖是天花板**——早期 gap 错误不可撤销，小数据用迭代/一致性法，发表前用集成量化不确定度
-3. **<20% 一致度序列 MSA 不可靠**——转入结构/pLM 比对而非硬跑序列比对
-4. **先验证同源再比**——MSA 工具对不相关序列也会产出比对，BLAST 先验同源是前置门槛
+- **T-Coffee（含 Expresso/3D-Coffee）**：一致性法未实跑；其结构模板依赖联网（PSI-BLAST + PDB），本环境未测。
+- **密码子感知比对**：PAL2NAL、PRANK +F、MACSE v2、OMM_MACSE、HyPhy `pre/post-msa.bf` 均未实跑（需 CDS 输入，本试用为蛋白）。
+- **置信度评估**：GUIDANCE2、T-Coffee TCS、MUSCLE5 `-stratified`/`-diversified` 集成、HoT 均未实跑；未量化逐列不确定度。
+- **HMM-profile / 超大规模（>10k 序列）**：ClustalOmega 的 HMM 路径与 PASTA/MAGUS/FAMSA 等分治工具未触及。
+- **`--auto` 在大数据的实际降级表现**：仅以 6 条验证"不降级"，200/500/2000/50000 阈值的真实翻转未逐一复现。
 
-这些经验属于选型知识，工具 `--help` 通常不单列。
+## 6 小结
 
----
-
-## 小结
-
-multiple-alignment 把"构建 MSA"打包成一个算法选型知识库：六类算法家族对应不同失效模式，MAFFT 七模式 + MUSCLE5/ClustalOmega/T-Coffee 各自覆盖不同规模与精度需求，核心价值在于 **`--auto` 静默降级**与**引导树依赖上限**两条认知——前者决定复现性，后者决定结果可信度。用 bioSkills 自带示例序列严格复现了推荐默认 L-INS-i，证实工具链路跑通（102 列、44 无 gap 列、35.3% gap 比例），也用实测高 gap 比例印证了 skill 自身"非同源序列不应做 MSA"的警示。
+MAFFT（L-INS-i / --auto / FFT-NS-2）、MUSCLE5 `-align`、ClustalOmega 在 6 条真实人类 S1 丝氨酸蛋白酶上全部实跑成功。五者比对长度 342–349 列、整体空位 22.2%–23.8%、平均成对一致性 45.6%–46.9%，结论高度一致；`mafft --auto` 因 6 条 <200 阈值实际等价于 L-INS-i（不降级），是对 SKILL.md "`--auto` 静默降级"规则的真实反例验证。trypsin paralog 间 ~85% 一致性、与 chymotrypsin/elastase 间跌至 ~33%–44%，印证"分歧度决定比对可靠区"的论断。T-Coffee、密码子感知、置信度评估等扩展路径未实跑，结论按 SKILL.md 陈述。

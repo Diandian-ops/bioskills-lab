@@ -1,0 +1,162 @@
+########## ENVIRONMENT ##########
+mafft:    v7.526 (2024/Apr/26)
+clipkit:  clipkit 2.14.0
+trimal:   trimAl v1.5.rev1 build[2025-11-25]
+bmge:     /opt/miniconda3/envs/bio/share/bmge-1.12-1/BMGE.jar
+biopython:1.88
+input sequences: 6
+
+########## CMD: mafft --localpair --maxiterate 1000 /mnt/d/1.WorkDir/RedBook/content/素材/alignment/006-trimming/sequences.fasta ##########
+exit=0  runtime=0.249s
+STDERR:
+outputhat23=16
+treein = 0
+compacttree = 0
+stacksize: 8192 kb
+rescale = 1
+All-to-all alignment.
+    0 / 6
+    1 / 6
+    2 / 6
+    3 / 6
+    4 / 6
+tbfast-pair (aa) Version 7.526
+alg=L, model=BLOSUM62, 2.00, -0.10, +0.10, noshift, amax=0.0
+0 thread(s)
+
+outputhat23=16
+Loading 'hat3.seed' ... 
+done.
+Writing hat3 for iterative refinement
+rescale = 1
+Gap Penalty = -1.53, +0.00, +0.00
+tbutree = 1, compacttree = 0
+Constructing a UPGMA tree ... 
+
+    0 / 6
+done.
+
+Progressive alignment ... 
+
+STEP     1 /5 
+STEP     2 /5 
+STEP     3 /5 
+STEP     4 /5 
+STEP     5 /5 
+done.
+tbfast (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+1 thread(s)
+
+minimumweight = 0.000010
+autosubalignment = 0.000000
+nthread = 0
+randomseed = 0
+blosum 62 / kimura 200
+poffset = 0
+niter = 16
+sueff_global = 0.100000
+nadd = 16
+Loading 'hat3' ... done.
+rescale = 1
+
+
+    0 / 6
+Segment   1/  1    1- 350
+STEP 001-001-0  identical.   
+STEP 001-001-1  identical.   
+STEP 001-002-0  accepted.
+STEP 001-002-1  accepted.
+STEP 001-003-0  accepted.
+STEP 001-003-1  accepted.
+STEP 001-004-0  accepted.
+STEP 001-004-1  accepted.
+STEP 001-005-1  accepted.
+STEP 002-005-1  identical.   
+STEP 002-004-0  rejected.
+STEP 002-004-1  identical.   
+STEP 002-003-0  accepted.
+STEP 002-003-1  rejected.
+STEP 002-002-0  identical.   
+STEP 002-002-1  accepted.
+STEP 002-001-0  identical.   
+STEP 002-001-1  identical.   
+STEP 003-001-0  identical.   
+STEP 003-001-1  identical.   
+STEP 003-002-0  accepted.
+STEP 003-002-1  identical.   
+STEP 003-003-0  rejected.
+STEP 003-003-1  rejected.
+STEP 003-004-0  rejected.
+STEP 003-004-1  rejected.
+STEP 003-005-1  identical.   
+STEP 004-005-1  identical.   
+STEP 004-004-0  rejected.
+STEP 004-004-1  rejected.
+STEP 004-003-0  rejected.
+STEP 004-003-1  rejected.
+STEP 004-002-0  identical.   
+Converged.
+
+done
+dvtditr (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+0 thread(s)
+
+
+Strategy:
+ L-INS-i (Probably most accurate, very slow)
+ Iterative refinement method (<16) with LOCAL pairwise alignment information
+
+If unsure which option to use, try 'mafft --auto input > output'.
+For more information, see 'mafft --help', 'mafft --man' and the mafft page.
+
+The default gap scoring scheme has been changed in version 7.110 (2013 Oct).
+It tends to insert more gaps into gap-rich regions than previous versions.
+To disable this change, add the --leavegappyregion option.
+RUNTIME input_msa 0.249
+
+########## CMD: clipkit input_msa.fasta -m kpic-smart-gap -o clipkit_kpic.fasta --log ##########
+exit=0  runtime=0.290s
+STDERR:
+(none)
+RUNTIME clipkit_kpic 0.290
+
+########## CMD: clipkit input_msa.fasta -m gappyout -g 0.9 -o clipkit_gappy.fasta ##########
+exit=0  runtime=0.191s
+STDERR:
+(none)
+RUNTIME clipkit_gappy 0.191
+
+########## CMD: trimal -in input_msa.fasta -out trimal_auto.fasta -automated1 -colnumbering ##########
+exit=0  runtime=0.014s
+STDERR:
+(none)
+RUNTIME trimal_auto 0.014
+
+########## CMD: trimal -in input_msa.fasta -out trimal_gappy.fasta -gappyout ##########
+exit=0  runtime=0.013s
+STDERR:
+(none)
+RUNTIME trimal_gappy 0.013
+
+########## CMD: trimal -in input_msa.fasta -out trimal_strictplus.fasta -strictplus ##########
+exit=0  runtime=0.011s
+STDERR:
+(none)
+RUNTIME trimal_strictplus 0.011
+
+########## CMD: java -jar /opt/miniconda3/envs/bio/share/bmge-1.12-1/BMGE.jar -i input_msa.fasta -t AA -of bmge.fasta -h 0.5 -g 0.2 ##########
+exit=0  runtime=0.121s
+STDERR:
+(none)
+RUNTIME bmge 0.121
+
+########## TRIM SUMMARY ##########
+input MSA: 6 seqs, 348 cols, 120 gappy cols
+clipkit_kpic     ClipKIT kpic-smart-gap       in=348 out=125 removed=223 (64.1%)
+clipkit_gappy    ClipKIT gappyout (g=0.9)     in=348 out=249 removed=99 (28.4%)
+trimal_auto      trimAl -automated1           in=348 out=244 removed=104 (29.9%)
+trimal_gappy     trimAl -gappyout             in=348 out=244 removed=104 (29.9%)
+trimal_strictplus trimAl -strictplus           in=348 out=190 removed=158 (45.4%)
+bmge             BMGE -h 0.5 -g 0.2           in=348 out=240 removed=108 (31.0%)

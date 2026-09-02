@@ -1,188 +1,106 @@
-<!--
-META
-标题: bioSkills alignment-trimming：ClipKIT 默认修剪模式的行为
-系列: bioSkills
-配图: ![](../../素材/alignment/006-trimming/006-fig.png)
-参考仓库: GPTomics/bioSkills (alignment/alignment-trimming)
-发布顺序: 006
-/META
--->
-
-# 006｜bioSkills alignment-trimming：ClipKIT 默认修剪模式的行为
-
-用 bioSkills 仓库自带的示例 MSA（多序列比对，Multiple Sequence Alignment）→ 原样跑 alignment-trimming skill 推荐默认模式 `kpic-smart-gap` → 严格复现并逐块拆解这个 skill 的内容成分。
-
+---
+title: "bioSkills 真实试用 · 比对列修剪 (006 / DEEP DIVE)"
+skill: alignment-trimming
+trial: "006"
+category: "bioSkills 真实试用"
+tags: ["bioSkills", "ClipKIT", "trimAl", "BMGE", "MSA", "alignment-trimming", "alignment", "真实试用"]
+cover: "content/素材/alignment/006-trimming/fig1_alignment_length.png"
+date: "2026-09-03"
+status: "full-real"
+note: "按 SKILL.md 原命真跑 ClipKIT(kpic-smart-gap / gappyout)、trimAl(-automated1 / -gappyout / -strictplus)、BMGE(-h 0.5 -g 0.2) 于真实蛋白酶 MSA，比较各工具移除列数与落点。"
 ---
 
-## 功能定位与适用范围
+# 比对列修剪实战：ClipKIT / trimAl / BMGE 同台（006 / DEEP DIVE）
 
-alignment-trimming = **多序列比对(MSA) 建完后的列过滤与逐残基清洗工具集**。内容覆盖：根据下游目标（系统发育树 / HMM 建模 / 选择分析 / 结构建模）选对修剪工具与模式，而不是把"trim"当作一个单一操作。
+## 1 功能定位与适用范围
+
+本 skill 覆盖多序列比对（MSA）的列修剪：按下游目标，用 ClipKIT、trimAl、BMGE（及 Divvier、HMMcleaner、Gblocks、PhyIN）移除不可靠列或污染残基。核心是"按数据集特征选模式"，而非无脑修剪——修剪比不修剪更关键的是模式与激进度。
+
+| 属性 | 值 |
+|---|---|
+| 主工具 | ClipKIT / trimAl / BMGE（CLI） |
+| 输入 | 已构建的 MSA（本试用 348 列、6 条、120 个空位列） |
+| 核心输出 | 修剪后的 MSA（FASTA）+ 列映射（--log / -colnumbering） |
+| 本机实跑 | clipkit 2.14.0 / trimAl 1.5.rev1 / BMGE 1.12 |
+
+适用范围：比对**后处理**（列过滤/掩码）由其覆盖；比对**构建**见 `multiple-alignment`，列**统计**见 `msa-statistics`，均不在本 skill 范围内。
+
+## 2 属性表
 
 | 属性 | 内容 |
 |------|------|
-| tool_type | mixed |
-| primary_tool | ClipKIT |
-| 前置条件 | 需要一个已完成的多序列比对（MSA）文件 |
-| 核心输出 | 修剪后的 MSA（或更温和的逐残基掩码 / 列分裂） |
+| 输入 MSA | 6 条人类 S1 丝氨酸蛋白酶（MAFFT L-INS-i 比对），348 列、120 个空位列（34.5%） |
+| ClipKIT 模式 | `kpic-smart-gap`（推荐默认）、`smart-gap`、`gappy`/`gappyout`、`kpi-smart-gap` 等 15 种 |
+| trimAl 模式 | `-automated1`、`-gappyout`（HMM 建库）、`-strictplus`（系统发育）、`-gt`/`-st`/`-cons` 手动阈值 |
+| BMGE | 熵+空位率矩阵感知，`-h` 熵阈值（低=激进）、`-g` 空位率、`-t AA/DNA/CODON` |
+| 20%/40% 规则 | 移除 >40% 列即过激，应换轻模式或跳过修剪 |
+| 实测移除区间 | 28.4%–64.1%（取决于模式） |
 
-适用范围：本 skill 的输入为已完成的序列比对（MSA），比对构建步骤由同目录的 `multiple-alignment` skill（MAFFT/MUSCLE）覆盖，不在本 skill 范围内。
+## 3 成分拆解
 
----
+### 3.1 ClipKIT 模式选择
 
-## Skill 成分拆解
+`kpic-smart-gap` 是发表级系统发育拼接超级矩阵的推荐默认（保留简约信息列+恒定列，Steenwyk 2020）；`smart-gap` 用于单基因树或失衡数据集（无 kpic 约束）；`gappy`/`gappyout` 显式空位阈值；`kpi-smart-gap` 丢弃恒定列（最大简约树）。`--log` 产出逐列 keep/trim 日志，是复现审计的关键。
 
-### 文件结构
+### 3.2 trimAl 模式选择
 
-alignment-trimming 是 alignment 类别下**覆盖工具最广**的 skill（9 种修剪方案 + 4 个示例脚本 + usage-guide）：
+`-gappyout` 适合 HMM profile 构建（激进去空位有利 profile 质量）；`-strictplus` 适合系统发育树输入；`-automated1` 按特征自动选 gappyout/strict/strictplus，但 1.4→1.4.1→2.0 内部启发式有变，审计级复现须显式指定模式而非 `-automated1`；`-colnumbering` 输出保留列的原始索引。
 
-| 文件 | 行数 | 功能 |
-|------|------|------|
-| SKILL.md | 310 行 | 主文档：9 种工具选型表 + 模式表 + 20/40% 法则 + 常见错误 |
-| examples/clipkit_trim.py | 45 行 | 跑 ClipKIT 并计算保留率，保留率<0.7 告警 |
-| examples/trimal_modes.py | 46 行 | 同一输入上对比 5 种 trimAl 模式的保留列数 |
-| examples/bmge_trim.py | 44 行 | 跑 BMGE 熵阈值修剪（-h 0.4 深 / 0.6 浅）|
-| examples/divvier_split.py | 39 行 | Divvier 列分裂（列数可能增加）|
-| usage-guide.md | 103 行 | 使用者视角快速入门 + 示例 prompt |
+### 3.3 BMGE 熵阈值
 
-### 每个参考脚本干什么
+BMGE 用 BLOSUM62 加权的矩阵感知熵过滤，`-h 0.5` 为 BLOSUM62 默认校准值；换 `-m BLOSUM30`（深系统发育）使同数值更宽松，`-m BLOSUM90`（近缘）更激进。深原核系统发育默认 `-h 0.4`。
 
-**clipkit_trim.py（45行）** — skill 的核心参考脚本，封装推荐默认 `kpic-smart-gap`。`run_clipkit()` 构建 `clipkit input -m kpic-smart-gap -o out --log`；`trimming_summary()` 用 Biopython `AlignIO` 读前后 MSA 算保留率；保留率<0.7 时打印 Tan 2015 + Steenwyk 2020 的激进修剪告警。
+### 3.4 20%/40% 规则与列映射
 
-**trimal_modes.py（46行）** — 在同一 `input.fasta` 上跑 5 种 trimAl 模式（automated1 / gappyout / strict / strictplus / gt0.5），各出 `trimmed_<mode>.fasta` + `cols_<mode>.txt` 列映射，汇总打印每模式保留列数 / 保留率 / 删除列数。
+Tan 2015 与 Steenwyk 2020 看似矛盾、实则由激进度调和：轻修剪（<20% 列移除）对树精度影响小，重修剪（>40%）随信号移除噪声也删树信号。操作规则：移除 >40% 列即模式过激，换轻模式或保留原比对。列映射（`--log` / `-colnumbering`）用于下游逐位点分析回溯。
 
-**bmge_trim.py（44行）** — 封装 BMGE.jar：`run_bmge()` 用 `-t AA -h 0.4 -g 0.2`（深）/ `-h 0.6`（浅）两组，算保留率对比，体现"深系统发育保留更少列"。
+## 4 严格复现
 
-**divvier_split.py（39行）** — 跑 Divvier 的 `-divvy`（整列分裂，列数可能增加）与 `-partial -mincol 4`（仅过滤模糊字符），对比前后列数，强调"分裂而非删除保留更多系统发育信号"。
+### 4.1 环境与数据
 
-### 它封装的工具知识（9 种修剪方案）
+- 工具：conda `bio` 环境，clipkit 2.14.0 / trimAl 1.5.rev1 / BMGE 1.12 / biopython 1.83。
+- 输入 MSA：同 007 的 6 条人类 S1 丝氨酸蛋白酶，经 `mafft --localpair --maxiterate 1000` 比对成 `input_msa.fasta`（348 列、120 空位列）。`run_tools.py` 复现"建 MSA + 修剪"全流程。
+- 运行：`python run_tools.py` → 修剪产物 + `repro_transcript.txt` + `runtimes.txt`；`python make_figs.py` 出图；统计见 `trim_data.json`。
 
-skill 把"修剪"拆成 9 种方案，各自解决不同失败模式：
+### 4.2 六条命令实测
 
-- **ClipKIT**（CLI）：推荐默认 `kpic-smart-gap`（保留简约信息列+恒定列，产出更稳的树）；`smart-gap`（单基因）；`gappy`/`gappyout`（显式 gap 阈值）；`kpi-smart-gap`（仅保留简约信息列，最激进，给最大简约树用）
-- **trimAl**（CLI）：`-gappyout`（HMM 建模）、`-strict`/`-strictplus`（系统发育）、`-automated1` 启发式（跨点版本行为会变，**审计级可复现禁用**）
-- **BMGE**（Java）：熵 + BLOSUM62 上下文，深原核系统发育标准（GToTree 默认），`-h 0.4` 深 / `0.6` 浅
-- **Divvier**（编译二进制）：列分裂而非删除，保留 indel 中的系统发育信号
-- **HMMcleaner**（Perl+HMMER）：逐残基用 `X` 掩码污染残基（≥15 条序列才有效），不删列
-- **Gblocks**（legacy）：默认过激进，仅匹配旧流程时放松用
-- **PhyIN**（2024）：第二遍修剪，标记相邻列的成对系统发育不兼容分裂模式（对齐伪影）
-- **TCS 列掩码**（T-Coffee M-Coffee）：选择分析前用一致性打分掩码不可靠列，而非删除（防 dN/dS 假阳性）
-- **MACSE 框移标记后处理**：把 `!`/`*` 框移标记转成 PAML/HyPhy 可解析格式
+| 工具（SKILL.md 原命） | 出列 | 移除 | 占比 |
+|------|------|------|------|
+| ClipKIT `-m kpic-smart-gap --log` | 125 | 223 | 64.1% |
+| ClipKIT `-m gappyout -g 0.9` | 249 | 99 | 28.4% |
+| trimAl `-automated1 -colnumbering` | 244 | 104 | 29.9% |
+| trimAl `-gappyout` | 244 | 104 | 29.9% |
+| trimAl `-strictplus` | 190 | 158 | 45.4% |
+| BMGE `-t AA -h 0.5 -g 0.2` | 240 | 108 | 31.0% |
 
-### 它封装的核心 API（代码片段）
+`trimAl -automated1` 在此集实际选中 `-gappyout`（同 244 列）。ClipKIT `kpic-smart-gap` 与 trimAl `-strictplus` 移除均 >40%，触发 SKILL.md 的"过激"警戒线——本例输入是 trypsin 与 chymotrypsin/elastase 混合（跨 paralog 一致性仅 33%–44%），比对本身分歧大，推荐默认模式在此偏激进。
 
-skill 的 Python 示例共享 Biopython 读取 + 保留率封装模式：
+### 4.3 移除列落点
 
-```python
-from Bio import AlignIO
-original = AlignIO.read('input.fasta', 'fasta')
-trimmed = AlignIO.read('trimmed.fasta', 'fasta')
-retention = trimmed.get_alignment_length() / original.get_alignment_length()
-## ClipKIT 还提供 Python API: clipkit.api.clipkit() 做内存态修剪
-```
+ClipKIT 的 `--log` 与 trimAl 的 `-colnumbering` 给出保留列索引。两者都把移除集中在高空格列——下图输入逐列空位剖面中，被移除列（红点=ClipKIT、蓝 x=trimAl）几乎全部落在空位比例高的区域，符合 skill 的空位分数逻辑。
 
-注意：skill 的示例脚本都是薄封装（subprocess 调 CLI + AlignIO 算保留率），没有自研算法，重点在选型知识而非代码。
+![比对长度前后对比](../../素材/alignment/006-trimming/fig1_alignment_length.png)
+![每工具移除列数](../../素材/alignment/006-trimming/fig2_removed_per_tool.png)
+![输入空位剖面与移除列标注](../../素材/alignment/006-trimming/fig3_gap_distribution.png)
 
-### 它封装的经验与知识（重点）
+## 5 实践要点
 
-**核心法则：20%/40% 规则（修剪激进度比"修不修"更关键）**
+- **模式按下游目标选**：HMM 建库用 trimAl `-gappyout`；系统发育拼接超级矩阵用 ClipKIT `kpic-smart-gap`；深原核用 BMGE `-h 0.4`。
+- **20%/40% 规则是硬校验**：本例 `kpic-smart-gap`(64.1%) 与 `-strictplus`(45.4%) 超 40%，提示该分歧集不适合这两个模式，应换 `gappyout`/`-automated1` 或保留原比对。
+- **审计级复现禁用 `-automated1`**：其内部启发式跨版本漂移；记录 `trimAl --version` 并显式写模式。
+- **保留列映射**：下游逐位点分析需 `--log`（ClipKIT）或 `-colnumbering`（trimAl）回溯原始列。
+- **BMGE 阈值随矩阵变**：`-h` 按 BLOSUM62 校准，换矩阵须重新标定，不可照搬数值。
 
-Tan 2015 与 Steenwyk 2020 看着矛盾，其实被激进度调和：轻修（删 <20% 列）对树的精度几乎无影响，与工具无关；重修（>40%）把系统发育信号连同噪声一起砍掉，在大多数实证数据上降低树精度。Steenwyk 的 `kpic-smart-gap` 改善树是因为它停在轻修区；老 Gblocks 默认失败是因为过度修剪。**操作规则：若修剪器删掉 >40% 列，模式对该数据集过激进 → 换更温和模式或干脆不修。**
+## 未覆盖（诚实标注）
 
-**经验二：trimAl -automated1 不可审计复现**
+以下 SKILL.md 内容未在本机逐行实测，相关结论按 SKILL.md 原文陈述：
 
-跨点版本（1.4→1.4.1→2.0-rc）内部启发式会变，选出的底层模式不稳定。审计级复现必须显式指定底层模式（`-gappyout`/`-strict`/`-strictplus`）并在 pipeline manifest 记录 `trimal --version`。
+- **Divvier**：须编译二进制（`./divvier`），环境未装，未运行；其"分列而非删列"逻辑未验证。
+- **HMMcleaner**：SKILL.md 要求 >=15 条序列才有足够信号，本例仅 6 条，低于阈值，未运行也未编造。
+- **Gblocks / PhyIN / TCS / MACSE**：Gblocks 旧默认过激、PhyIN 结构不相容列、TCS/MACSE 选择分析掩码均未触及。
+- **BMGE 非默认矩阵标定**：仅跑 `-h 0.5 -g 0.2`（BLOSUM62 默认），未换 BLOSUM30/90 重新标定。
+- **修剪后系统发育灵敏度检验**：SKILL.md 建议修剪前后各建树比较拓扑/支持度，本例未跑建树。
 
-**经验三：选择分析禁用激进修剪**
+## 6 小结
 
-dN/dS 分析（PAML codeml / HyPhy）里删除列会制造假阳性选择信号（Fletcher & Yang 2010 MBE）。改用逐列可靠性打分（TCS、GUIDANCE2）掩码，而非删除。
-
-**经验四：保留列映射才可复现**
-
-`clipkit --log` 写每列 `position keep/trim site_classification gap_proportion`；`trimal -colnumbering` 写保留列的原始索引列表（stdout）。两种格式不同，跨工具比较需分别解析再对齐到"保留列索引列表"。
-
-**其他知识封装**：
-- ClipKIT `kpic` 把"简约信息"定义为"至少 2 个不同残基、各自≥2 条序列"，在分类不平衡数据（如 95 近缘+5 外类群）上会让修剪偏向主体支系信号（issues #71/#88）
-- BMGE `-h` 阈值绑定 BLOSUM62；换矩阵（如 BLOSUM30 深 / BLOSUM90 近）需重新校准
-- HMMcleaner 在 <15 条序列的小比对上 HMM 信号不足、过标真实分歧残基
-- Divvier 2019 后停更，但 v2019 二进制结果仍可复现
-
----
-
-## 严格复现（按 skill 自己的方案）
-
-### 环境
-
-| 项目 | 版本/路径 |
-|------|----------|
-| ClipKIT | 2.14.0（managed python venv：`~/.workbuddy/binaries/python/envs/default`，pip 安装，未污染本机）|
-| 其他工具 | trimAl / BMGE / Divvier / HMMcleaner 本机未安装（本次未跑，仅做成分拆解）|
-
-### 数据来源
-
-bioSkills 仓库自带示例比对 `content/库/bioSkills/alignment/alignment-io/examples/sample_alignment.aln`（CLUSTAL 格式，4 条序列、21 列，alignment-io skill 官方示例）。非自造数据，符合"完全复现、用仓库自带示例"的纪律。
-
-### 标准配置输出
-
-原样运行 skill 推荐默认 `kpic-smart-gap` + `--log`（未加任何 skill 未提的参数）：
-
-```bash
-clipkit sample_alignment.aln -m kpic-smart-gap -o trimmed.fasta --log
-```
-
-输出：
-```
-Original: 21 列
-Trimmed:  20 列（砍掉第 13 列，gap 比例 0.75）
-保留率 95.2%（删除 1/21 ≈ 4.762% 列）
-生成 trimmed.fasta + trimmed.fasta.log（每列 kept/trim 审计日志）
-```
-
-ClipKIT 自动识别 `.aln` 为 clustal 格式，无需额外参数。删除 1 列（4.8%）落在 SKILL.md 说的"安全修剪区"（<20% 列被删，对树几乎无影响）。
-
-![](../../素材/alignment/006-trimming/006-fig.png)
-
-上图：逐列状态色块，第 13 列（gap 0.75）标红为 trim，其余 20 列 kept。基于 `--log` 真实数据，零夹带。
-
-### kpic-smart-gap 砍的是 gap 列
-
-21 列 → 保留 20 列，只砍第 13 列（gap 比例 0.75，超过 smart-gap 阈值）。保留率 95.2% 落在 skill 的"安全修剪区"（删 <20% 列，对树几乎无影响）。
-
-| 指标 | 值 |
-|------|-----|
-| 原始列数 | 21 |
-| 保留列数 | 20 |
-| 修剪列数 | 1（第 13 列，gap 0.75）|
-| 保留率 | 95.2% |
-
-### --log 让修剪可被审计
-
-`--log` 输出每列 `position keep/trim site_classification gap_proportion`：
-
-```
-13 trim other 0.75
-```
-
-不写 `--log` 只拿到 `trimmed.fasta`，别人无法核对具体砍了哪列。SKILL.md 把 `--log` 列为"可复现审计必备"，发论文级的复现就靠它。
-
-### 关于未跑的工具（诚实声明）
-
-本机未装 trimAl / BMGE / Divvier / HMMcleaner，本次只复现了 skill 推荐默认 `kpic-smart-gap`。其余 8 种方案（trimAl 五模式、BMGE、Divvier、HMMcleaner、Gblocks、PhyIN、TCS、MACSE）的成分拆解来自 SKILL.md **忠实转述**，未实际执行——严格遵循"skills 规定好了完全复现、不自己加内容"的纪律，未跑的工具不编造结果。
-
----
-
-## 实践要点
-
-四点经验封装，超出工具文档：
-
-1. **20%/40% 规则**——把看似矛盾的 Tan 2015 与 Steenwyk 2020 用一个激进度轴调和，给出可操作"删>40% 就换温和模式"的硬规则
-2. **trimAl -automated1 不可审计**——跨版本启发式会变，审计级必须显式指定底层模式
-3. **选择分析禁用激进修剪**——删列制造 dN/dS 假阳性，改用 TCS/GUIDANCE2 掩码
-4. **保留列映射才可复现**——`--log` / `-colnumbering` 两种格式需分别解析再对齐
-
-这些经验属于选型知识，工具自带文档通常不单列。
-
----
-
-## 小结
-
-alignment-trimming 把"比对后处理"打包成一个选型知识库：9 种修剪方案各自对应不同失败模式（gap / 熵 / 逐残基污染 / 不兼容分裂 / 选择假阳性），核心价值在于 **20%/40% 规则**——轻修保信号、重修丢信号，默认 `kpic-smart-gap` 停在轻修区。用 bioSkills 自带示例 MSA 严格复现了推荐默认模式，证实砍掉的列（gap 0.75）确实落在安全区。
+ClipKIT、trimAl、BMGE 在真实蛋白酶 MSA（348 列、120 空位列）上全部实跑成功。六条命令移除 28.4%–64.1% 列：`kpic-smart-gap` 最激进（64.1%）、`-strictplus` 次之（45.4%），`gappyout`/`-automated1`/BMGE 约 29%–31%。两工具移除列均集中于高空格区域，印证 skill 的空位分数逻辑；`kpic-smart-gap` 与 `-strictplus` 触发 40% 过激警戒线，说明跨 paralog 分歧集不适合这两个推荐模式——这是对 SKILL.md 20%/40% 规则的真实反例验证。Divvier、HMMcleaner（序列数不足）、Gblocks、PhyIN、TCS/MACSE 等未实跑，结论按 SKILL.md 陈述。

@@ -1,0 +1,5 @@
+RUNTIME mafft_linsi 0.259
+RUNTIME mafft_auto 0.257
+RUNTIME mafft_fftns2 0.217
+RUNTIME muscle_align 0.051
+RUNTIME clustalo 1.245

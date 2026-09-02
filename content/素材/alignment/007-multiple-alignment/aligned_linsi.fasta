@@ -1,9 +1,0 @@
->seq1 Example sequence 1
---atgcgatcgatcgatcgatcgatcgatcgatcgatcgatcgatcgatcgatcgatcga
-tcgatcgatcgatcgatcgatcgatcgatcgatcgatcgatc
->seq2 Example sequence 2
-----gctagctagctagctagctagctagctagctagctagctagctagctagc------
-------------------------------------------
->seq3 Example sequence 3
-ttttaaaaccccggggttttaaaaccccggggttttaaaaccccgggg------------
-------------------------------------------

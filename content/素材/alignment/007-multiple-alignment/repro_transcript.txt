@@ -1,0 +1,335 @@
+########## ENVIRONMENT ##########
+mafft:    v7.526 (2024/Apr/26)
+muscle:   muscle 5.3.linux64 []
+clustalo: 1.2.4
+biopython:1.88
+input sequences: 6
+
+########## CMD: mafft --localpair --maxiterate 1000 /mnt/d/1.WorkDir/RedBook/content/素材/alignment/007-multiple-alignment/sequences.fasta ##########
+exit=0  runtime=0.259s
+STDERR:
+outputhat23=16
+treein = 0
+compacttree = 0
+stacksize: 8192 kb
+rescale = 1
+All-to-all alignment.
+    0 / 6
+    1 / 6
+    2 / 6
+    3 / 6
+    4 / 6
+tbfast-pair (aa) Version 7.526
+alg=L, model=BLOSUM62, 2.00, -0.10, +0.10, noshift, amax=0.0
+0 thread(s)
+
+outputhat23=16
+Loading 'hat3.seed' ... 
+done.
+Writing hat3 for iterative refinement
+rescale = 1
+Gap Penalty = -1.53, +0.00, +0.00
+tbutree = 1, compacttree = 0
+Constructing a UPGMA tree ... 
+
+    0 / 6
+done.
+
+Progressive alignment ... 
+
+STEP     1 /5 
+STEP     2 /5 
+STEP     3 /5 
+STEP     4 /5 
+STEP     5 /5 
+done.
+tbfast (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+1 thread(s)
+
+minimumweight = 0.000010
+autosubalignment = 0.000000
+nthread = 0
+randomseed = 0
+blosum 62 / kimura 200
+poffset = 0
+niter = 16
+sueff_global = 0.100000
+nadd = 16
+Loading 'hat3' ... done.
+rescale = 1
+
+
+    0 / 6
+Segment   1/  1    1- 350
+STEP 001-001-0  identical.   
+STEP 001-001-1  identical.   
+STEP 001-002-0  accepted.
+STEP 001-002-1  accepted.
+STEP 001-003-0  accepted.
+STEP 001-003-1  accepted.
+STEP 001-004-0  accepted.
+STEP 001-004-1  accepted.
+STEP 001-005-1  accepted.
+STEP 002-005-1  identical.   
+STEP 002-004-0  rejected.
+STEP 002-004-1  identical.   
+STEP 002-003-0  accepted.
+STEP 002-003-1  rejected.
+STEP 002-002-0  identical.   
+STEP 002-002-1  accepted.
+STEP 002-001-0  identical.   
+STEP 002-001-1  identical.   
+STEP 003-001-0  identical.   
+STEP 003-001-1  identical.   
+STEP 003-002-0  accepted.
+STEP 003-002-1  identical.   
+STEP 003-003-0  rejected.
+STEP 003-003-1  rejected.
+STEP 003-004-0  rejected.
+STEP 003-004-1  rejected.
+STEP 003-005-1  identical.   
+STEP 004-005-1  identical.   
+STEP 004-004-0  rejected.
+STEP 004-004-1  rejected.
+STEP 004-003-0  rejected.
+STEP 004-003-1  rejected.
+STEP 004-002-0  identical.   
+Converged.
+
+done
+dvtditr (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+0 thread(s)
+
+
+Strategy:
+ L-INS-i (Probably most accurate, very slow)
+ Iterative refinement method (<16) with LOCAL pairwise alignment information
+
+If unsure which option to use, try 'mafft --auto input > output'.
+For more information, see 'mafft --help', 'mafft --man' and the mafft page.
+
+The default gap scoring scheme has been changed in version 7.110 (2013 Oct).
+It tends to insert more gaps into gap-rich regions than previous versions.
+To disable this change, add the --leavegappyregion option.
+RUNTIME mafft_linsi 0.259
+
+########## CMD: mafft --auto /mnt/d/1.WorkDir/RedBook/content/素材/alignment/007-multiple-alignment/sequences.fasta ##########
+exit=0  runtime=0.257s
+STDERR:
+outputhat23=16
+treein = 0
+compacttree = 0
+stacksize: 8192 kb
+rescale = 1
+All-to-all alignment.
+    0 / 6
+    1 / 6
+    2 / 6
+    3 / 6
+    4 / 6
+tbfast-pair (aa) Version 7.526
+alg=L, model=BLOSUM62, 2.00, -0.10, +0.10, noshift, amax=0.0
+0 thread(s)
+
+outputhat23=16
+Loading 'hat3.seed' ... 
+done.
+Writing hat3 for iterative refinement
+rescale = 1
+Gap Penalty = -1.53, +0.00, +0.00
+tbutree = 1, compacttree = 0
+Constructing a UPGMA tree ... 
+
+    0 / 6
+done.
+
+Progressive alignment ... 
+
+STEP     1 /5 
+STEP     2 /5 
+STEP     3 /5 
+STEP     4 /5 
+STEP     5 /5 
+done.
+tbfast (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+1 thread(s)
+
+minimumweight = 0.000010
+autosubalignment = 0.000000
+nthread = 0
+randomseed = 0
+blosum 62 / kimura 200
+poffset = 0
+niter = 16
+sueff_global = 0.100000
+nadd = 16
+Loading 'hat3' ... done.
+rescale = 1
+
+
+    0 / 6
+Segment   1/  1    1- 350
+STEP 001-001-0  identical.   
+STEP 001-001-1  identical.   
+STEP 001-002-0  accepted.
+STEP 001-002-1  accepted.
+STEP 001-003-0  accepted.
+STEP 001-003-1  accepted.
+STEP 001-004-0  accepted.
+STEP 001-004-1  accepted.
+STEP 001-005-1  accepted.
+STEP 002-005-1  identical.   
+STEP 002-004-0  rejected.
+STEP 002-004-1  identical.   
+STEP 002-003-0  accepted.
+STEP 002-003-1  rejected.
+STEP 002-002-0  identical.   
+STEP 002-002-1  accepted.
+STEP 002-001-0  identical.   
+STEP 002-001-1  identical.   
+STEP 003-001-0  identical.   
+STEP 003-001-1  identical.   
+STEP 003-002-0  accepted.
+STEP 003-002-1  identical.   
+STEP 003-003-0  rejected.
+STEP 003-003-1  rejected.
+STEP 003-004-0  rejected.
+STEP 003-004-1  rejected.
+STEP 003-005-1  identical.   
+STEP 004-005-1  identical.   
+STEP 004-004-0  rejected.
+STEP 004-004-1  rejected.
+STEP 004-003-0  rejected.
+STEP 004-003-1  rejected.
+STEP 004-002-0  identical.   
+Converged.
+
+done
+dvtditr (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+0 thread(s)
+
+
+Strategy:
+ L-INS-i (Probably most accurate, very slow)
+ Iterative refinement method (<16) with LOCAL pairwise alignment information
+
+If unsure which option to use, try 'mafft --auto input > output'.
+For more information, see 'mafft --help', 'mafft --man' and the mafft page.
+
+The default gap scoring scheme has been changed in version 7.110 (2013 Oct).
+It tends to insert more gaps into gap-rich regions than previous versions.
+To disable this change, add the --leavegappyregion option.
+RUNTIME mafft_auto 0.257
+
+########## CMD: mafft --retree 2 /mnt/d/1.WorkDir/RedBook/content/素材/alignment/007-multiple-alignment/sequences.fasta ##########
+exit=0  runtime=0.217s
+STDERR:
+nthread = 0
+nthreadpair = 0
+nthreadtb = 0
+ppenalty_ex = 0
+stacksize: 8192 kb
+rescale = 1
+Gap Penalty = -1.53, +0.00, +0.00
+
+
+
+Making a distance matrix ..
+
+    1 / 6
+done.
+
+Constructing a UPGMA tree (efffree=0) ... 
+
+    0 / 6
+done.
+
+Progressive alignment 1/2... 
+
+STEP     1 / 5  f
+STEP     2 / 5  f
+STEP     3 / 5  f
+STEP     4 / 5  f
+Reallocating..done. *alloclen = 1621
+
+STEP     5 / 5  f
+done.
+
+Making a distance matrix from msa.. 
+
+    0 / 6
+done.
+
+Constructing a UPGMA tree (efffree=1) ... 
+
+    0 / 6
+done.
+
+Progressive alignment 2/2... 
+
+STEP     1 / 5  f
+STEP     2 / 5  f
+STEP     3 / 5  f
+STEP     4 / 5  f
+STEP     5 / 5  f
+done.
+
+disttbfast (aa) Version 7.526
+alg=A, model=BLOSUM62, 1.53, -0.00, -0.00, noshift, amax=0.0
+0 thread(s)
+
+
+Strategy:
+ FFT-NS-2 (Fast but rough)
+ Progressive method (guide trees were built 2 times.)
+
+If unsure which option to use, try 'mafft --auto input > output'.
+For more information, see 'mafft --help', 'mafft --man' and the mafft page.
+
+The default gap scoring scheme has been changed in version 7.110 (2013 Oct).
+It tends to insert more gaps into gap-rich regions than previous versions.
+To disable this change, add the --leavegappyregion option.
+RUNTIME mafft_fftns2 0.217
+
+########## CMD: muscle -align /mnt/d/1.WorkDir/RedBook/content/素材/alignment/007-multiple-alignment/sequences.fasta -output muscle_align.fasta -threads 4 ##########
+exit=0  runtime=0.051s
+STDERR:
+muscle 5.3.linux64 []  16.3Gb RAM, 28 cores
+Built Jul 30 2025 21:13:04
+(C) Copyright 2004-2021 Robert C. Edgar.
+https://drive5.com
+
+[align /mnt/d/1.WorkDir/RedBook/content/素材/alignment/007-multiple-alignment/sequences.fasta]
+Input: 6 seqs, avg length 266, max 304, min 247
+
+00:00 9.6Mb    16.7% Derep 1 uniques, 0 dupes
+00:00 9.6Mb   100.0% Derep 6 uniques, 0 dupes
+00:00 9.6Mb  CPU has 28 cores, running 4 threads
+00:00 102Mb     6.7% Calc posteriors
+00:00 247Mb   100.0% Calc posteriors
+00:00 247Mb    20.0% UPGMA5         
+00:00 247Mb   100.0% UPGMA5
+00:00 247Mb     6.7% Consistency (1/2)
+00:00 247Mb   100.0% Consistency (1/2)
+00:00 247Mb     6.7% Consistency (2/2)
+00:00 247Mb   100.0% Consistency (2/2)
+00:00 247Mb     1.0% Refining         
+00:00 247Mb   100.0% Refining
+RUNTIME muscle_align 0.051
+
+########## CMD: clustalo -i /mnt/d/1.WorkDir/RedBook/content/素材/alignment/007-multiple-alignment/sequences.fasta -o clustalo.fasta --force ##########
+exit=0  runtime=1.245s
+STDERR:
+(none)
+RUNTIME clustalo 1.245
+
+########## alignment file sizes (bytes) ##########
+mafft_linsi.fasta  2194
+mafft_auto.fasta  2194
+mafft_fftns2.fasta  2182
+muscle_align.fasta  2194
+clustalo.fasta  2158
