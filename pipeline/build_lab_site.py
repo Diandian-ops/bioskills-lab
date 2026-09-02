@@ -84,7 +84,7 @@ for name in sorted(os.listdir(BIO)):
         n = len([d for d in os.listdir(p) if os.path.isdir(os.path.join(p, d)) and not d.startswith('.')])
         if n > 0:
             cats.append((name, n))
-DONE = {"alignment", "read-alignment", "variant-calling"}
+DONE = {"alignment", "alignment-files", "read-alignment", "variant-calling"}
 NCAT = len(cats)
 NTOTAL = sum(n for _, n in cats)
 
@@ -122,7 +122,7 @@ for dname, dcolor in DOMAIN_META:
     TREE["children"].append({
         "name": dname, "color": dcolor,
         "children": [{"name":c,"value":n,"done": c in DONE,
-                      "link": ("alignment/index.html" if c=="alignment" else ("read-alignment/index.html" if c=="read-alignment" else ("variant-calling/index.html" if c=="variant-calling" else None))),
+                      "link": ("alignment-files/index.html" if c=="alignment-files" else ("alignment/index.html" if c=="alignment" else ("read-alignment/index.html" if c=="read-alignment" else ("variant-calling/index.html" if c=="variant-calling" else None)))),
                       "skills": sorted(d for d in os.listdir(os.path.join(BIO,c)) if os.path.isdir(os.path.join(BIO,c, d)) and not d.startswith('.'))} for c,n in items]
     })
 TREE_JSON = __import__("json").dumps(TREE, ensure_ascii=False)
@@ -146,6 +146,7 @@ READ_ALIGN_SUBS = [("bowtie2", "bowtie2-alignment", "read-alignment/bowtie2-alig
                   ("bwa", "bwa-alignment", "read-alignment/bwa-alignment.html"),
                   ("hisat2", "hisat2-alignment", "read-alignment/hisat2-alignment.html"),
                   ("star", "star-alignment", "read-alignment/star-alignment.html")]
+ALIGN_FILES_SUBS = [("sambambasics", "sam-bam-basics", "alignment-files/sam-bam-basics.html")]
 VARCALL_SUBS = [("varcall", "variant-calling", "variant-calling/variant-calling.html"),
                 ("vcfbasics", "vcf-basics", "variant-calling/vcf-basics.html"),
                 ("vcfnorm", "variant-normalization", "variant-calling/variant-normalization.html"),
@@ -160,8 +161,8 @@ VARCALL_SUBS = [("varcall", "variant-calling", "variant-calling/variant-calling.
                 ("clinical", "clinical-interpretation", "variant-calling/clinical-interpretation.html"),
                 ("deepvariant", "deepvariant", "variant-calling/deepvariant.html")]
 # 同一套「family 子页」机制同时服务 alignment / read-alignment / variant-calling，避免对 category 名硬编码
-FAMILY_SUBS = {"alignment": ALIGN_SUBS, "read-alignment": READ_ALIGN_SUBS,
-               "variant-calling": VARCALL_SUBS}
+FAMILY_SUBS = {"alignment": ALIGN_SUBS, "alignment-files": ALIGN_FILES_SUBS,
+               "read-alignment": READ_ALIGN_SUBS, "variant-calling": VARCALL_SUBS}
 FAMILY_KEYS = {k for subs in FAMILY_SUBS.values() for k, _, _ in subs}
 
 def sidebar(active, prefix=""):
@@ -507,6 +508,7 @@ idx = page("", "index", idx)
 # ---------- 分类总览页（按 TRIALS 配置自动生成，消除硬编码）----------
 CAT_META = {
     "alignment": "序列比对家族",
+    "alignment-files": "比对文件家族",
     "read-alignment": "读长比对家族",
     "variant-calling": "变异检出家族",
 }
@@ -536,6 +538,7 @@ TRIALS = [
     ("variant-calling", "025", "consensus-sequences",   "DEEP DIVE 22", "consensus"),
     ("variant-calling", "026", "clinical-interpretation", "DEEP DIVE 23", "clinical"),
     ("variant-calling", "027", "deepvariant",           "DEEP DIVE 24", "deepvariant"),
+    ("alignment-files", "028", "sam-bam-basics",       "DEEP DIVE 25", "sambambasics"),
 ]
 def cat_page(cat):
     items = pages.get(cat, [])

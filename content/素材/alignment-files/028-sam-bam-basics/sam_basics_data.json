@@ -1,0 +1,213 @@
+{
+  "bam": "aligned_e2e.bam",
+  "total_reads": 6000,
+  "header": {
+    "HD": [
+      "@HD\tVN:1.5\tSO:coordinate"
+    ],
+    "SQ": [
+      "@SQ\tSN:contig1\tLN:3000",
+      "@SQ\tSN:contig2\tLN:3000",
+      "@SQ\tSN:contig3\tLN:3000",
+      "@SQ\tSN:contig4\tLN:3000"
+    ],
+    "PG": [
+      "@PG\tID:bowtie2\tPN:bowtie2\tVN:2.5.5\tCL:\"/Applications/anaconda3/envs/bioaligners/bin/bowtie2-align-s --wrapper basic-0 -p 8 -x /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reference_index -1 /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reads_1.fq -2 /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reads_2.fq\"",
+      "@PG\tID:samtools\tPN:samtools\tPP:bowtie2\tVN:1.21\tCL:/Applications/anaconda3/bin/samtools sort -@4 -o /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/aligned_e2e.bam -",
+      "@PG\tID:samtools.1\tPN:samtools\tPP:samtools\tVN:1.22.1\tCL:samtools view -H /mnt/d/1.WorkDir/RedBook/content/素材/alignment-files/028-sam-bam-basics/aligned_e2e.bam"
+    ]
+  },
+  "categories": {
+    "total": 6000,
+    "mapped": 5954,
+    "unmapped": 46,
+    "secondary": 0,
+    "supplementary": 0,
+    "duplicates": 0,
+    "qcfail": 0,
+    "paired": 6000,
+    "proper_pair": 3042,
+    "reverse": 2976,
+    "read1": 3000,
+    "read2": 3000
+  },
+  "mapq_dist": {
+    "0": 46,
+    "8": 30,
+    "23": 86,
+    "24": 80,
+    "40": 360,
+    "42": 5398
+  },
+  "cigar_ops": {
+    "M": 594386,
+    "I": 1014
+  },
+  "cigar_feat": {
+    "contains_insertion": 139,
+    "contains_deletion": 0,
+    "contains_clip": 0,
+    "contains_skip": 0,
+    "clean_100M": 5815
+  },
+  "readlen_dist": {
+    "100": 6000
+  },
+  "refs": {
+    "contig1": 1486,
+    "contig2": 1494,
+    "contig3": 1494,
+    "contig4": 1492,
+    "*": 34
+  },
+  "sample_flags": [
+    {
+      "qname": "contig1_3_426_1:0:0_1:0:0_197",
+      "flag": 163,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ2"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 3
+    },
+    {
+      "qname": "contig1_4_487_0:0:0_1:0:0_c6",
+      "flag": 99,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ1"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 4
+    },
+    {
+      "qname": "contig1_6_430_1:0:0_0:0:0_65",
+      "flag": 99,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ1"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 6
+    },
+    {
+      "qname": "contig1_17_450_1:0:0_3:0:0_11",
+      "flag": 163,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ2"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 17
+    },
+    {
+      "qname": "contig1_21_614_1:0:0_0:0:0_22b",
+      "flag": 161,
+      "names": [
+        "PAIRED",
+        "MATE_REVERSE",
+        "READ2"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 21
+    },
+    {
+      "qname": "contig1_52_537_3:0:0_1:0:0_18b",
+      "flag": 163,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ2"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 52
+    },
+    {
+      "qname": "contig1_57_597_0:0:0_1:0:0_234",
+      "flag": 97,
+      "names": [
+        "PAIRED",
+        "MATE_REVERSE",
+        "READ1"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 57
+    },
+    {
+      "qname": "contig1_58_554_2:0:0_0:0:0_c8",
+      "flag": 99,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ1"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 58
+    },
+    {
+      "qname": "contig1_61_521_0:0:0_1:0:0_176",
+      "flag": 99,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ1"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 61
+    },
+    {
+      "qname": "contig1_64_484_2:0:0_3:0:0_2bb",
+      "flag": 163,
+      "names": [
+        "PAIRED",
+        "PROPER_PAIR",
+        "MATE_REVERSE",
+        "READ2"
+      ],
+      "mapq": 42,
+      "cigar": "100M",
+      "rname": "contig1",
+      "pos": 64
+    }
+  ],
+  "flagstat_raw": "6000 + 0 in total (QC-passed reads + QC-failed reads)\n6000 + 0 primary\n0 + 0 secondary\n0 + 0 supplementary\n0 + 0 duplicates\n0 + 0 primary duplicates\n5954 + 0 mapped (99.23% : N/A)\n5954 + 0 primary mapped (99.23% : N/A)\n6000 + 0 paired in sequencing\n3000 + 0 read1\n3000 + 0 read2\n3042 + 0 properly paired (50.70% : N/A)\n5942 + 0 with itself and mate mapped\n12 + 0 singletons (0.20% : N/A)\n0 + 0 with mate mapped to a different chr\n0 + 0 with mate mapped to a different chr (mapQ>=5)\n",
+  "cram_demo": {
+    "cram_count": 6000,
+    "bam_back_count": 6000,
+    "match": true,
+    "exit_bam2cram": 0,
+    "exit_cram2bam": 0
+  },
+  "samtools_version": "samtools 1.22.1",
+  "reference": "reference.fa"
+}

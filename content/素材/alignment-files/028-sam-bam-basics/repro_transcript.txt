@@ -1,0 +1,84 @@
+# ===== S2a 真实复现：bioSkills sam-bam-basics =====
+# 命令来源：content/库/bioSkills/alignment-files/sam-bam-basics/SKILL.md
+# 输入：011 真跑产物 aligned_e2e.bam（paired-end，坐标排序，6000 reads）
+# 时间：2026-09-01
+# 环境：WSL2 Ubuntu + samtools 1.22.1 / htslib 1.22.1
+
+## 1) samtools view -H（header）
+$ samtools view -H aligned_e2e.bam
+@HD	VN:1.5	SO:coordinate
+@SQ	SN:contig1	LN:3000
+@SQ	SN:contig2	LN:3000
+@SQ	SN:contig3	LN:3000
+@SQ	SN:contig4	LN:3000
+@PG	ID:bowtie2	PN:bowtie2	VN:2.5.5	CL:"/Applications/anaconda3/envs/bioaligners/bin/bowtie2-align-s --wrapper basic-0 -p 8 -x /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reference_index -1 /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reads_1.fq -2 /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reads_2.fq"
+@PG	ID:samtools	PN:samtools	PP:bowtie2	VN:1.21	CL:/Applications/anaconda3/bin/samtools sort -@4 -o /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/aligned_e2e.bam -
+@PG	ID:samtools.1	PN:samtools	PP:samtools	VN:1.22.1	CL:samtools view -H aligned_e2e.bam
+
+## 2) samtools view（前 2 条 alignment 记录）
+$ samtools view aligned_e2e.bam | head -2
+contig1_3_426_1:0:0_1:0:0_197	163	contig1	3	42	100M	=	327	424	ACCTCGCGCCCTCCCGAACGCCTATACCATGAGTACACCCAAGAGCACCAATATGAGTGTAACGCCCCTATCAATATAAGATGCACCGTTACTACCTGTC	2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222	AS:i:-3	XN:i:0	XM:i:1	XO:i:0	XG:i:0	NM:i:1	MD:Z:41T58	YS:i:-3	YT:Z:CP
+contig1_4_487_0:0:0_1:0:0_c6	99	contig1	4	42	100M	=	388	484	CCTCGCGCCCTCCCGAACGCCTATACCATGAGTACACCCATGAGCACCAATATGAGTGTAACGCCCCTATCAATATAAGATGCACCGTTACTACCTGTCA	2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222	AS:i:0	XN:i:0	XM:i:0	XO:i:0	XG:i:0	NM:i:0	MD:Z:100	YS:i:-3	YT:Z:CP
+
+## 3) samtools view -c（计数）
+$ samtools view -c aligned_e2e.bam
+6000
+
+## 4) samtools flagstat
+$ samtools flagstat aligned_e2e.bam
+6000 + 0 in total (QC-passed reads + QC-failed reads)
+6000 + 0 primary
+0 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+0 + 0 primary duplicates
+5954 + 0 mapped (99.23% : N/A)
+5954 + 0 primary mapped (99.23% : N/A)
+6000 + 0 paired in sequencing
+3000 + 0 read1
+3000 + 0 read2
+3042 + 0 properly paired (50.70% : N/A)
+5942 + 0 with itself and mate mapped
+12 + 0 singletons (0.20% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+
+## 5) samtools flags 双向解码示例
+$ samtools flags 0
+0x0	0	
+
+$ samtools flags 4
+0x4	4	UNMAP
+
+$ samtools flags 16
+0x10	16	REVERSE
+
+$ samtools flags 99
+0x63	99	PAIRED,PROPER_PAIR,MREVERSE,READ1
+
+$ samtools flags 147
+0x93	147	PAIRED,PROPER_PAIR,REVERSE,READ2
+
+$ samtools flags 256
+0x100	256	SECONDARY
+
+$ samtools flags 2048
+0x800	2048	SUPPLEMENTARY
+
+## 6) 区域查询（1-based closed interval）
+$ samtools view aligned_e2e.bam contig1:1-100 | head -3
+contig1_3_426_1:0:0_1:0:0_197	163	contig1	3	42	100M	=	327	424	ACCTCGCGCCCTCCCGAACGCCTATACCATGAGTACACCCAAGAGCACCAATATGAGTGTAACGCCCCTATCAATATAAGATGCACCGTTACTACCTGTC	2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222	AS:i:-3	XN:i:0	XM:i:1	XO:i:0	XG:i:0	NM:i:1	MD:Z:41T58	YS:i:-3	YT:Z:CP
+contig1_4_487_0:0:0_1:0:0_c6	99	contig1	4	42	100M	=	388	484	CCTCGCGCCCTCCCGAACGCCTATACCATGAGTACACCCATGAGCACCAATATGAGTGTAACGCCCCTATCAATATAAGATGCACCGTTACTACCTGTCA	2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222	AS:i:0	XN:i:0	XM:i:0	XO:i:0	XG:i:0	NM:i:0	MD:Z:100	YS:i:-3	YT:Z:CP
+contig1_6_430_1:0:0_0:0:0_65	99	contig1	6	42	100M	=	331	425	TCGCGCCCTCCCGAACGCCTATACCATGAGTACACGCATGAGCACCAATATGAGTGTAACGCCCCTATCAATATAAGATGCACCGTTACTACCTGTCAAA	2222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222	AS:i:-3	XN:i:0	XM:i:1	XO:i:0	XG:i:0	NM:i:1	MD:Z:35C64	YS:i:0	YT:Z:CP
+
+## 7) BAM -> SAM -> BAM 往返
+$ samtools view -h -o demo.sam aligned_e2e.bam && samtools view -c demo.sam
+6000
+$ samtools view -b -o demo_back.bam demo.sam && samtools view -c demo_back.bam
+6000
+
+## 8) BAM -> CRAM -> BAM 往返（需同一参考基因组）
+$ samtools view -C -T reference.fa -o demo.cram aligned_e2e.bam && samtools view -c demo.cram
+6000
+$ samtools view -b -T reference.fa -o demo_back2.bam demo.cram && samtools view -c demo_back2.bam
+6000
