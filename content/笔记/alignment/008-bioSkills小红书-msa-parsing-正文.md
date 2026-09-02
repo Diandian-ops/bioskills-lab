@@ -1,22 +1,23 @@
-<!--
-META
-标题建议: 小样本多序列比对的加权方法
-/META
--->
+---
+title: "MSA 先清两样再分析"
+skill: msa-parsing
+trial: "008"
+type: "xhs-body"
+category: "bioSkills 真实试用"
+tags: ["Biopython", "AlignIO", "msa-parsing", "生信", "bioSkills"]
+date: "2026-09-03"
+---
 
-# 008｜bioSkills msa-parsing：解析 MSA 提取保守性与 gap
+封面卡：比对完别急着统计，先清空位列和重复序列
 
-做多序列比对（MSA）之后，常要从中挖信息——哪些列保守、gap 怎么分布、共识序列是啥、要不要给序列加权。bioSkills 的 msa-parsing 就是干这个的，纯 Biopython（AlignIO）薄封装。
+用 BioPython 的 AlignIO 真跑 msa-parsing SKILL.md 的解析与过滤函数，输入是 5 条 × 30 列的小 DNA MSA，把预处理要点记下来。
 
-拿仓库自带的示例比对（4 条序列 × 21 列）试了下，把文档里的函数都跑了一遍。
+发现一：空位比例超 50% 的列是伪影，先删。本例 cols 20-24 有 3/5 序列带空位（gap=0.6），被标成 gappy 列，remove_gappy_columns 一下把 30 列裁到 25 列。这种列不做下游统计，否则拉低整列指标。
 
-基础解析一把过：18/21 列完全保守，col12 是 3/4 序列都有的 gap 列；共识序列 = `ATGGCTAGCTAGNACGTACGT`，col12 因为多数位置是 gap 被标成 N。但加权指标在小样本上退化：
-- Henikoff 权重 0.25 / 0.25 / 0.25 / 0.25（四条全一样，拉不开）
-- Neff = 0.25（4 条一致性都超 62%，被聚成 1 簇），Neff/L = 0.012，远低于 DCA 接触预测用的 0.5 阈值
-- 互信息（MI）全 0——样本里没有残基共变信号
+发现二：近重复序列会污染每列指标，用 Henikoff 权重降权。本例 s1 和 s2 只在 1 个位点不同，是近重复。henikoff_weights 给它们 0.175 和 0.170，唯一序列 s3/s4/s5 是 0.215-0.220，权重和正好 1.0。系统发育结构数据上每列统计都要乘这个权重，否则被多数 clade 主导。
 
-换真实 102×3 的 MAFFT 比对再跑同一套函数：Henikoff 权重 0.31 / 0.31 / 0.38（分出来了），50 个 gappy 列——加权指标在真实 gap 富集的数据上才正常分化。
+发现三：一致序列低于阈值的列会出模糊字符。本例可变区没有残基达到 0.5，一致序列在中间一段全是 N（DNA）或 X（蛋白），不能当真实残基用。坐标映射用 numpy 向量化版（cumsum）是 O(1) 查找，空位列返回 -1，比逐字符遍历快得多。
 
-所以 MSA 的基础解析（保守性 / gap / 共识 / 坐标映射）小样本也能用；Henikoff、Neff、MI-APC 这些加权与共进化指标，喂小比对会塌，先用 gap 和保守性概览判断数据规模，够大够多样再上。
+结论：比对解析不是读进来就完事。gappy 列先移除、冗余序列用 Henikoff 权重校正、一致序列的 N/X 别当真。核心解析函数本机全部跑通，MI-APC、Neff、A2M/A3M 在 examples 里没逐行复现。
 
-#生信 #生物信息 #多序列比对 #MSA #Biopython #保守性分析 #序列加权
+#生信 #生物信息学 #Biopython #MSA #bioSkills

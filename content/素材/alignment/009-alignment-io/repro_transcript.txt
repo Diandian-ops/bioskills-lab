@@ -1,0 +1,32 @@
+======================================================================
+1. read / write / convert between formats
+======================================================================
+write+read fasta         : 4 seqs, 20 cols
+write+read clustal       : 4 seqs, 20 cols
+write+read phylip-relaxed: 4 seqs, 20 cols
+write+read stockholm     : 4 seqs, 20 cols
+write+read nexus         : 4 seqs, 20 cols
+AlignIO.convert clustal->phylip-relaxed: 1 alignment(s)
+AlignIO.convert stockholm->nexus (no molecule_type): FAILED -> Need the molecule type to be defined
+AlignIO.convert stockholm->nexus (molecule_type=DNA): 1 alignment(s)
+======================================================================
+2. format read/write support test (Bio.AlignIO)
+======================================================================
+fasta            read=True write=True
+clustal          read=True write=True
+phylip           read=True write=True
+phylip-relaxed   read=True write=True
+phylip-sequential read=True write=True
+stockholm        read=True write=True
+nexus            read=True write=True
+======================================================================
+3. Stockholm annotations: kept vs lost after FASTA export
+======================================================================
+Stockholm read-back: SS_cons = (((((((((()))))))))); per-seq GS(source) present = False
+FASTA read-back: SS_cons present = False (expected False); GS present = False (expected False)
+Bio.Align.Align.read(clustal): 4 seqs, 20 cols
+Bio.Align.Align.write(fasta): ok
+======================================================================
+4. create MultipleSeqAlignment from code
+======================================================================
+built alignment: 3 seqs, 12 cols

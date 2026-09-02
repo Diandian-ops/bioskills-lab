@@ -1,0 +1,60 @@
+======================================================================
+1. Global DNA alignment  (PairwiseAligner, mode='global')
+   match=2 mismatch=-1 open_gap=-10 extend_gap=-0.5
+======================================================================
+Found 1 optimal alignment(s)
+target            0 ACCGGTAACGTAG 13
+                  0 ||||.|||||.|| 13
+query             0 ACCGTTAACGAAG 13
+
+alignment.score      = 20.0
+alignment.shape      = (2, 13)
+len(alignment)       = 2
+counts.identities    = 11
+counts.mismatches    = 2
+counts.gaps          = 0
+Percent identity (counts, PID2-like) = 84.6%
+PID1 (aligned+internal gaps) = 84.6%
+PID2 (residue pairs only)    = 84.6%
+PID3 (shorter length)        = 84.6%
+PID4 (mean length)           = 84.6%
+PID spread on this alignment = 0.0%
+alignment.substitutions (rows=target, cols=query):
+    A   C   G   T
+A 4.0 0.0 0.0 0.0
+C 0.0 3.0 0.0 0.0
+G 0.0 0.0 3.0 1.0
+T 1.0 0.0 0.0 1.0
+
+format(alignment, 'fasta'):
+>
+ACCGGTAACGTAG
+>
+ACCGTTAACGAAG
+
+format(alignment, 'clustal'):
+sequence_0                          ACCGGTAACGTAG
+sequence_1                          ACCGTTAACGAAG
+
+
+
+format(alignment, 'psl'):
+11	2	0	0	0	0	0	0	+	query	13	0	13	target	13	0	13	1	13,	0,	0,
+
+format(alignment, 'sam'):
+query	0	target	1	255	13M	*	0	0	ACCGTTAACGAAG	*	AS:i:20
+
+======================================================================
+2. Protein alignment  (BLOSUM62, open=-11 extend=-1)
+======================================================================
+target            0 GIVEGILSR 9
+                  0 |||||.||| 9
+query             0 GIVEGVLSR 9
+
+protein score=41.0 identities=8 mismatches=1 gaps=0
+======================================================================
+3. Mode comparison on localA/localB (divergent flanks, conserved core)
+======================================================================
+global    score = 12.0
+local     score = 20.0
+semiglobal score = 11.0

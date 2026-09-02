@@ -1,0 +1,29 @@
+{
+  "dna_global": {
+    "score": 20.0,
+    "identities": 11,
+    "mismatches": 2,
+    "gaps": 0,
+    "alignment_length": 13,
+    "pid_counts_pct": 84.62
+  },
+  "pid_defs_pct": {
+    "pid1": 84.62,
+    "pid2": 84.62,
+    "pid3": 84.62,
+    "pid4": 84.62
+  },
+  "pid_spread_pct": 0.0,
+  "protein": {
+    "score": 41.0,
+    "identities": 8,
+    "mismatches": 1,
+    "gaps": 0,
+    "matrix": "BLOSUM62"
+  },
+  "mode_scores": {
+    "global": 12.0,
+    "local": 20.0,
+    "semiglobal": 11.0
+  }
+}

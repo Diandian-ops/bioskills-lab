@@ -1,0 +1,40 @@
+{
+  "n_seqs": 4,
+  "n_cols": 20,
+  "format_support": {
+    "fasta": {
+      "read": true,
+      "write": true
+    },
+    "clustal": {
+      "read": true,
+      "write": true
+    },
+    "phylip": {
+      "read": true,
+      "write": true
+    },
+    "phylip-relaxed": {
+      "read": true,
+      "write": true
+    },
+    "phylip-sequential": {
+      "read": true,
+      "write": true
+    },
+    "stockholm": {
+      "read": true,
+      "write": true
+    },
+    "nexus": {
+      "read": true,
+      "write": true
+    }
+  },
+  "annotation": {
+    "stockholm_keeps_ss": true,
+    "fasta_loses_ss": true,
+    "fasta_loses_gs": true,
+    "ss_cons": "(((((((((())))))))))"
+  }
+}

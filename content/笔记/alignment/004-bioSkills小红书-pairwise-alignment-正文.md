@@ -1,18 +1,23 @@
-<!--
-META
-用途: 004 pairwise-alignment 小红书帖子「正文文本框」文案，与出图源稿配套，不进站点、不参与 md2card。
-标题建议: pairwise 比对缺口罚分的默认行为
-/ META
--->
+---
+title: "双序列比对怎么选模式"
+skill: pairwise-alignment
+trial: "004"
+type: "xhs-body"
+category: "bioSkills 真实试用"
+tags: ["Biopython", "PairwiseAligner", "双序列比对", "生信", "bioSkills"]
+date: "2026-09-03"
+---
 
-拿到两条同源序列，想知道差多少、哪些位置保守，第一步是做两两比对（pairwise alignment）。bioSkills 的 pairwise-alignment 就是教怎么把这一步做对的。
+封面卡：两条序列怎么比对？全局/局部/半全局，分数差一倍
 
-拿示例数据（人血红蛋白 α 链 vs β 链，NCBI P69905 / P68871）试了下，用 Biopython 的 PairwiseAligner，踩到两个点：
+用 Biopython 的 PairwiseAligner 真跑了一遍 SKILL.md 的三种模式，把实测结果记下来。
 
-一是默认不设罚分，gap 全 0，比对会疯狂插无意义短 gap 凑分。同样这两条序列，默认对齐出 172 列、塞了 55 个 gap；按 BLOSUM62 推荐 open=-11 / extend=-1，只有 149 列、9 个 gap——多出来 46 个假 gap（+15.4%）。
+发现一：模式选错，分数天差地别。两条「两端发散、中间保守」的序列，全局比对 score 只有 12.0，局部比对是 20.0，半全局是 11.0。局部比对会跳过发散的两端、只给保守核心打分，所以最高。长度差很多或者两端不保守的序列，别用全局，改局部或半全局（自由端空位）。
 
-二是相似度（PID）有四种定义，同一份比对能差出 2.8 个百分点，极端情况达 11.5%。报 PID 必须说清口径。
+发现二：用替换矩阵必须显式设空位罚分。PairwiseAligner 默认的 open/extend 都是 0，配上 BLOSUM62 这种正分矩阵，会冒出一堆无意义的短空位。蛋白比对要用 open=-11、extend=-1（BLASTP 默认）。实测 protA/protB 用 BLOSUM62 比对，score=41.0，8 个一致、1 个错配。
 
-所以 pairwise 比对别用默认值，BLOSUM62 配 open=-11 / extend=-1，并明确 PID 口径。
+发现三：百分比一致性有四个分母（PID1-4），同一个比对能差到 11.5%。本报告的无空位等长例子四个都是 84.6% 重合，但只要出现内部空位或长度不对称就会分开，下游比较一定写清用哪一种。另外 len(alignment) 返回的是序列条数不是比对长度，比对长度用 alignment.shape[1]。
 
-#生信 #生物信息学 #序列比对 #PairwiseAlignment #bioSkills
+结论：PairwiseAligner 默认适合小于 10 kb 的交互和脚本。空位罚分记得显式给；全球/局部/半全局按序列特征选；PID 定义要标注。比对器核心流程在本机全部跑通，库性能基准和 Karlin-Altschul 显著性未实测。
+
+#生信 #生物信息学 #Biopython #双序列比对 #bioSkills
