@@ -1,0 +1,214 @@
+================================================================================
+012 bwa-alignment — 真实复现记录 (repro_transcript.txt)
+================================================================================
+
+本文件证明本次 bioSkills 真实试用所报告的产物均来自真实执行，而非杜撰。
+
+诚实标注 (honesty disclosure)
+-----------------------------
+[RECONSTRUCTED-FROM-LOG]  下列 bwa-mem2 / bwa / samtools 命令由先前 agent 在
+                          macOS (anaconda3 envs/bioaligners: bwa-mem2 2.3,
+                          bwa 0.7.19, samtools 1.21) 上真实跑通，命令原文见
+                          run_bwa.py，stderr 原文见各 *.log。本次未重新执行
+                          `bwa index` / `bwa mem`（索引与 BAM 已落盘）。
+[RE-RUN]                  下列 `samtools flagstat` 由本 agent 在本次会话用
+                          WSL Ubuntu bio 环境 (samtools 1.24) 对既有 BAM
+                          重新执行，命令与输出均真实（见 §FLAGSTAT）。
+
+工作目录: content/素材/read-alignment/012-bwa-alignment/
+参考: reference.fa (合成, 24000 bp, gen_ref.py 固定种子)
+读长: reads_1.fq / reads_2.fq (wgsim -N 3000 -1 100 -2 100 -e 0.02 -S 43 → 3000 对 PE)
+
+================================================================================
+A. 建索引 (bwa-mem2 index)            [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ bwa-mem2 index reference.fa
+  (stderr → idx.log)
+
+真实输出 (idx.log 摘录):
+  * Entering FMI_search
+  init ticks = 24100
+  ref seq len = 24000
+  binary seq ticks = 11641
+  build suffix-array ticks = 41907
+  build fm-index ticks = 26239
+  Total time taken: 0.0062
+
+产物 (bwa_results.json -> index): rc=0, files=5
+  reference.fa.0123 / .amb / .ann / .bwt.2bit.64 / .pac
+  （与 `bwa index` 的 .bwt/.sa 不互通 —— 见 §G）
+
+================================================================================
+B. 带 read group 比对 → 排序 BAM        [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ bwa-mem2 mem -t 8 \
+      -R '@RG\tID:s1\tSM:s1\tPL:ILLUMINA\tLB:lib1' \
+      reference.fa reads_1.fq reads_2.fq | \
+  samtools sort -@4 -o aligned_rg.bam -
+$ samtools index aligned_rg.bam
+  (stderr → align_rg.log)
+
+真实输出 (align_rg.log 摘录):
+  * Index file found. Loading index from .../reference.fa.bwt.2bit.64
+  * Reference genome size: 24000 bp
+  * Read 0 ALT contigs
+  [0000][ M::kt_pipeline] read 6000 sequences (600000 bp)...
+  [0000][PE] # candidate unique pairs for (FF, FR, RF, RR): (0, 2999, 0, 0)
+  [0000][PE] mean and std.dev: (498.45, 50.06)
+  [0000][PE] low and high boundaries for proper pairs: (257, 740)
+  [0000][ M::mem_process_seqs] Processed 6000 reads in 0.137 CPU sec, 0.028 real sec
+
+契约校验 (bwa_results.json -> with_rg):
+  rc=0, has_RG_header=True, max_mapq=60, mapped_reads=6000
+
+================================================================================
+C. 不带 read group 比对（契约负向）      [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ bwa-mem2 mem -t 8 reference.fa reads_1.fq reads_2.fq | \
+  samtools sort -@4 -o aligned_norg.bam -
+  (stderr → align_norg.log)
+
+契约校验 (bwa_results.json -> without_rg):
+  has_RG_header=False        （缺 -R → BAM 头完全没有 @RG）
+
+================================================================================
+D. 去重严格顺序 collate→fixmate→sort→markdup   [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ bwa-mem2 mem -t 8 -R '@RG\tID:s1\tSM:s1\tPL:ILLUMINA\tLB:lib1' \
+      reference.fa reads_1.fq reads_2.fq | \
+  samtools collate -@4 -O -u - | \
+  samtools fixmate -m -@4 -u - - | \
+  samtools sort -@4 -u - | \
+  samtools markdup -@4 - aligned.markdup.bam
+$ samtools index aligned.markdup.bam
+  (stderr → md.log)
+
+契约校验 (bwa_results.json -> markdup):
+  rc=0, has_MC_tag=True, dup_flagged=2
+  （fixmate -m 写入 MC/MS 标签；markdup 标出 2 个重复）
+
+注: md.log 主流程与 §B 一致 (Processed 6000 reads in 0.122 CPU / 0.026 real)，
+    差别仅在 SAM 写出耗时 (0.76 sec)，符合 markdup 管道增加的中间步骤。
+
+================================================================================
+E. -Y（软截 supplementary，SV 安全）vs -M（降级 secondary） [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ bwa-mem2 mem -t 8 -Y -R '@RG\tID:s1\tSM:s1\tPL:ILLUMINA' \
+      reference.fa reads_1.fq reads_2.fq | samtools sort -@4 -o aligned_Y.bam -
+$ bwa-mem2 mem -t 8 -M -R '@RG\tID:s1\tSM:s1\tPL:ILLUMINA' \
+      reference.fa reads_1.fq reads_2.fq | samtools sort -@4 -o aligned_M.bam -
+  (stderr → y.log / m.log)
+
+契约校验 (bwa_results.json -> Y_vs_M):
+  Y_supplementary_0x800 = 0
+  M_secondary_0x100     = 0
+  note: 合成参考无 SV 断点，二者均为 0；语义差异仅在真实 SV 数据显现：
+        -M 把分裂片段降为 secondary(0x100) 会被 SV caller 跳过，
+        -Y 保留 supplementary(0x800) 全程序列。
+
+================================================================================
+F. -K 100000000 跨线程可复现            [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ bwa-mem2 mem -t 8 -K 100000000 -R '@RG\tID:s1\tSM:s1\tPL:ILLUMINA\tLB:lib1' \
+      reference.fa reads_1.fq reads_2.fq | samtools sort -@4 -o repro1.bam -
+$ bwa-mem2 mem -t 8 -K 100000000 -R '@RG\tID:s1\tSM:s1\tPL:ILLUMINA\tLB:lib1' \
+      reference.fa reads_1.fq reads_2.fq | samtools sort -@4 -o repro2.bam -
+  (stderr → repro1.log / repro2.log；两者 read_chunk: 100000000)
+
+契约校验 (bwa_results.json -> reproducible_K):
+  md5_1 = 7a6ac1919c75ec124865f0f4d82dc747
+  md5_2 = 7a6ac1919c75ec124865f0f4d82dc747
+  identical = True
+
+================================================================================
+G. 索引错配负向：bwa 原版索引喂给 bwa-mem2   [RECONSTRUCTED-FROM-LOG]
+================================================================================
+
+$ mkdir -p bwaonly && bwa index -p bwaonly/ref reference.fa
+  (stderr → bwaidx.log: Version 0.7.19-r1273；产出 ref.amb/.ann/.bwt/.pac/.sa)
+$ bwa-mem2 mem -t 8 bwaonly/ref reads_1.fq reads_2.fq
+  (stderr → mismatch.log)
+
+真实输出 (mismatch.log):
+  * Ref file: .../bwaonly/ref
+  * Entering FMI_search
+  ERROR! Unable to open the file: .../bwaonly/ref.bwt.2bit.64
+
+契约校验 (bwa_results.json -> idx_mismatch):
+  rc=1, last_err="ERROR! Unable to open the file: .../bwaonly/ref.bwt.2bit.64"
+  （bwa 的 .bwt/.sa 与 bwa-mem2 的 .bwt.2bit.64 不互通）
+
+================================================================================
+FLAGSTAT — 本次会话重新执行 (samtools 1.24, WSL)   [RE-RUN]
+================================================================================
+
+$ wsl.exe -d Ubuntu -u root -- bash -lc \
+    'source /opt/miniconda3/etc/profile.d/conda.sh && conda activate bio && \
+     cd /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/012-bwa-alignment/ && \
+     for b in aligned_rg aligned_norg aligned.markdup aligned_Y aligned_M; do \
+       samtools flagstat $b.bam > fs_$b.txt; done'
+
+各 BAM 真实 flagstat 关键行（mapped / properly paired / duplicates）:
+
+--- aligned_rg.bam (with -R) ---
+  6000 + 0 in total (QC-passed reads + QC-failed reads)
+  6000 + 0 mapped (100.00% : N/A)
+  6000 + 0 primary mapped (100.00% : N/A)
+  6000 + 0 properly paired (100.00% : N/A)
+
+--- aligned_norg.bam (without -R) ---
+  6000 + 0 in total
+  6000 + 0 mapped (100.00% : N/A)
+  6000 + 0 properly paired (100.00% : N/A)
+
+--- aligned.markdup.bam (collate→fixmate -m→sort→markdup) ---
+  6000 + 0 in total
+  6000 + 0 mapped (100.00% : N/A)
+  6000 + 0 properly paired (100.00% : N/A)
+  2 + 0 duplicates
+  2 + 0 primary duplicates
+
+--- aligned_Y.bam (-Y) ---
+  6000 + 0 in total
+  6000 + 0 mapped (100.00% : N/A)
+  6000 + 0 properly paired (100.00% : N/A)
+
+--- aligned_M.bam (-M) ---
+  6000 + 0 in total
+  6000 + 0 mapped (100.00% : N/A)
+  6000 + 0 properly paired (100.00% : N/A)
+
+一致性: 五个配置均为 6000/6000 映射 (100%)、6000/6000 正确配对 (100%)；
+        仅 aligned.markdup.bam 出现 2 个重复 (占 6000 的 0.03%)。
+        上述数字与 bwa_results.json (mapped_reads=6000, dup_flagged=2) 完全一致。
+
+================================================================================
+出图 (make_figs.py, 真实数字驱动)        [RE-RUN]
+================================================================================
+
+$ python make_figs.py
+  [PASS] fig1_mapping_rate.png: text within axes, no overlap
+  [PASS] fig2_markdup.png: text within axes, no overlap
+  [PASS] fig3_rg_mapq.png: text within axes, no overlap
+  FIGURE QUALITY: TOTAL FAILS = 0
+
+三张图数字来源:
+  fig1_mapping_rate.png  ← §FLAGSTAT 的 mapped / properly-paired (re-run)
+  fig2_markdup.png       ← §FLAGSTAT 的 duplicates + bwa_results.json dup_flagged/has_MC_tag
+  fig3_rg_mapq.png       ← bwa_results.json max_mapq=60 / has_RG_header
+
+================================================================================
+未覆盖（诚实标注）
+================================================================================
+- GRCh38 + ALT/decoy 分层、bwa-postalt.js：合成参考无 ALT contig，仅用
+  bwa_results.json 中的 "Read 0 ALT contigs" 佐证，未做真实 ALT-aware 映射。
+- -Y/-M 的分裂读长语义差异：合成参考无 SV 断点，supplementary/secondary 计数
+  均为 0；文档所述 SV 行为属转述，未在真实 SV 断点上验证。
+- MAPQ 0–60 双峰分布：本次仅确认 max MAPQ=60，未做全量 MAPQ 直方图。
+- 古 DNA (bwa aln) 路径：SKILL.md 覆盖但本次未执行（超出合成数据范围）。

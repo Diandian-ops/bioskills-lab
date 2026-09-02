@@ -1,16 +1,15 @@
-STAR version=                 2.7.11b
-STAR compilation time,server,dir= :/opt/mambaforge/envs/bioconda/conda-bld/star_1763121632674/work/source
+STAR version=2.7.10b
+STAR compilation time,server,dir=2022-11-01T09:53:26-04:00 :/home/dobin/data/STAR/STARcode/STAR.master/source
+STAR git: On branch master ; commit c6f8efc2c7043ef83bf8b0d9bed36bbb6b9b1133 ; diff files: CHANGES.md 
 ##### Command Line:
-/Applications/anaconda3/envs/bioaligners/bin/STAR --runThreadN 4 --genomeDir /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index --outFileNamePrefix /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_ --runMode genomeGenerate --genomeFastaFiles /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa --sjdbGTFfile /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf --sjdbOverhang 99 --genomeSAindexNbases 5
+STAR --runMode genomeGenerate --runThreadN 4 --genomeDir /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index --genomeFastaFiles reference.fa --sjdbGTFfile annotation.gtf --sjdbOverhang 99 --genomeSAindexNbases 5
 ##### Initial USER parameters from Command Line:
-outFileNamePrefix                 /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_
 ###### All USER parameters from Command Line:
-runThreadN                    4     ~RE-DEFINED
-genomeDir                     /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index     ~RE-DEFINED
-outFileNamePrefix             /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_     ~RE-DEFINED
 runMode                       genomeGenerate        ~RE-DEFINED
-genomeFastaFiles              /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa        ~RE-DEFINED
-sjdbGTFfile                   /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf     ~RE-DEFINED
+runThreadN                    4     ~RE-DEFINED
+genomeDir                     /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index     ~RE-DEFINED
+genomeFastaFiles              reference.fa        ~RE-DEFINED
+sjdbGTFfile                   annotation.gtf     ~RE-DEFINED
 sjdbOverhang                  99     ~RE-DEFINED
 genomeSAindexNbases           5     ~RE-DEFINED
 ##### Finished reading parameters from all sources
@@ -18,27 +17,26 @@ genomeSAindexNbases           5     ~RE-DEFINED
 ##### Final user re-defined parameters-----------------:
 runMode                           genomeGenerate   
 runThreadN                        4
-genomeDir                         /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index
-genomeFastaFiles                  /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa   
+genomeDir                         /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index
+genomeFastaFiles                  reference.fa   
 genomeSAindexNbases               5
-outFileNamePrefix                 /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_
-sjdbGTFfile                       /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf
+sjdbGTFfile                       annotation.gtf
 sjdbOverhang                      99
 
 -------------------------------
 ##### Final effective command line:
-/Applications/anaconda3/envs/bioaligners/bin/STAR   --runMode genomeGenerate      --runThreadN 4   --genomeDir /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index   --genomeFastaFiles /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa      --genomeSAindexNbases 5   --outFileNamePrefix /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_   --sjdbGTFfile /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf   --sjdbOverhang 99
+STAR   --runMode genomeGenerate      --runThreadN 4   --genomeDir /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index   --genomeFastaFiles reference.fa      --genomeSAindexNbases 5   --sjdbGTFfile annotation.gtf   --sjdbOverhang 99
 ----------------------------------------
 
 Number of fastq files for each mate = 1
 ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0.99 10
 Finished loading and checking parameters
---genomeDir directory exists and will be overwritten: /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/
-Aug 27 18:51:35 ... starting to generate Genome files
-/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa : chr # 0  "chr1" chrStart: 0
-/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa : chr # 1  "chr2" chrStart: 262144
-/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa : chr # 2  "chr3" chrStart: 524288
-/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa : chr # 3  "chr4" chrStart: 786432
+--genomeDir directory exists and will be overwritten: /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index/
+Sep 02 23:46:34 ... starting to generate Genome files
+reference.fa : chr # 0  "chr1" chrStart: 0
+reference.fa : chr # 1  "chr2" chrStart: 262144
+reference.fa : chr # 2  "chr3" chrStart: 524288
+reference.fa : chr # 3  "chr4" chrStart: 786432
 Chromosome sequence lengths: 
 chr1	4000
 chr2	3000
@@ -46,45 +44,47 @@ chr3	3000
 chr4	3000
 Genome sequence total length = 13000
 Genome size with padding = 1048576
-Aug 27 18:51:35 ..... processing annotations GTF
-Processing pGe.sjdbGTFfile=/Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf, found:
+Sep 02 23:46:34 ..... processing annotations GTF
+Processing pGe.sjdbGTFfile=annotation.gtf, found:
 		4 transcripts
 		5 exons (non-collapsed)
 		1 collapsed junctions
 Total junctions: 1
-Aug 27 18:51:35 ..... finished GTF processing
+Sep 02 23:46:34 ..... finished GTF processing
 
 Estimated genome size with padding and SJs: total=genome+SJ=200048576 = 1048576 + 199000000
 GstrandBit=32
 Number of SA indices: 26000
-Aug 27 18:51:35 ... starting to sort Suffix Array. This may take a long time...
+Sep 02 23:46:34 ... starting to sort Suffix Array. This may take a long time...
 Number of chunks: 4;   chunks size limit: 69328 bytes
-Aug 27 18:51:35 ... sorting Suffix Array chunks and saving them to disk...
-Writing 1600 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SA_3 ; empty space on disk = 26134381068288 bytes ... done
-Writing 68904 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SA_2 ; empty space on disk = 26134380019712 bytes ...Writing 68944 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SA_0 ; empty space on disk = 26134372679680 bytes ...Writing 68552 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SA_1 ; empty space on disk = 26134359048192 bytes ... done
+Sep 02 23:46:34 ... sorting Suffix Array chunks and saving them to disk...
+Writing 68904 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SA_2 ; empty space on disk = 222413012992 bytes ... done
  done
+Writing 68944 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SA_0 ; empty space on disk = 222412939264 bytes ... done
  done
-Aug 27 18:51:35 ... loading chunks from disk, packing SA...
-Aug 27 18:51:35 ... finished generating suffix array
-Aug 27 18:51:35 ... generating Suffix Array index
-Aug 27 18:51:35 ... completed Suffix Array index
-Aug 27 18:51:35   Finished preparing junctions
-Aug 27 18:51:35 ..... inserting junctions into the genome indices
-Aug 27 18:51:35   Finished SA search: number of new junctions=1, old junctions=0
-Aug 27 18:51:35   Finished sorting SA indicesL nInd=396
+Writing 1600 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SA_3 ; empty space on disk = 222412869632 bytes ...Writing 68552 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SA_1 ; empty space on disk = 222412873728 bytes ...Writing 68552 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SA_1 ; empty space on disk = 222412873728 bytes ... done
+ done
+Sep 02 23:46:34 ... loading chunks from disk, packing SA...
+Sep 02 23:46:34 ... finished generating suffix array
+Sep 02 23:46:34 ... generating Suffix Array index
+Sep 02 23:46:34 ... completed Suffix Array index
+Sep 02 23:46:34   Finished preparing junctions
+Sep 02 23:46:34 ..... inserting junctions into the genome indices
+Sep 02 23:46:34   Finished SA search: number of new junctions=1, old junctions=0
+Sep 02 23:46:34   Finished sorting SA indicesL nInd=396
 Genome size with junctions=1048775  1048576   199
 GstrandBit1=32   GstrandBit=32
-Aug 27 18:51:35   Finished inserting junction indices
-Aug 27 18:51:35   Finished SAi
-Aug 27 18:51:35 ..... finished inserting junctions into genome
-Aug 27 18:51:35 ... writing Genome to disk ...
-Writing 1048775 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//Genome ; empty space on disk = 26134665232384 bytes ... done
+Sep 02 23:46:34   Finished inserting junction indices
+Sep 02 23:46:34   Finished SAi
+Sep 02 23:46:34 ..... finished inserting junctions into genome
+Sep 02 23:46:34 ... writing Genome to disk ...
+Writing 1048775 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//Genome ; empty space on disk = 222413008896 bytes ... done
 SA size in bytes: 108887
-Aug 27 18:51:35 ... writing Suffix Array to disk ...
-Writing 108887 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SA ; empty space on disk = 26134413574144 bytes ... done
-Aug 27 18:51:35 ... writing SAindex to disk
-Writing 8 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SAindex ; empty space on disk = 26134382116864 bytes ... done
-Writing 48 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SAindex ; empty space on disk = 26134382116864 bytes ... done
-Writing 5971 bytes into /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index//SAindex ; empty space on disk = 26134382116864 bytes ... done
-Aug 27 18:51:35 ..... finished successfully
+Sep 02 23:46:34 ... writing Suffix Array to disk ...
+Writing 108887 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SA ; empty space on disk = 222413008896 bytes ... done
+Sep 02 23:46:34 ... writing SAindex to disk
+Writing 8 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SAindex ; empty space on disk = 222413008896 bytes ... done
+Writing 48 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SAindex ; empty space on disk = 222413008896 bytes ... done
+Writing 5971 bytes into /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index//SAindex ; empty space on disk = 222413008896 bytes ... done
+Sep 02 23:46:34 ..... finished successfully
 DONE: Genome generation, EXITING

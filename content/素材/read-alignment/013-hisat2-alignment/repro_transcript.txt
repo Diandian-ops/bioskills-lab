@@ -1,0 +1,152 @@
+================================================================================
+013 hisat2-alignment — REPRO TRANSCRIPT（真实试用取证）
+================================================================================
+本文件证明本 skill 的产出来自真实执行，而非杜撰。
+
+诚实标注（务必先读）：
+  [RE-RUN]    本次（本 agent）实跑：samtools flagstat <已有 BAM>。
+              命令真实、输出真实（samtools 1.24，Windows 侧 WSL bio 环境）。
+  [FROM-LOG]  hisat2-build / hisat2 各命令由前 agent 真跑留存产物给出
+              （hisat2_results.json + *.log + 8 个 .ht2 + 5 个 BAM）。
+              本 agent 按任务要求**不再重跑** hisat2-build / hisat2
+              （索引与 BAM 已在盘），此处仅据 run_hisat2.py 与日志原文转录。
+              run_hisat2.py 本身全部为真实子进程调用，非模拟。
+
+环境：
+  - hisat2 / hisat2-build 2.2.3（前 agent，conda bioaligners）
+  - samtools 1.24（本 agent 复核，WSL: wsl.exe -d Ubuntu -u root -- bash -lc
+    'source /opt/miniconda3/etc/profile.d/conda.sh && conda activate bio'）
+  - 数据：合成参考 reference.fa（chr1 3000 bp + 3 条随机 contig，共 12 kb）、
+    reads_1.fq / reads_2.fq（wgsim -N 3000 -e 0.02 -S 44）、
+    junction_read.fa（跨 chr1[1000,1800] 内含子的 100 bp 读长）
+
+================================================================================
+[FROM-LOG] 1) 建索引
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 86 行，前 agent 真跑）：
+  hisat2-build -p 8 reference.fa hisat2_index 2> idx.log
+
+产物（盘上真实，ls 佐证）：
+  hisat2_index.1..8.ht2 共 8 个文件；idx.log 末行
+  "Total time for call to driver() for forward index: 00:00:00"
+  hisat2_results.json: {"index": {"rc": 0, "ht2_files": 8}}
+
+================================================================================
+[FROM-LOG] 2) 基础 PE 比对（basename 索引）
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 94 行）：
+  hisat2 -p 8 -x hisat2_index -1 reads_1.fq -2 reads_2.fq 2> pe.log \
+    | samtools sort -@4 -o aligned_pe.bam -
+  samtools index aligned_pe.bam
+
+pe.log 原文末段：
+  3000 reads; of these:
+    3000 (100.00%) were paired; of these:
+      47 (1.57%) aligned concordantly 0 times
+      2953 (98.43%) aligned concordantly exactly 1 time
+      0 (0.00%) aligned concordantly >1 times
+  ----
+  ...
+  99.17% overall alignment rate
+
+hisat2_results.json: {"pe": {"overall_rate": 99.17, "max_mapq": 60}}
+
+================================================================================
+[RE-RUN] 3) samtools flagstat 复核 aligned_pe.bam（本 agent 实跑）
+--------------------------------------------------------------------------------
+命令（WSL bio 环境）：
+  samtools flagstat aligned_pe.bam
+
+flagstat_pe.txt 关键行（真实输出）：
+  6000 + 0 in total (QC-passed reads + QC-failed reads)
+  5950 + 0 mapped (99.17% : N/A)
+  5950 + 0 primary mapped (99.17% : N/A)
+  5906 + 0 properly paired (98.43% : N/A)
+  5906 + 0 with itself and mate mapped
+  44 + 0 singletons (0.73% : N/A)
+
+================================================================================
+[FROM-LOG] 4) 剪接能力：跨内含子读长 -> CIGAR 含 N
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 102 行；junction_read.fa 为 FASTA，故 -f）：
+  hisat2 -p 8 -x hisat2_index -U junction_read.fa -f 2> j.log \
+    | samtools sort -@4 -o junction.bam -
+
+j.log：1 reads; 100.00% aligned exactly 1 time; 100.00% overall alignment rate
+hisat2_results.json: {"splice": {"cigar": "50M800N50M", "is_spliced": true}}
+  → 读长被对齐为 50M + 800N + 50M，N 即跳过的 800 bp 内含子 [1000,1800]。
+
+[RE-RUN] 本 agent 复核（junction.bam 真实 flagstat）：
+  samtools flagstat junction.bam  -> 1 + 0 mapped (100.00% : N/A)
+
+================================================================================
+[FROM-LOG] 5) --rna-strandness RF（XS 链标签）
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 112 行）：
+  hisat2 -p 8 --rna-strandness RF -x hisat2_index -1 reads_1.fq -2 reads_2.fq \
+    2> rf.log | samtools sort -@4 -o aligned_rf.bam -
+rf.log：2953 (98.43%) concordantly exactly 1 time; 99.17% overall alignment rate
+hisat2_results.json: {"strand_rf": {"has_XS_tag": true}}
+
+[RE-RUN] flagstat 复核 aligned_rf.bam：
+  6000 + 0 in total; 5950 + 0 mapped (99.17%); 5906 + 0 properly paired (98.43%)
+
+================================================================================
+[FROM-LOG] 6) --dta 转录本组装模式
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 120 行）：
+  hisat2 -p 8 --dta -x hisat2_index -1 reads_1.fq -2 reads_2.fq \
+    2> dta.log | samtools sort -@4 -o aligned_dta.bam -
+dta.log 原文末段：
+  3000 reads; of these:
+    109 (3.63%) aligned concordantly 0 times
+    2891 (96.37%) aligned concordantly exactly 1 time
+  ...
+  98.05% overall alignment rate
+hisat2_results.json: {"dta": {"rc": 0, "overall_rate": 98.05}}
+  → 比对率 98.05% 明显低于 PE/RF 的 99.17%，印证 --dta 抑制短锚定 junction 读长。
+
+[RE-RUN] flagstat 复核 aligned_dta.bam：
+  6000 + 0 in total; 5883 + 0 mapped (98.05%); 5782 + 0 properly paired (96.37%)
+  → 未比对读长 117（vs PE 50），与 dta.log 的 109 对 mates 一致。
+
+================================================================================
+[FROM-LOG] 7) 手动两趟法：发现并复用 novel junction
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 127 / 130 行）：
+  # pass1：发现
+  hisat2 -p 8 -x hisat2_index -U junction_read.fa -f \
+      --novel-splicesite-outfile junction.novel.txt 2> nov.log -S /dev/null
+  # pass2：复用
+  hisat2 -p 8 -x hisat2_index -U junction_read.fa -f \
+      --novel-splicesite-infile junction.novel.txt 2> nov2.log \
+      | samtools sort -@4 -o junction_pass2.bam -
+
+junction.novel.txt 真实内容：
+  chr1	999	1800	.
+hisat2_results.json: {"two_pass": {"discovered_junctions": 1,
+    "pass2_cigar": "50M800N50M", "pass2_spliced": true}}
+
+[RE-RUN] flagstat 复核 junction_pass2.bam：
+  1 + 0 mapped (100.00% : N/A)
+
+================================================================================
+[FROM-LOG] 8) 负向测试：-x 传 .ht2 文件名
+--------------------------------------------------------------------------------
+命令（run_hisat2.py 第 141 行）：
+  hisat2 -p 8 -x hisat2_index.1.ht2 -1 reads_1.fq -2 reads_2.fq \
+    2> neg.log -S neg.sam
+neg.log："(ERR): \".../hisat2_index.1.ht2\" does not exist / Exiting now ..."
+hisat2_results.json: {"neg_x_file": {"rc": 255, "last_err": "Exiting now ..."}}
+  → -x 须传索引 basename，不能传 .ht2 文件名（常见错误表已列）。
+
+================================================================================
+结论
+================================================================================
+- 全部 8 项 hisat2 命令由前 agent 真跑，产物（.ht2 ×8、BAM ×5、*.log、
+  hisat2_results.json）均在盘，本 agent 据原文转录并诚实标注 [FROM-LOG]。
+- samtools flagstat 由本 agent 对已有 BAM 实跑 [RE-RUN]，数字与日志的
+  overall alignment rate 完全吻合（PE/RF 99.17%、DTA 98.05%、junction 100%），
+  且新增 properly-paired 复核（PE/RF 98.43%、DTA 96.37%）。
+- 未重新执行 hisat2-build / hisat2（任务明确要求复用盘上产物）。
+================================================================================

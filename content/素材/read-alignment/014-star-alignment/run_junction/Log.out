@@ -1,27 +1,28 @@
-STAR version=                 2.7.11b
-STAR compilation time,server,dir= :/opt/mambaforge/envs/bioconda/conda-bld/star_1763121632674/work/source
+STAR version=2.7.10b
+STAR compilation time,server,dir=2022-11-01T09:53:26-04:00 :/home/dobin/data/STAR/STARcode/STAR.master/source
+STAR git: On branch master ; commit c6f8efc2c7043ef83bf8b0d9bed36bbb6b9b1133 ; diff files: CHANGES.md 
 ##### Command Line:
-/Applications/anaconda3/envs/bioaligners/bin/STAR --runThreadN 4 --genomeDir /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index --outFileNamePrefix /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/run_junction/ --readFilesIn /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/junction_read.fq --outSAMtype BAM SortedByCoordinate
+STAR --runThreadN 4 --genomeDir /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index --outFileNamePrefix /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/run_junction/ --readFilesIn junction_read.fq --outSAMtype BAM SortedByCoordinate
 ##### Initial USER parameters from Command Line:
-outFileNamePrefix                 /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/run_junction/
+outFileNamePrefix                 /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/run_junction/
 ###### All USER parameters from Command Line:
 runThreadN                    4     ~RE-DEFINED
-genomeDir                     /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index     ~RE-DEFINED
-outFileNamePrefix             /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/run_junction/     ~RE-DEFINED
-readFilesIn                   /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/junction_read.fq        ~RE-DEFINED
+genomeDir                     /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index     ~RE-DEFINED
+outFileNamePrefix             /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/run_junction/     ~RE-DEFINED
+readFilesIn                   junction_read.fq        ~RE-DEFINED
 outSAMtype                    BAM   SortedByCoordinate        ~RE-DEFINED
 ##### Finished reading parameters from all sources
 
 ##### Final user re-defined parameters-----------------:
 runThreadN                        4
-genomeDir                         /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index
-readFilesIn                       /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/junction_read.fq   
-outFileNamePrefix                 /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/run_junction/
+genomeDir                         /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index
+readFilesIn                       junction_read.fq   
+outFileNamePrefix                 /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/run_junction/
 outSAMtype                        BAM   SortedByCoordinate   
 
 -------------------------------
 ##### Final effective command line:
-/Applications/anaconda3/envs/bioaligners/bin/STAR   --runThreadN 4   --genomeDir /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index   --readFilesIn /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/junction_read.fq      --outFileNamePrefix /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/run_junction/   --outSAMtype BAM   SortedByCoordinate   
+STAR   --runThreadN 4   --genomeDir /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index   --readFilesIn junction_read.fq      --outFileNamePrefix /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/run_junction/   --outSAMtype BAM   SortedByCoordinate   
 ----------------------------------------
 
 Number of fastq files for each mate = 1
@@ -29,11 +30,11 @@ ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0
 WARNING: --limitBAMsortRAM=0, will use genome size as RAM limit for BAM sorting
 Finished loading and checking parameters
 Reading genome generation parameters:
-### /Applications/anaconda3/envs/bioaligners/bin/STAR   --runMode genomeGenerate      --runThreadN 4   --genomeDir /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index   --genomeFastaFiles /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa      --genomeSAindexNbases 5   --outFileNamePrefix /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/star_index/genomeGenerate_   --sjdbGTFfile /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf   --sjdbOverhang 99
+### STAR   --runMode genomeGenerate      --runThreadN 4   --genomeDir /mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/014-star-alignment/star_index   --genomeFastaFiles reference.fa      --genomeSAindexNbases 5   --sjdbGTFfile annotation.gtf   --sjdbOverhang 99
 ### GstrandBit=32
 versionGenome                 2.7.4a     ~RE-DEFINED
 genomeType                    Full     ~RE-DEFINED
-genomeFastaFiles              /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/reference.fa        ~RE-DEFINED
+genomeFastaFiles              reference.fa        ~RE-DEFINED
 genomeSAindexNbases           5     ~RE-DEFINED
 genomeChrBinNbits             18     ~RE-DEFINED
 genomeSAsparseD               1     ~RE-DEFINED
@@ -41,7 +42,7 @@ genomeTransformType           None     ~RE-DEFINED
 genomeTransformVCF            -     ~RE-DEFINED
 sjdbOverhang                  99     ~RE-DEFINED
 sjdbFileChrStartEnd           -        ~RE-DEFINED
-sjdbGTFfile                   /Users/zhangdiandian/RedBook/content/素材/014-star-alignment/annotation.gtf     ~RE-DEFINED
+sjdbGTFfile                   annotation.gtf     ~RE-DEFINED
 sjdbGTFchrPrefix              -     ~RE-DEFINED
 sjdbGTFfeatureExon            exon     ~RE-DEFINED
 sjdbGTFtagExonParentTranscripttranscript_id     ~RE-DEFINED
@@ -55,7 +56,7 @@ Number of real (reference) chromosomes= 4
 3	chr3	3000	524288
 4	chr4	3000	786432
 --sjdbOverhang = 99 taken from the generated genome
-Started loading the genome: Thu Aug 27 18:51:36 2026
+Started loading the genome: Wed Sep  2 23:47:10 2026
 
 Genome: size given as a parameter = 1048775
 SA: size given as a parameter = 108887
@@ -69,28 +70,78 @@ Loading Genome ... done! state: good=1 eof=0 fail=0 bad=0; loaded 1048775 bytes
 SA file size: 108887 bytes; state: good=1 eof=0 fail=0 bad=0
 Loading SA ... done! state: good=1 eof=0 fail=0 bad=0; loaded 108887 bytes
 Loading SAindex ... done: 6027 bytes
-Finished loading the genome: Thu Aug 27 18:51:36 2026
+Finished loading the genome: Wed Sep  2 23:47:10 2026
 
 Processing splice junctions database sjdbN=1,   pGe.sjdbOverhang=99 
 alignIntronMax=alignMatesGapMax=0, the max intron size will be approximately determined by (2^winBinNbits)*winAnchorDistNbins=589824
 Created thread # 1
-Thread #1 end of input stream, nextChar=-1
 Created thread # 2
+Created thread # 3
+Thread #1 end of input stream, nextChar=-1
+BAM sorting: 1 mappCompleted: thread #0
+ reads
+BAM sorting bins genomic start loci:
+1	0	950
+2	0	950
+3	0	950
+d: thread #0
+Complete4	0	950
+5	0	950
+d: thread #3
+Complete6	0	950
+7	0	950
+d: thread #2
+7	0	950
+8	0	950
+9	0	950
+10	0	950
+11	0	950
+12	0	950
+13	0	950
+14	0	950
+15	0	950
+16	0	950
+17	0	950
+18	0	950
+19	0	950
+20	0	950
+21	0	950
+22	0	950
+23	0	950
+24	0	950
+25	0	950
+26	0	950
+27	0	950
+28	0	950
+29	0	950
+30	0	950
+31	0	950
+32	0	950
+33	0	950
+34	0	950
+35	0	950
+36	0	950
+37	0	950
+38	0	950
+39	0	950
+40	0	950
+41	0	950
+42	0	950
+43	0	950
+44	0	950
+45	0	950
+46	0	950
+47	0	950
+48	0	950
 Completed: thread #1
-Completed: thread #2
-Completed: thread #Created thread # 3
-Completed: thread #3
-Completed: thread #0
-Completed: thread #3
 Joined thread # 1
 Joined thread # 2
 Joined thread # 3
-Aug 27 18:51:36 ..... finished mapping
+Sep 02 23:47:10 ..... finished mapping
 RAM after mapping:
-
+VmPeak:	  832112 kB; VmSize:	  766576 kB; VmHWM:	  406508 kB; VmRSS:	  406508 kB; 
 RAM after freeing genome index memory:
-
-Aug 27 18:51:36 ..... started sorting BAM
-Max memory needed for sorting = 0
-WARNING: nothing to sort - no output alignments
+VmPeak:	  832112 kB; VmSize:	  765548 kB; VmHWM:	  405924 kB; VmRSS:	  405480 kB; 
+Sep 02 23:47:10 ..... started sorting BAM
+Max memory needed for sorting = 256
 ALL DONE!

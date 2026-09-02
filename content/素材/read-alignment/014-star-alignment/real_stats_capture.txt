@@ -1,0 +1,88 @@
+===== dbg2 =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbg3 =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbg6 =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbg7 =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbg8 =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbg9 =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbgA =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0
+===== dbgB =====
+                          Number of input reads |	0
+                   Uniquely mapped reads number |	0
+                        Uniquely mapped reads % |	0.00%
+                          Average mapped length |	0.00
+                       Number of splices: Total |	0
+                      Mismatch rate per base, % |	nan%
+                         Deletion rate per base |	0.00%
+        Number of reads mapped to multiple loci |	0
+             % of reads mapped to multiple loci |	0.00%
+                       Number of chimeric reads |	0

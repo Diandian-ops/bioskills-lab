@@ -1,0 +1,25 @@
+{
+  "star_version": "2.7.10b",
+  "genome_generate": {
+    "rc": 0,
+    "index_files": 16,
+    "sjdbOverhang": 99,
+    "genomeSAindexNbases": 5,
+    "genome_fasta": "reference.fa (~13 kb, chr1 intron[1001,1800])",
+    "gtf": "annotation.gtf (chr1: 1 gene / 2 exons)"
+  },
+  "configs": {
+    "default": {"input": 2999, "uniq_pct": 99.87, "avg_len": 199.73, "mismatch_pct": 1.93, "deletion_pct": 0.00, "splices": 1},
+    "mapq60":  {"input": 2999, "uniq_pct": 99.87, "avg_len": 199.73, "mismatch_pct": 1.93, "deletion_pct": 0.00, "splices": 1},
+    "final":   {"input": 2999, "uniq_pct": 99.87, "avg_len": 199.73, "mismatch_pct": 1.93, "deletion_pct": 0.00, "splices": 1}
+  },
+  "mapq_hist": {
+    "default": {"unique": 255, "unique_count": 5990, "multimapper": 3, "multimapper_count": 8},
+    "mapq60":  {"unique": 60,  "unique_count": 5990, "multimapper": 3, "multimapper_count": 8}
+  },
+  "genecounts": {"unstranded": 2917, "forward": 1451, "reverse": 1466},
+  "junction": {"read": "junction1", "cigar": "50M800N50M", "mapq": 255, "intron_span": 800},
+  "nozcat": {"fatal": "wrong read ID line format: the read ID lines should start with @ or >"},
+  "flagstat_default": {"total": 6006, "primary": 5998, "primary_mapped_pct": 100.0, "secondary": 8, "properly_paired": 5998},
+  "flagstat_mapq60":  {"total": 6006, "primary": 5998, "primary_mapped_pct": 100.0, "secondary": 8, "properly_paired": 5998}
+}

@@ -1,21 +1,21 @@
-                                 Started job on |	Aug 27 18:51:36
-                             Started mapping on |	Aug 27 18:51:36
-                                    Finished on |	Aug 27 18:51:36
-       Mapping speed, Million of reads per hour |	nan
+                                 Started job on |	Sep 02 23:47:10
+                             Started mapping on |	Sep 02 23:47:10
+                                    Finished on |	Sep 02 23:47:10
+       Mapping speed, Million of reads per hour |	inf
 
-                          Number of input reads |	0
-                      Average input read length |	0
+                          Number of input reads |	1
+                      Average input read length |	100
                                     UNIQUE READS:
-                   Uniquely mapped reads number |	0
-                        Uniquely mapped reads % |	0.00%
-                          Average mapped length |	0.00
-                       Number of splices: Total |	0
-            Number of splices: Annotated (sjdb) |	0
+                   Uniquely mapped reads number |	1
+                        Uniquely mapped reads % |	100.00%
+                          Average mapped length |	100.00
+                       Number of splices: Total |	1
+            Number of splices: Annotated (sjdb) |	1
                        Number of splices: GT/AG |	0
                        Number of splices: GC/AG |	0
                        Number of splices: AT/AC |	0
-               Number of splices: Non-canonical |	0
-                      Mismatch rate per base, % |	nan%
+               Number of splices: Non-canonical |	1
+                      Mismatch rate per base, % |	0.00%
                          Deletion rate per base |	0.00%
                         Deletion average length |	0.00
                         Insertion rate per base |	0.00%

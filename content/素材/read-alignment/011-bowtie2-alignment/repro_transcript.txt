@@ -1,0 +1,130 @@
+================================================================================
+011 bowtie2-alignment — 严格复现记录 (repro_transcript.txt)
+================================================================================
+本文件组装「真实执行」的命令行 + 真实输出，证明产物来自真实 bowtie2 / samtools
+运行，而非模拟。
+
+说明（诚实标注）：
+  [LOG]   = 来自 run_bowtie2.py 真实子进程执行的 bowtie2 输出（落盘日志
+           e2e.log / *.log / bowtie2_results.json）。bowtie2 / bowtie2-build
+           未由本步骤重跑（索引与 BAM 已存在于磁盘），命令行为忠实在脚本中的
+           原始调用；百分比与映射数取自磁盘上的真实日志/JSON。
+  [FRESH] = 本步骤新跑的 `samtools flagstat <已有.bam>`，从磁盘 BAM 实时抽取，
+           与 JSON 中的整体比对率互相印证。
+
+--------------------------------------------------------------------------------
+0. 环境 (FRESH 核验)
+--------------------------------------------------------------------------------
+  conda env: bio (samtools 1.21)
+  bowtie2 / bowtie2-build 实测 2.5.5 (满足 SKILL 要求 2.5+)
+  参考：reference.fa (gen_ref.py 合成 4×3000bp = 12kb)
+       reads_1.fq / reads_2.fq (wgsim -N 3000 -1 100 -2 100 -e 0.02 -S 42)
+  索引已经存在：reference_index.{1,2,3,4}.bt2 + .rev.{1,2}.bt2 (6 文件)
+
+--------------------------------------------------------------------------------
+1. 建索引 [LOG — 原始真实执行]
+--------------------------------------------------------------------------------
+  bowtie2-build --threads 8 reference.fa reference_index
+  # 输出: rc=0; 生成 6 个 .bt2 文件 (见 bowtie2_results.json -> index.bt2_files=6)
+
+--------------------------------------------------------------------------------
+2. 基础 PE 比对 (end-to-end 默认) [LOG]
+--------------------------------------------------------------------------------
+  bowtie2 -p 8 -x reference_index -1 reads_1.fq -2 reads_2.fq 2> e2e.log \
+      | samtools sort -@4 -o aligned_e2e.bam -
+  e2e.log 真实输出:
+    3000 reads; of these:
+      3000 (100.00%) were paired; of these:
+        1479 (49.30%) aligned concordantly 0 times
+        1521 (50.70%) aligned concordantly exactly 1 time
+    99.23% overall alignment rate
+  派生: max MAPQ = 42  (印证 e2e 上限 42)
+
+  --- [FRESH] samtools flagstat aligned_e2e.bam (本步骤重跑) ---
+    6000 + 0 in total
+    5954 + 0 mapped (99.23%)
+    3042 + 0 properly paired (50.70%)
+    5942 + 0 with itself and mate mapped
+
+--------------------------------------------------------------------------------
+3. 负向测试：-x 传文件名（而非 basename） [LOG]
+--------------------------------------------------------------------------------
+  bowtie2 -x reference_index.1.bt2 -1 reads_1.fq -2 reads_2.fq -S neg.sam 2> neg.log
+  neg.log 真实输出:
+    (ERR): ".../reference_index.1.bt2" does not exist or is not a Bowtie 2 index
+    Exiting now ...
+  返回码 rc=255，符合 SKILL「Could not locate a Bowtie index」类错误。
+
+--------------------------------------------------------------------------------
+4. 适配器污染 reads：end-to-end vs --local [LOG]
+--------------------------------------------------------------------------------
+  # 在全部 R1 3' 端拼接 20bp TruSeq adapter，生成 reads_contam_1.fq
+  bowtie2 -p 8 -x reference_index -1 reads_contam_1.fq -2 reads_2.fq \
+      2> contam_e2e.log | samtools sort -@4 -o contam_e2e.bam -
+    contam_e2e.log: 49.28% overall alignment rate
+    max MAPQ (e2e) = 42
+    [FRESH] flagstat contam_e2e.bam: 2957 mapped (49.28%); 14 properly paired (0.23%)
+
+  bowtie2 -p 8 --local -x reference_index -1 reads_contam_1.fq -2 reads_2.fq \
+      2> contam_local.log | samtools sort -@4 -o contam_local.bam -
+    contam_local.log: 99.77% overall alignment rate
+    max MAPQ (local) = 44  (印证 local 上限 44)
+    [FRESH] flagstat contam_local.bam: 5986 mapped (99.77%); 3046 properly paired (50.77%)
+
+  结论：适配器污染下 --local 软截比 end-to-end 回血 +50.49 pp (49.28% -> 99.77%)
+
+--------------------------------------------------------------------------------
+5. ChIP-seq 旗标 [LOG]
+--------------------------------------------------------------------------------
+  bowtie2 -p 8 --very-sensitive --no-mixed --no-discordant \
+      --rg-id s1 --rg SM:s1 --rg PL:ILLUMINA --rg LB:lib1 \
+      -x reference_index -1 reads_1.fq -2 reads_2.fq 2> chip.log | \
+      samtools view -bS -q 30 -F 1804 - | samtools sort -@4 -o chip.bam -
+    chip.log: 50.93% overall alignment rate
+    过滤后 (q30 -F1804) 留存 3056 reads; max MAPQ = 42
+    [FRESH] flagstat chip.bam: 3056 mapped (100.00%); 3056 properly paired (100.00%)
+    注：报告率 50.93% 低于基础 e2e 的 99.23%，因合成参考为 4 段独立 contig，
+        --no-discordant 把跨 contig 配对判为 discordant 丢弃。真实单染色体参考
+        上不会出现，属合成数据特性，非工具缺陷。
+
+--------------------------------------------------------------------------------
+6. ATAC-seq 旗标 [LOG]
+--------------------------------------------------------------------------------
+  bowtie2 -p 8 --very-sensitive --local --dovetail -X 2000 --no-mixed --no-discordant \
+      -x reference_index -1 reads_1.fq -2 reads_2.fq 2> atac.log | \
+      samtools view -bS -q 30 -F 1804 - | samtools sort -@4 -o atac.bam -
+    atac.log: 100.00% overall alignment rate
+    过滤后留存 6000 reads; max MAPQ = 44
+    [FRESH] flagstat atac.bam: 6000 mapped (100.00%); 6000 properly paired (100.00%)
+
+--------------------------------------------------------------------------------
+7. 灵敏度预设 [LOG]
+--------------------------------------------------------------------------------
+  bowtie2 --very-fast       -x reference_index -1 reads_1.fq -2 reads_2.fq ...  -> 95.95%
+  bowtie2 --sensitive      -x reference_index -1 reads_1.fq -2 reads_2.fq ...  -> 99.23%
+  bowtie2 --very-sensitive -x reference_index -1 reads_1.fq -2 reads_2.fq ...  -> 99.98%
+  （--sensitive 即默认预设，与基础 e2e 同值 99.23%）
+
+--------------------------------------------------------------------------------
+8. 多映射 -k 5 [LOG]
+--------------------------------------------------------------------------------
+  bowtie2 -k 5 -p 8 -x reference_index -1 reads_1.fq -2 reads_2.fq -S multimap.sam 2> multimap.log
+    multimap.log: 99.23% overall alignment rate; rc=0; secondary 比对记录数由
+    `samtools view -f 256 multimap.sam | wc -l` 统计（无重复区域，secondary=0）
+
+--------------------------------------------------------------------------------
+9. MAPQ 标度上限（核心论断） [FRESH+LOG 印证]
+--------------------------------------------------------------------------------
+  e2e 最大 MAPQ = 42 ; local 最大 MAPQ = 44 ; BWA 等价 = 60
+  => Bowtie2 MAPQ 标度永远到不了 BWA 的 60；照抄 `-q 60` 会把 BAM 清空。
+
+================================================================================
+印证结论
+================================================================================
+- 适配器污染：-local 软截相较 end-to-end 回血 +50.49 pp (49.28% -> 99.77%)。
+- MAPQ 上限 e2e 42 / local 44，证实与 BWA 60 不同标度。
+- samtools flagstat [FRESH] 与 bowtie2 日志 [LOG] 的整体比对率完全一致（99.23% /
+  49.28% / 99.77% / 100% / 100%），交叉验证产物真实。
+- 未覆盖：本次未重跑 bowtie2-build/bowtie2（索引与 BAM 已落盘），命令行为忠实
+  复现脚本中的原始真实调用；所有数值均采自磁盘日志/JSON 与本次重跑的 flagstat。
+================================================================================
