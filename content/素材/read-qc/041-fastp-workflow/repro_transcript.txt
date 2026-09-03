@@ -1,0 +1,75 @@
+========================================================================
+041 fastp-workflow — 真实复现记录（repro transcript）
+日期：2026-09-03（WSL Ubuntu / Windows 11，全部命令真跑，输出落盘）
+目录：content/素材/read-qc/041-fastp-workflow/
+========================================================================
+
+[0] 环境（已就绪，未重装）
+    conda env bio-qc（bioconda 通道）
+    fastp      v1.3.6（fastp --version 实测）
+    python3    3.13.15（造数据用）
+    硬性纪律：所有 WSL 命令先写 .sh 文件再经
+      wsl.exe -d Ubuntu -u root -- bash /mnt/d/.../_run.sh
+    执行，不在 wsl.exe 命令行内联复杂命令（本地 Git Bash 会提前展开
+    $ 变量产生假结果；本次实测一次 zcat|awk 内联确实产出假分布，
+    改用 .sh 后结果正常）。
+
+[1] 造数据（make_inputs.py，seed 20260412 → _run.log [1] 节）
+    30,000 PE 读对 × 100 bp = 60,000 reads / 6,000,000 bases，全部等长
+    缺陷设计（让每道工序都有活干）：
+      - 25% 读对 insert 45-100 / 20-44 bp：read-through 接头（循环填充保 100 bp）
+      - 25% 读对 insert 110-199 bp：重叠区注入 1-2 处 R1 高质量 / R2 Q7 错配
+      - 12% 读对：质量沿 3' 衰减至 Q20 以下占比 > 40%
+      - 3% 读对：6-12 连续 N（质量 Q2）
+    实测输入统计：
+      R1 带 AGATCG 接头读 7,297（24.3%）；带 N run 读 905（3.0%）
+      before：Q20 率 91.46%，Q30 率 52.96%，R1 均长 100 bp
+    开发期修正记录（诚实交代）：
+      a) 初版用 ADAPTER_R1[:100-insert] 补接头，但接头仅 33 bp，
+         insert < 67 bp 时读段不足 100 bp（实测 3,873 条 53-99 bp），
+         改为 (ADAPTER_R1*4)[:100-insert] 循环填充后 off-length = 0；
+      b) 初版重叠区错配两侧质量均高，--correction 零触发，
+         改为非对称质量（Q36 vs Q7）后触发。
+
+[2] fastp 主流程（_run.sh → _run.log，bio-qc 环境）
+    a) 全流程（SKILL.md 标准 PE 工作流 + --correction）：
+       fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_R1.fq.gz -O clean_R2.fq.gz \
+             --detect_adapter_for_pe --correction \
+             --cut_right --cut_window_size 4 --cut_mean_quality 20 \
+             -q 20 -l 36 -w 8 -h report_full.html -j report_full.json
+    b) 消融 A：同命令 + --disable_adapter_trimming（report_noadapter.json）
+    c) 消融 B：同命令 + --disable_length_filtering（report_nolenfilter.json）
+    d) 消融 C：同命令去掉 --cut_right 三连参数（report_nocut.json）
+    每组 time used: 1 seconds（-w 8）。
+
+[3] 关键结果（parse_reports.py 解析 4 组 JSON → _metrics.tsv）
+    全流程组：60,000 → 50,612 reads（保留 84.4%）；bases 6,000,000 → 4,677,400；
+      Q20 91.46% → 99.78%；Q30 52.96% → 62.10%（+9.15 pp）；R1 均长 100 → 92 bp
+      adapter_trimmed_reads 12,739 / adapter_trimmed_bases 451,574
+      too_short_reads 9,388；low_quality_reads 0；too_many_N_reads 0
+      corrected_reads 5,891 / corrected_bases 9,688（fastp stdout：
+      "reads corrected by overlap analysis: 5891 / bases: 9688"）
+      duplication rate 0（诊断用，未启用 --dedup）
+    消融对照：
+      noadapter：保留 52,198（+1,586）；Q30 59.83%（-2.28 pp）；R1 均长 99 bp
+      nolenfilter：保留 59,998；Q30 60.75%；R1 均长 82 bp
+      nocut：保留 50,076（比全流程少 536）；low_quality_reads 6,592；
+      too_many_N_reads 1,506；too_short_reads 1,826；Q30 61.70%；
+      adapter_trimmed 14,766 / 528,372；corrected 6,047 / 10,032
+    工序屏蔽效应（实测结论）：剪裁在前、过滤在后，--cut_right 先剪掉
+      低质量尾巴与多 N 区段，逐条过滤器计数归 0；关掉剪裁过滤器才开工。
+    版本差异记录：fastp 1.3.6 的修正计数在 JSON 的
+      filtering_result.corrected_reads / corrected_bases，
+      不存在独立 correction 节点（初版解析脚本按旧键名取到 None，已修正）。
+
+[4] 出图（make_figs.py → 3 张 PNG，全部解析自真实 JSON）
+    fig1_before_after.png      before/after 关键指标（Q20/Q30/均长 + reads）
+    fig2_step_outcomes.png     各工序处置读数分解（dropped vs modified-kept）
+    fig3_ablation_steps.png    四组消融对比（保留读数 + Q30 率）
+    自检：check_figs.py make_figs.py → 3 × [PASS]
+          FIGURE QUALITY: TOTAL FAILS = 0   （2026-09-03）
+
+[5] 门禁（gate_lint.py，2026-09-03）
+    041-bioSkills真实试用-fastp-workflow.md          → ERROR=0 WARN=0
+    041-bioSkills小红书-fastp-workflow-正文.md       → ERROR=0 WARN=0
+========================================================================

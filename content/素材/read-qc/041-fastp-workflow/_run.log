@@ -1,0 +1,404 @@
+=== [1] make simulated PE FASTQ (adapter + low-quality + N pollution) ===
+pairs written: 30000 (read length 100 bp, off-length reads: 0)
+R1 with adapter read-through (AGATCG...): 7297 (24.3%)
+R1 with N-run (>=6 Ns): 905 (3.0%)
+low-quality pairs (design rate 12 pct): about 3600
+=== [2] fastp FULL run (SKILL.md standard PE workflow + --correction) ===
+=== [3] ablation A: --disable_adapter_trimming ===
+=== [4] ablation B: --disable_length_filtering ===
+=== [5] ablation C: drop --cut_right (per-read quality/N filters fire) ===
+=== [6] parse fastp JSON reports -> _metrics.tsv ===
+== full ==
+  before_total_reads       60000
+  before_total_bases       6000000
+  before_q20_rate          0.914614
+  before_q30_rate          0.529557
+  before_read1_mean_len    100
+  after_total_reads        50612
+  after_total_bases        4677400
+  after_q20_rate           0.997802
+  after_q30_rate           0.621019
+  after_read1_mean_len     92
+  adapter_trimmed_reads    12739
+  adapter_trimmed_bases    451574
+  passed_filter_reads      50612
+  low_quality_reads        0
+  too_many_N_reads         0
+  too_short_reads          9388
+  corrected_reads          None
+  duplication_rate         0
+== noadapter ==
+  before_total_reads       60000
+  before_total_bases       6000000
+  before_q20_rate          0.914614
+  before_q30_rate          0.529557
+  before_read1_mean_len    100
+  after_total_reads        52198
+  after_total_bases        5171288
+  after_q20_rate           0.997445
+  after_q30_rate           0.598264
+  after_read1_mean_len     99
+  adapter_trimmed_reads    None
+  adapter_trimmed_bases    None
+  passed_filter_reads      52198
+  low_quality_reads        0
+  too_many_N_reads         0
+  too_short_reads          7802
+  corrected_reads          None
+  duplication_rate         0
+== nolenfilter ==
+  before_total_reads       60000
+  before_total_bases       6000000
+  before_q20_rate          0.914614
+  before_q30_rate          0.529557
+  before_read1_mean_len    100
+  after_total_reads        59998
+  after_total_bases        4953648
+  after_q20_rate           0.996201
+  after_q30_rate           0.607496
+  after_read1_mean_len     82
+  adapter_trimmed_reads    12739
+  adapter_trimmed_bases    451574
+  passed_filter_reads      59998
+  low_quality_reads        0
+  too_many_N_reads         0
+  too_short_reads          2
+  corrected_reads          None
+  duplication_rate         0
+== nocut ==
+  before_total_reads       60000
+  before_total_bases       6000000
+  before_q20_rate          0.914614
+  before_q30_rate          0.529557
+  before_read1_mean_len    100
+  after_total_reads        50076
+  after_total_bases        4646529
+  after_q20_rate           0.996634
+  after_q30_rate           0.61695
+  after_read1_mean_len     92
+  adapter_trimmed_reads    14766
+  adapter_trimmed_bases    528372
+  passed_filter_reads      50076
+  low_quality_reads        6592
+  too_many_N_reads         1506
+  too_short_reads          1826
+  corrected_reads          None
+  duplication_rate         0
+written: _metrics.tsv
+=== [7] output files ===
+total 27200
+drwxrwxrwx 1 devah devah    4096 Sep  3 20:18 .
+drwxrwxrwx 1 devah devah    4096 Sep  3 20:16 ..
+-rwxrwxrwx 1 devah devah     309 Sep  3 20:15 _checklen.sh
+-rwxrwxrwx 1 devah devah    1079 Sep  3 20:16 _debug.sh
+-rwxrwxrwx 1 devah devah     215 Sep  3 20:09 _envcheck.sh
+-rwxrwxrwx 1 devah devah     305 Sep  3 20:14 _inspect.sh
+-rwxrwxrwx 1 devah devah     766 Sep  3 20:18 _metrics.tsv
+-rwxrwxrwx 1 devah devah   24947 Sep  3 20:18 _run.log
+-rwxrwxrwx 1 devah devah    1827 Sep  3 20:18 _run.sh
+-rwxrwxrwx 1 devah devah 2347333 Sep  3 20:18 clean_R1.fq.gz
+-rwxrwxrwx 1 devah devah 2342376 Sep  3 20:18 clean_R2.fq.gz
+-rwxrwxrwx 1 devah devah 2531290 Sep  3 20:18 clean_noadapter_R1.fq.gz
+-rwxrwxrwx 1 devah devah 2527185 Sep  3 20:18 clean_noadapter_R2.fq.gz
+-rwxrwxrwx 1 devah devah 2332044 Sep  3 20:18 clean_nocut_R1.fq.gz
+-rwxrwxrwx 1 devah devah 2332683 Sep  3 20:18 clean_nocut_R2.fq.gz
+-rwxrwxrwx 1 devah devah 2517255 Sep  3 20:18 clean_nolen_R1.fq.gz
+-rwxrwxrwx 1 devah devah 2512307 Sep  3 20:18 clean_nolen_R2.fq.gz
+-rwxrwxrwx 1 devah devah    6043 Sep  3 20:18 make_inputs.py
+-rwxrwxrwx 1 devah devah    2951 Sep  3 20:18 parse_reports.py
+-rwxrwxrwx 1 devah devah 3035968 Sep  3 20:18 raw_R1.fq.gz
+-rwxrwxrwx 1 devah devah 3041133 Sep  3 20:18 raw_R2.fq.gz
+-rwxrwxrwx 1 devah devah  457807 Sep  3 20:18 report_full.html
+-rwxrwxrwx 1 devah devah  109084 Sep  3 20:18 report_full.json
+-rwxrwxrwx 1 devah devah  446346 Sep  3 20:18 report_noadapter.html
+-rwxrwxrwx 1 devah devah  104925 Sep  3 20:18 report_noadapter.json
+-rwxrwxrwx 1 devah devah  458078 Sep  3 20:18 report_nocut.html
+-rwxrwxrwx 1 devah devah  109305 Sep  3 20:18 report_nocut.json
+-rwxrwxrwx 1 devah devah  457802 Sep  3 20:18 report_nolenfilter.html
+-rwxrwxrwx 1 devah devah  109125 Sep  3 20:18 report_nolenfilter.json
+ALL DONE
+ies/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin\'\nexport CONDA_PREFIX=\'/opt/miniconda3/envs/bio-qc\'\nexport CONDA_SHLVL=\'1\'\nexport CONDA_DEFAULT_ENV=\'bio-qc\'\nexport CONDA_PROMPT_MODIFIER=\'(bio-qc) \'\nexport CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport _CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport CONDA_PYTHON_EXE=\'/opt/miniconda3/bin/python\'\nexport _CONDA_ROOT=\'/opt/miniconda3\'\n. "/opt/miniconda3/envs/bio-qc/etc/conda/activate.d/libglib_activate.sh"\n. "/opt/miniconda3/envs/bio-qc/etc/conda/activate.d/libxml2-split_activate.sh"\n. "/opt/miniconda3/envs/bio-qc/etc/conda/activate.d/openjdk_activate.sh"'
++ eval $'export _CE_M=\'\'\nexport _CE_CONDA=\'\'\nPS1=\'(bio-qc) \'\nexport PATH=\'/opt/miniconda3/envs/bio-qc/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin\'\nexport CONDA_PREFIX=\'/opt/miniconda3/envs/bio-qc\'\nexport CONDA_SHLVL=\'1\'\nexport CONDA_DEFAULT_ENV=\'bio-qc\'\nexport CONDA_PROMPT_MODIFIER=\'(bio-qc) \'\nexport CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport _CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport CONDA_PYTHON_EXE=\'/opt/miniconda3/bin/python\'\nexport _CONDA_ROOT=\'/opt/miniconda3\'\n. "/opt/miniconda3/envs/bio-qc/etc/conda/activate.d/libglib_activate.sh"\n. "/opt/miniconda3/envs/bio-qc/etc/conda/activate.d/libxml2-split_activate.sh"\n. "/opt/miniconda3/envs/bio-qc/etc/conda/activate.d/openjdk_activate.sh"'
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ PS1='(bio-qc) '
+++ export 'PATH=/opt/miniconda3/envs/bio-qc/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin'
+++ PATH='/opt/miniconda3/envs/bio-qc/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin'
+++ export CONDA_PREFIX=/opt/miniconda3/envs/bio-qc
+++ CONDA_PREFIX=/opt/miniconda3/envs/bio-qc
+++ export CONDA_SHLVL=1
+++ CONDA_SHLVL=1
+++ export CONDA_DEFAULT_ENV=bio-qc
+++ CONDA_DEFAULT_ENV=bio-qc
+++ export 'CONDA_PROMPT_MODIFIER=(bio-qc) '
+++ CONDA_PROMPT_MODIFIER='(bio-qc) '
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CONDA_EXE=/opt/miniconda3/bin/conda
+++ _CONDA_EXE=/opt/miniconda3/bin/conda
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ export _CONDA_ROOT=/opt/miniconda3
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/envs/bio-qc/etc/conda/activate.d/libglib_activate.sh
++++ export GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ export GSETTINGS_SCHEMA_DIR=/opt/miniconda3/envs/bio-qc/share/glib-2.0/schemas
++++ GSETTINGS_SCHEMA_DIR=/opt/miniconda3/envs/bio-qc/share/glib-2.0/schemas
+++ . /opt/miniconda3/envs/bio-qc/etc/conda/activate.d/libxml2-split_activate.sh
++++ test -n ''
++++ xml_catalog_files_libxml2=
++++ XML_CATALOG_FILES=
++++ conda_catalog_files=
++++ ifs_libxml2=$' \t\n'
++++ IFS=' '
++++ rem=/opt/miniconda3/envs/bio-qc
++++ for pre in ${rem}
++++ test '' = /opt/miniconda3/envs/bio-qc
++++ conda_catalog_files=/opt/miniconda3/envs/bio-qc
++++ rem=
++++ IFS=$' \t\n'
++++ conda_catalog_files='file:///opt/miniconda3/envs/bio-qc/etc/xml/catalog file:///etc/xml/catalog'
++++ export 'XML_CATALOG_FILES=file:///opt/miniconda3/envs/bio-qc/etc/xml/catalog file:///etc/xml/catalog'
++++ XML_CATALOG_FILES='file:///opt/miniconda3/envs/bio-qc/etc/xml/catalog file:///etc/xml/catalog'
++++ unset conda_catalog_files ifs_libxml2 rem
+++ . /opt/miniconda3/envs/bio-qc/etc/conda/activate.d/openjdk_activate.sh
++++ '[' '' ']'
++++ export JAVA_HOME=/opt/miniconda3/envs/bio-qc/lib/jvm
++++ JAVA_HOME=/opt/miniconda3/envs/bio-qc/lib/jvm
++++ '[' '' ']'
++++ export JAVA_LD_LIBRARY_PATH=/opt/miniconda3/envs/bio-qc/lib/jvm/lib/server
++++ JAVA_LD_LIBRARY_PATH=/opt/miniconda3/envs/bio-qc/lib/jvm/lib/server
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ echo '=== [1] make simulated PE FASTQ (adapter + low-quality + N pollution) ==='
++ python3 make_inputs.py
++ echo '=== [2] fastp FULL run (SKILL.md standard PE workflow + --correction) ==='
++ fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_R1.fq.gz -O clean_R2.fq.gz --detect_adapter_for_pe --correction --cut_right --cut_window_size 4 --cut_mean_quality 20 -q 20 -l 36 -w 8 -h report_full.html -j report_full.json
+Detecting adapter sequence for read1...
+>Illumina TruSeq Adapter Read 1
+AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+
+Detecting adapter sequence for read2...
+>Illumina TruSeq Adapter Read 2
+AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+Read1 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2749373(91.6458%)
+Q30 bases: 1593359(53.112%)
+Q40 bases: 34863(1.1621%)
+
+Read2 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2738311(91.277%)
+Q30 bases: 1583982(52.7994%)
+Q40 bases: 34640(1.15467%)
+
+Read1 after filtering:
+total reads: 25306
+total bases: 2341512
+Q20 bases: 2336589(99.7898%)
+Q30 bases: 1452348(62.0261%)
+Q40 bases: 33358(1.42464%)
+
+Read2 after filtering:
+total reads: 25306
+total bases: 2335888
+Q20 bases: 2330531(99.7707%)
+Q30 bases: 1452405(62.1779%)
+Q40 bases: 33315(1.42622%)
+
+Filtering result:
+reads passed filter: 50612
+reads failed due to low quality: 0
+reads failed due to too many N: 0
+reads failed due to too short: 9388
+reads failed due to adapter dimer: 0
+reads with adapter trimmed: 12739
+bases trimmed due to adapters: 451574
+reads corrected by overlap analysis: 5891
+bases corrected by overlap analysis: 9688
+
+Duplication rate: 0%
+
+Insert size peak (evaluated by paired-end reads): 68
+
+JSON report: report_full.json
+HTML report: report_full.html
+
+fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_R1.fq.gz -O clean_R2.fq.gz --detect_adapter_for_pe --correction --cut_right --cut_window_size 4 --cut_mean_quality 20 -q 20 -l 36 -w 8 -h report_full.html -j report_full.json 
+fastp v1.3.6, time used: 1 seconds
++ echo '=== [3] ablation A: --disable_adapter_trimming ==='
++ fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_noadapter_R1.fq.gz -O clean_noadapter_R2.fq.gz --detect_adapter_for_pe --correction --cut_right --cut_window_size 4 --cut_mean_quality 20 -q 20 -l 36 -w 8 --disable_adapter_trimming -h report_noadapter.html -j report_noadapter.json
+Read1 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2749373(91.6458%)
+Q30 bases: 1593359(53.112%)
+Q40 bases: 34863(1.1621%)
+
+Read2 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2738311(91.277%)
+Q30 bases: 1583982(52.7994%)
+Q40 bases: 34640(1.15467%)
+
+Read1 after filtering:
+total reads: 26099
+total bases: 2588481
+Q20 bases: 2582250(99.7593%)
+Q30 bases: 1547065(59.7673%)
+Q40 bases: 34507(1.3331%)
+
+Read2 after filtering:
+total reads: 26099
+total bases: 2582807
+Q20 bases: 2575826(99.7297%)
+Q30 bases: 1546731(59.8857%)
+Q40 bases: 34349(1.32991%)
+
+Filtering result:
+reads passed filter: 52198
+reads failed due to low quality: 0
+reads failed due to too many N: 0
+reads failed due to too short: 7802
+reads corrected by overlap analysis: 5891
+bases corrected by overlap analysis: 9688
+
+Duplication rate: 0%
+
+Insert size peak (evaluated by paired-end reads): 68
+
+JSON report: report_noadapter.json
+HTML report: report_noadapter.html
+
+fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_noadapter_R1.fq.gz -O clean_noadapter_R2.fq.gz --detect_adapter_for_pe --correction --cut_right --cut_window_size 4 --cut_mean_quality 20 -q 20 -l 36 -w 8 --disable_adapter_trimming -h report_noadapter.html -j report_noadapter.json 
+fastp v1.3.6, time used: 1 seconds
++ echo '=== [4] ablation B: --disable_length_filtering ==='
++ fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_nolen_R1.fq.gz -O clean_nolen_R2.fq.gz --detect_adapter_for_pe --correction --cut_right --cut_window_size 4 --cut_mean_quality 20 -q 20 -l 36 -w 8 --disable_length_filtering -h report_nolenfilter.html -j report_nolenfilter.json
+Detecting adapter sequence for read1...
+>Illumina TruSeq Adapter Read 1
+AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+
+Detecting adapter sequence for read2...
+>Illumina TruSeq Adapter Read 2
+AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+Read1 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2749373(91.6458%)
+Q30 bases: 1593359(53.112%)
+Q40 bases: 34863(1.1621%)
+
+Read2 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2738311(91.277%)
+Q30 bases: 1583982(52.7994%)
+Q40 bases: 34640(1.15467%)
+
+Read1 after filtering:
+total reads: 29999
+total bases: 2479752
+Q20 bases: 2470677(99.634%)
+Q30 bases: 1504712(60.6799%)
+Q40 bases: 34645(1.39712%)
+
+Read2 after filtering:
+total reads: 29999
+total bases: 2473896
+Q20 bases: 2464152(99.6061%)
+Q30 bases: 1504610(60.8195%)
+Q40 bases: 34535(1.39598%)
+
+Filtering result:
+reads passed filter: 59998
+reads failed due to low quality: 0
+reads failed due to too many N: 0
+reads failed due to adapter dimer: 0
+reads with adapter trimmed: 12739
+bases trimmed due to adapters: 451574
+reads corrected by overlap analysis: 5891
+bases corrected by overlap analysis: 9688
+
+Duplication rate: 0%
+
+Insert size peak (evaluated by paired-end reads): 68
+
+JSON report: report_nolenfilter.json
+HTML report: report_nolenfilter.html
+
+fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_nolen_R1.fq.gz -O clean_nolen_R2.fq.gz --detect_adapter_for_pe --correction --cut_right --cut_window_size 4 --cut_mean_quality 20 -q 20 -l 36 -w 8 --disable_length_filtering -h report_nolenfilter.html -j report_nolenfilter.json 
+fastp v1.3.6, time used: 1 seconds
++ echo '=== [5] ablation C: drop --cut_right (per-read quality/N filters fire) ==='
++ fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_nocut_R1.fq.gz -O clean_nocut_R2.fq.gz --detect_adapter_for_pe --correction -q 20 -l 36 -w 8 -h report_nocut.html -j report_nocut.json
+Detecting adapter sequence for read1...
+>Illumina TruSeq Adapter Read 1
+AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+
+Detecting adapter sequence for read2...
+>Illumina TruSeq Adapter Read 2
+AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+Read1 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2749373(91.6458%)
+Q30 bases: 1593359(53.112%)
+Q40 bases: 34863(1.1621%)
+
+Read2 before filtering:
+total reads: 30000
+total bases: 3000000
+Q20 bases: 2738311(91.277%)
+Q30 bases: 1583982(52.7994%)
+Q40 bases: 34640(1.15467%)
+
+Read1 after filtering:
+total reads: 25038
+total bases: 2323296
+Q20 bases: 2315774(99.6762%)
+Q30 bases: 1432836(61.6726%)
+Q40 bases: 32766(1.41032%)
+
+Read2 after filtering:
+total reads: 25038
+total bases: 2323233
+Q20 bases: 2315114(99.6505%)
+Q30 bases: 1433841(61.7175%)
+Q40 bases: 32766(1.41036%)
+
+Filtering result:
+reads passed filter: 50076
+reads failed due to low quality: 6592
+reads failed due to too many N: 1506
+reads failed due to too short: 1826
+reads failed due to adapter dimer: 0
+reads with adapter trimmed: 14766
+bases trimmed due to adapters: 528372
+reads corrected by overlap analysis: 6047
+bases corrected by overlap analysis: 10032
+
+Duplication rate: 0%
+
+Insert size peak (evaluated by paired-end reads): 68
+
+JSON report: report_nocut.json
+HTML report: report_nocut.html
+
+fastp -i raw_R1.fq.gz -I raw_R2.fq.gz -o clean_nocut_R1.fq.gz -O clean_nocut_R2.fq.gz --detect_adapter_for_pe --correction -q 20 -l 36 -w 8 -h report_nocut.html -j report_nocut.json 
+fastp v1.3.6, time used: 1 seconds
++ echo '=== [6] parse fastp JSON reports -> _metrics.tsv ==='
++ python3 parse_reports.py
++ echo '=== [7] output files ==='
++ ls -la
++ echo 'ALL DONE'

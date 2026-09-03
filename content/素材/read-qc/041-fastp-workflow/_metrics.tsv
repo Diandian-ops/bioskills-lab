@@ -1,0 +1,20 @@
+metric	full	noadapter	nolenfilter	nocut
+before_total_reads	60000	60000	60000	60000
+before_total_bases	6000000	6000000	6000000	6000000
+before_q20_rate	0.914614	0.914614	0.914614	0.914614
+before_q30_rate	0.529557	0.529557	0.529557	0.529557
+before_read1_mean_len	100	100	100	100
+after_total_reads	50612	52198	59998	50076
+after_total_bases	4677400	5171288	4953648	4646529
+after_q20_rate	0.997802	0.997445	0.996201	0.996634
+after_q30_rate	0.621019	0.598264	0.607496	0.61695
+after_read1_mean_len	92	99	82	92
+adapter_trimmed_reads	12739		12739	14766
+adapter_trimmed_bases	451574		451574	528372
+passed_filter_reads	50612	52198	59998	50076
+low_quality_reads	0	0	0	6592
+too_many_N_reads	0	0	0	1506
+too_short_reads	9388	7802	2	1826
+corrected_reads	5891	5891	5891	6047
+corrected_bases	9688	9688	9688	10032
+duplication_rate	0	0	0	0
