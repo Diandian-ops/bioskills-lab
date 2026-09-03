@@ -1,0 +1,90 @@
+===== versions =====
+Thu Sep  3 14:55:24 UTC 2026
+bedtools v2.31.1
+Python 3.11.16
+===== stage 1: inputs =====
+wrote genome.txt: 1 intervals
+wrote blacklist.bed: 3 intervals
+wrote workspace.bed: 240 intervals
+wrote B_features.bed: 400 intervals
+wrote A_enriched.bed: 600 intervals
+wrote A_random.bed: 600 intervals
+workspace: 846000 bp (42.3% of 2000000)
+B covers 23.6% of workspace
+expected overlap A_enriched~B ~ 108000 bp (360 x 300 on-target)
+expected overlap A_random ~B ~ 42553 bp (A x B / workspace)
+expected jaccard: enriched ~0.37, random ~0.11 (uniform-genome null ~0.05)
+===== head of inputs =====
+==> workspace.bed <==
+chr1	0	2000
+chr1	4000	8000
+chr1	12000	20000
+
+==> B_features.bed <==
+chr1	6218	6718
+chr1	42103	42603
+chr1	43179	43679
+
+==> A_enriched.bed <==
+chr1	6230	6530
+chr1	6330	6630
+chr1	14611	14911
+
+==> A_random.bed <==
+chr1	503	803
+chr1	4850	5150
+chr1	4972	5272
+
+==> genome.txt <==
+chr1	2000000
+===== stage 1: bedtools fisher (analytic 2x2 screen, whole-genome null) =====
+--- fisher A_enriched vs B ---
+# Number of query intervals: 600
+# Number of db intervals: 400
+# Number of overlaps: 1706
+# Number of possible intervals (estimated): 2493
+# phyper(1706 - 1, 600, 2493 - 600, 400, lower.tail=F)
+# Contingency Table Of Counts
+#_________________________________________
+#           |  in -b       | not in -b    |
+#     in -a | 1706         | 0            |
+# not in -a | 0            | 787          |
+#_________________________________________
+# p-values for fisher's exact test
+left	right	two-tail	ratio
+1	0	0	inf
+--- fisher A_random  vs B ---
+# Number of query intervals: 600
+# Number of db intervals: 400
+# Number of overlaps: 184
+# Number of possible intervals (estimated): 2493
+# phyper(184 - 1, 600, 2493 - 600, 400, lower.tail=F)
+# Contingency Table Of Counts
+#_________________________________________
+#           |  in -b       | not in -b    |
+#     in -a | 184          | 416          |
+# not in -a | 216          | 1677         |
+#_________________________________________
+# p-values for fisher's exact test
+left	right	two-tail	ratio
+1	2.9263e-26	4.4654e-26	3.434
+===== observed jaccard =====
+set	jaccard
+enriched	0.37948
+random	0.0813279
+===== stage 2: permutation null (shuffle + jaccard, N=1000 per arm) =====
+arm: mode=matched set=enriched
+  done: nulls_matched_enriched.tsv (1000 values)
+arm: mode=uniform set=enriched
+  done: nulls_uniform_enriched.tsv (1000 values)
+arm: mode=matched set=random
+  done: nulls_matched_random.tsv (1000 values)
+arm: mode=uniform set=random
+  done: nulls_uniform_random.tsv (1000 values)
+===== stage 2 done =====
+Thu Sep  3 14:55:59 UTC 2026
+ 1000 nulls_matched_enriched.tsv
+ 1000 nulls_matched_random.tsv
+ 1000 nulls_uniform_enriched.tsv
+ 1000 nulls_uniform_random.tsv
+ 4000 total

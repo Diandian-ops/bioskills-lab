@@ -1,0 +1,5 @@
+set	n_int	obs_jaccard	null_mode	null_mean	null_median	null_sd	fold_vs_null	zscore	emp_p	fisher_a	fisher_b	fisher_c	fisher_d	fisher_two_tail_p	fisher_OR	py_fisher_p	py_fisher_log10p
+enriched	600	0.37948	matched	0.0832467	0.0833799	0.00815312	4.558	36.334	0.000999001	1706	0	0	787	0	inf		
+enriched	600	0.37948	uniform	0.0348531	0.034734	0.00535075	10.89	64.407	0.000999001	1706	0	0	787	0	inf		
+random	600	0.0813279	matched	0.0832467	0.0833799	0.00815312	0.977	-0.235	0.591409	184	416	216	1677	4.4654e-26	3.434		
+random	600	0.0813279	uniform	0.0348531	0.034734	0.00535075	2.333	8.686	0.000999001	184	416	216	1677	4.4654e-26	3.434		

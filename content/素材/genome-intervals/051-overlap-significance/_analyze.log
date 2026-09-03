@@ -1,0 +1,15 @@
+set	jaccard
+enriched	0.37948
+random	0.0813279
+===== analyze =====
+[enriched] fisher table a=1706 b=0 c=0 d=787
+[enriched] bedtools: two-tail=0.0 ratio=inf
+[enriched] python  : two-sided p=0 log10p=-673.38
+[random] fisher table a=184 b=416 c=216 d=1677
+[random] bedtools: two-tail=4.4654e-26 ratio=3.434
+[random] python  : two-sided p=4.4654e-26 log10p=-25.35
+[enriched/matched] obs=0.37948 null mean=0.0832467 median=0.0833799 sd=0.00815312 fold=4.558 z=36.33 emp_p=0.0010 (hits=0/N=1000)
+[enriched/uniform] obs=0.37948 null mean=0.0348531 median=0.034734 sd=0.00535075 fold=10.888 z=64.41 emp_p=0.0010 (hits=0/N=1000)
+[random/matched] obs=0.0813279 null mean=0.0832467 median=0.0833799 sd=0.00815312 fold=0.977 z=-0.24 emp_p=0.5914 (hits=591/N=1000)
+[random/uniform] obs=0.0813279 null mean=0.0348531 median=0.034734 sd=0.00535075 fold=2.333 z=8.69 emp_p=0.0010 (hits=0/N=1000)
+wrote summary.tsv

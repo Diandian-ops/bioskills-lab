@@ -1,0 +1,13 @@
+== B union bases ==
+110870
+== workspace bases ==
+846000
+== A_random intersect B bases ==
+53383
+== A_enriched intersect B bases ==
+369536
+== how much of shuffled A lands outside workspace (300 reps, matched) ==
+shuffled-A bases outside workspace: mean 0.0 bp of 180000 (0.00%), nonzero 0/300
+== shuffle placement vs tile placement: 300 shuffles of A_random, mean intersect with B ==
+shuffle->B inter: mean 41532 bp (obs A_random->B = 36038-equivalent below)
+obs A_random->B inter: 53383

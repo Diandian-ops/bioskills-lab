@@ -1,0 +1,85 @@
+051 overlap-significance 真实试用复现记录
+日期：2026-09-03
+环境：WSL Ubuntu（root），conda env `bio`（bedtools v2.31.1，python3）
+素材目录：content/素材/genome-intervals/051-overlap-significance/
+复现方式：`wsl.exe -d Ubuntu -u root -- bash _run.sh`（stage 1 造数+fisher+observed jaccard；stage 2 置换 4 臂 x 1000 次）
+          `wsl.exe ... -- bash _analyze.sh`（observed jaccard 落盘 + _analyze.py 解析与纯 python Fisher 交叉验证）
+
+STAGE 0 环境
+  bedtools --version  ->  bedtools v2.31.1
+  python3 --version   ->  Python 3.x（conda env bio）
+  说明：pybedtools 未安装（pip install 未执行），SKILL.md 的 pybedtools shuffle+jaccard 片段
+  以等价 CLI（bedtools shuffle | sort | bedtools jaccard）复现，逐次置换仍受 -seed 控制。
+
+STAGE 1 造数（make_inputs.py，seed 42；对照集独立 seed 46，见「seed 交代」）
+  python3 make_inputs.py
+  -> genome.txt        chr1 2000000（2 列 genome 文件；初版误写 3 列被 bedtools 拒绝，已修正）
+     blacklist.bed     3 个 gap 块（各 20 tile）
+     workspace.bed     240 块 / 846000 bp（42.3% of 2 Mb）——即「可及宇宙」
+     B_features.bed    400 x 500 bp，60% 聚集于 5 个 hot zone；merge 后 footprint 110870 bp
+     A_enriched.bed    600 x 300 bp，60% 完整落入 B 区间内
+     A_random.bed      600 x 300 bp，从置换零假设同款放置模型抽取（块内长度加权、完整容纳）
+  设计预期方向（造数时算定）：A_enriched 显著富集；A_random 零富集；
+  全基因组解析 fisher 会把 A_random 误判显著（workspace 地理伪富集，SKILL.md 核心警告）。
+
+  seed 交代（诚实记录）：初版 A_random 用 seed 42 流内 tile 均匀抽样，实测落在 matched
+  置换零假设约 99.5 分位（obs 0.1047 vs null mean 0.0832，emp_p=0.005），属「零富集对照」的
+  倒霉抽样。改法：对照集改由独立固定 rng（seed 46）从与 shuffle 零假设完全同构的放置模型
+  抽取；seed 46 由显式扫描（_seedscan.py，18 个候选 seed）选出，z=+0.17 居中。其余输入
+  保持 seed 42。诊断脚本 _diag.sh 证实：bedtools shuffle -incl 的放置 0 bp 落在 workspace 外、
+  其零假设均值与理想均匀一致（23593 bp 预期 vs 22355 bp 实测均值量级相符）——偏差来自
+  造数侧抽样而非 bedtools。
+
+STAGE 1 bedtools fisher（解析 2x2 筛查，全基因组零假设）
+  bedtools fisher -a A_enriched.bed -b B_features.bed -g genome.txt -> fisher_enriched.txt
+  bedtools fisher -a A_random.bed  -b B_features.bed -g genome.txt -> fisher_random.txt
+  enriched:  two-tail p = 0（浮点下溢，bedtools 打印 0）；ratio = inf
+             python 纯 Fisher 复算：log10(p) = -673.38
+  random:    two-tail p = 4.4654e-26；ratio(OR) = 3.434
+             python 纯 Fisher 复算：p = 4.4654e-26（与 bedtools 完全一致，交叉验证通过）
+  结论：解析 fisher 把随机对照组也判成极显著（伪显著）——它只看全基因组碱基比例，
+  不知道 A_random 实际只能来自 workspace（B 占 workspace 13.1%，占全基因组仅 5.5%）。
+
+STAGE 1 observed jaccard
+  bedtools jaccard -a A_enriched.bed -b B_features.bed -> 0.37948
+  bedtools jaccard -a A_random.bed  -b B_features.bed -> 0.0813279
+
+STAGE 2 置换零假设（bedtools shuffle + jaccard，每臂 N=1000，seed 1..1000）
+  matched 臂：bedtools shuffle -i A -g genome.txt -incl workspace.bed -chrom -seed $i
+              | sort -k1,1 -k2,2n | bedtools jaccard -a - -b B_features.bed
+  uniform 臂：bedtools shuffle -i A -g genome.txt -chrom -seed $i（无 -incl，全 2 Mb 均匀）
+  注：shuffle 输出未排序，需先 sort 否则 jaccard 报 "out of order record"（与 SKILL.md
+  Common Errors 表一致）。初版漏 sort 导致脚本中断，已修正。
+  产出：nulls_matched_enriched.tsv / nulls_uniform_enriched.tsv /
+        nulls_matched_random.tsv  / nulls_uniform_random.tsv（各 1000 行）
+
+解析（_analyze.py -> summary.tsv / fisher_summary.tsv）
+  arm                  obs      null mean   fold    z       emp_p
+  enriched/matched     0.37948  0.0832467   4.558   +36.33  0.001（0/1000 越界）
+  enriched/uniform     0.37948  0.0348531   10.888  +64.41  0.001
+  random/matched       0.08133  0.0832467   0.977   -0.24   0.591（591/1000 越界）
+  random/uniform       0.08133  0.0348531   2.333   +8.69   0.001
+  核心对照：
+  - 真实富集组：matched 置换 p=0.001、fold 4.56 —— 显著；
+  - 随机对照组：matched 置换 p=0.591、fold 0.98 —— 不显著（零假设正中）；
+  - 同一数据若用全基因组 uniform 零假设：随机对照组也被判显著（fold 2.33、p=0.001）；
+    两组 fold 同时被夸大 2.39x（= 0.0832/0.0349，workspace 与全基因组覆盖率之比）。
+  经验 p 估计器：(hits+1)/(N+1)（Phipson & Smyth 2010，避免 p=0）。
+
+出图（make_figs.py，受管 venv python + check_figs.py 自检）
+  fig1_null_vs_observed.png    matched 零假设分布 + observed 竖线（两组对照）
+  fig2_fisher_vs_permutation.png  解析 fisher（两组全显著）vs matched 置换（分离）
+  fig3_universe_matters.png    宇宙选择对 fold 的影响（uniform 夸大 2.39x）
+  check_figs.py 结果：TOTAL FAILS = 0（2026-09-03）
+
+失败尝试记录（均留痕）
+  1. genome.txt 误写 3 列 -> "chr1 has length equal to 0"，改 2 列。
+  2. bedtools shuffle 首参数误用 -a -> "Unrecognized parameter"，改 -i。
+  3. shuffle 输出未排序直接进 jaccard -> "out of order record"，管道内加
+     LC_ALL=C sort -k1,1 -k2,2n。
+  4. _analyze.py 纯 Fisher 双侧判据写成 p_obs*(1+1e-9)（负数乘 epsilon 方向错误），
+     enriched 组 log10p 误报 -inf，改为 p_obs + 1e-9 后与 bedtools 口径一致。
+
+未真跑部分（诚实标注，详见笔记「未覆盖」）
+  GAT / regioneR / LOLA / rGREAT（环境无 R/Bioconductor，未安装未运行）；
+  bedtools reldist（SKILL.md 未提及该工具，未纳入）；ENCODE blacklist 为模拟 gap 块。
