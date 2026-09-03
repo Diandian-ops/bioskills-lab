@@ -1,0 +1,36 @@
+=== copy data ===
+'/mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/011-bowtie2-alignment/reference.fa' -> '/mnt/d/1.WorkDir/RedBook/content/素材/variant-calling/022-gatk-variant-calling/reference.fa'
+'/mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/011-bowtie2-alignment/aligned_e2e.bam' -> '/mnt/d/1.WorkDir/RedBook/content/素材/variant-calling/022-gatk-variant-calling/aligned_e2e.bam'
+'/mnt/d/1.WorkDir/RedBook/content/素材/read-alignment/011-bowtie2-alignment/aligned_e2e.bam.bai' -> '/mnt/d/1.WorkDir/RedBook/content/素材/variant-calling/022-gatk-variant-calling/aligned_e2e.bam.bai'
+=== faidx (bio env samtools) ===
+-rwxrwxrwx 1 devah devah 94 Sep  3 17:26 /mnt/d/1.WorkDir/RedBook/content/素材/variant-calling/022-gatk-variant-calling/reference.fa.fai
+=== BAM header ===
+@HD	VN:1.5	SO:coordinate
+@SQ	SN:contig1	LN:3000
+@SQ	SN:contig2	LN:3000
+@SQ	SN:contig3	LN:3000
+@SQ	SN:contig4	LN:3000
+@PG	ID:bowtie2	PN:bowtie2	VN:2.5.5	CL:"/Applications/anaconda3/envs/bioaligners/bin/bowtie2-align-s --wrapper basic-0 -p 8 -x /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reference_index -1 /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reads_1.fq -2 /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/reads_2.fq"
+@PG	ID:samtools	PN:samtools	PP:bowtie2	VN:1.21	CL:/Applications/anaconda3/bin/samtools sort -@4 -o /Users/zhangdiandian/RedBook/content/素材/011-bowtie2-alignment/aligned_e2e.bam -
+@PG	ID:samtools.1	PN:samtools	PP:samtools	VN:1.24	CL:samtools view -H /mnt/d/1.WorkDir/RedBook/content/素材/variant-calling/022-gatk-variant-calling/aligned_e2e.bam
+=== flagstat ===
+6000 + 0 in total (QC-passed reads + QC-failed reads)
+6000 + 0 primary
+0 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+0 + 0 primary duplicates
+5954 + 0 mapped (99.23% : N/A)
+5954 + 0 primary mapped (99.23% : N/A)
+6000 + 0 paired in sequencing
+3000 + 0 read1
+3000 + 0 read2
+3042 + 0 properly paired (50.70% : N/A)
+5942 + 0 with itself and mate mapped
+12 + 0 singletons (0.20% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+=== mpileup: 统计有覆盖的碱基列数 & 非纯合参考的候选变异列 ===
+total pileup cols (covered): 11962
+cols with non-ref base(s) (candidate variants): 11152
+=== done ===

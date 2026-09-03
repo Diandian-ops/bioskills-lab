@@ -1,0 +1,46 @@
+=== [1] 修正统计法重算 mpileup 非参考列（同时排除 . 与 ,）===
+total pileup cols (covered): 11962
+cols with non-ref base(s), corrected: 4659
+=== [2] bcftools mpileup | bcftools call -mv（跨工具对照）===
+Note: none of --samples-file, --ploidy or --ploidy-file given, assuming all sites are diploid
+SN	0	number of samples:	1
+SN	0	number of records:	0
+SN	0	number of no-ALTs:	0
+SN	0	number of SNPs:	0
+SN	0	number of MNPs:	0
+SN	0	number of indels:	0
+SN	0	number of others:	0
+SN	0	number of multiallelic sites:	0
+SN	0	number of multiallelic SNP sites:	0
+--- called sites: CHROM POS REF ALT QUAL DP AD ---
+=== [3] 候选真实突变扫描：每列最高 ALT 支持度 TOP10 ===
+chrom	pos	ref	DP	top_alt	alt_reads	alt_frac
+contig2	815	C	27	g	5	0.185
+contig4	2018	T	36	a	5	0.139
+contig3	1418	G	36	t	5	0.139
+contig3	1731	C	38	g	5	0.132
+contig3	1477	A	41	t	5	0.122
+contig1	2641	A	17	t	4	0.235
+contig4	1821	C	26	g	4	0.154
+contig4	1185	C	26	g	4	0.154
+contig3	519	G	27	c	4	0.148
+contig4	2340	A	29	c	4	0.138
+cols with alt_reads>=10 AND alt_frac>=0.5 (real-mutation-like): 0
+=== [4] BAM error rate / 平均碱基质量（samtools stats 独立复核）===
+SN	reads mapped:	5954
+SN	reads mapped and paired:	5942	# paired-end technology bit set + both mates mapped
+SN	reads unmapped:	46
+SN	bases mapped (cigar):	595400	# more accurate
+SN	error rate:	2.192308e-02	# mismatches / bases mapped (cigar)
+SN	average length:	100
+SN	average quality:	17.0
+=== [5] GVCF 覆盖度分布（HC 是否真的看到了 reads）===
+GVCF blocks total: 2946
+blocks with DP=0: 4
+blocks with DP>0: 2942
+mean DP of covered blocks: 35.9
+=== [6] wgsim 读名内嵌错配数（含 e=0.02 测序错误）===
+reads: 6000
+mean header mismatch count per read: 3.97
+reads with 0 header mismatch: 94
+=== done Thu Sep  3 11:02:52 UTC 2026 ===

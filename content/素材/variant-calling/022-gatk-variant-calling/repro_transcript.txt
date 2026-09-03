@@ -1,0 +1,70 @@
+========================================================================
+022 gatk-variant-calling — 真实复现记录（repro transcript）
+日期：2026-09-03（WSL Ubuntu / Windows 11，全部命令真跑，输出落盘）
+目录：content/素材/variant-calling/022-gatk-variant-calling/
+========================================================================
+
+[0] 环境创建（_setup_env.sh → _setup_env.log）
+    $ conda create -y -n bio-gatk -c bioconda -c conda-forge gatk4 openjdk=17
+      → create exit: 0（经 bioconda 通道安装成功）
+      注：2026-09-01 评估稿曾因「GitHub release 不可达」判定无法获取 GATK jar，
+      该结论于 2026-09-03 被 bioconda 通道安装成功推翻，阻塞结论作废。
+    版本实测（_setup_env.log）：
+      GATK  v4.6.2.0 / HTSJDK 4.2.0 / Picard 3.4.0
+      Java  OpenJDK 17.0.18-internal（conda 独立环境，避免降级 bio 环境的 openjdk 25）
+
+[1] 输入数据（来自 011-bowtie2-alignment 真跑产物）
+    reference.fa：4 contig × 3000 bp = 12 kb 合成参考（gen_ref.py，seed 20260411）
+    aligned_e2e.bam：bowtie2 --sensitive e2e 比对（5954/6000 mapped = 99.23%）
+    reads 来源（011 笔记实录命令）：
+      wgsim -N 3000 -1 100 -2 100 -e 0.02 -r 0 -R 0 -X 0 -S 42
+      → -r 0 -R 0：模拟时零突变、零插入缺失；仅 -e 0.02（2% 测序错误）
+      → sim.mutations.vcf 不存在（-r 0 无突变可记录）
+
+[2] GATK 主流程（_run_gatk.sh → _run_gatk.log，bio-gatk 环境）
+    a) gatk CreateSequenceDictionary -R reference.fa -O reference.dict
+       → done，711 字节
+    b) samtools addreplacerg -r "@RG\tID:rg1\tSM:sample1\tPL:ILLUMINA\tLB:lib1" \
+         -o aligned_rg.bam aligned_e2e.bam   （GATK 要求 @RG）
+    c) gatk HaplotypeCaller -R reference.fa -I aligned_rg.bam -O raw.vcf.gz \
+         --native-pair-hmm-threads 4
+       → raw.vcf.gz 3948 字节；bcftools stats：number of records = 0
+    d) gatk HaplotypeCaller -R reference.fa -I aligned_rg.bam -ERC GVCF \
+         -O raw.g.vcf.gz --native-pair-hmm-threads 4
+       → raw.g.vcf.gz 42219 字节；bcftools stats：records = 2946，no-ALT = 2946，
+         SNPs = 0，indels = 0（全部为 hom-ref 区块，含 <NON_REF> 符号等位）
+
+[3] 「标准模式 0 变异」诊断（_diag.sh → _diag.log，bio 环境 samtools/bcftools）
+    ① 修正统计法重算 mpileup 非参考列（同时排除 . 与 ,，含 indel 标记剥离）：
+       total pileup cols (covered): 11962
+       cols with non-ref base(s), corrected: 4659（占 38.9%）
+       （原 _prep_data.log 的 11152 因 awk 未排除反向匹配逗号而虚高，作废）
+    ② 跨工具对照：bcftools mpileup | bcftools call -mv
+       → number of records = 0（与 HC 标准模式一致，同为 0 条变异）
+    ③ 真突变形态扫描（全基因组逐列）：
+       最高 ALT 支持 = 5 reads / 18.5%（contig2:815）；
+       alt_reads>=10 且 alt_frac>=0.5 的列 = 0（无任何位点具备真突变形态）
+    ④ 独立复核（samtools stats on aligned_rg.bam）：
+       error rate = 2.192308e-02（≈ wgsim -e 0.02）；average quality = 17.0；
+       average length = 100；reads mapped = 5954
+    ⑤ HC 是否真的看到 reads（GVCF 覆盖度分布）：
+       2946 区块中 2942 个 DP>0（mean DP 35.9），仅 4 个 DP=0
+    ⑥ wgsim 读名内嵌错配数：6000 reads，平均 3.97 个错配/读对（含双端），
+       ≈ 2% 错误率 × 200 bp，与 -e 0.02 一致
+    诊断结论（已验证）：
+      reads 由 wgsim -r 0 -R 0 生成，参考与读段间不存在真实突变，全基因组仅含
+      散在 2% 测序错误（最高位点支持度 5/18.5%，无真突变形态）。HC 标准模式与
+      bcftools call -mv 双双输出 0 条变异是调用器对「无变异输入」的正确行为，
+      而非工具配置或版本问题。
+
+[4] 出图（make_figs.py → 3 张 PNG，全部真实数据）
+    fig1_standard_vs_gvcf.png      标准模式 vs GVCF 记录构成
+    fig2_gvcf_block_lengths.png    GVCF 区块长度分布（gzip 解析 END，2946 区块）
+    fig3_zero_variant_diagnosis.png  0 变异诊断三联对照
+    自检：python check_figs.py make_figs.py → 3 × [PASS]
+          FIGURE QUALITY: TOTAL FAILS = 0   （2026-09-03）
+
+[5] 门禁（gate_lint.py，2026-09-03）
+    022-bioSkills真实试用-gatk-variant-calling.md   → ERROR=0 WARN=0
+    022-bioSkills小红书-gatk-variant-calling-正文.md → ERROR=0 WARN=0
+========================================================================

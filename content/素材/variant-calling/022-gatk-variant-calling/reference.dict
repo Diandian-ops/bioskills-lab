@@ -1,0 +1,5 @@
+@HD	VN:1.6
+@SQ	SN:contig1	LN:3000	M5:e0b7ecfb1b0946c96a81c4db4bc0304f	UR:file:///mnt/d/1.WorkDir/RedBook/content/%E7%B4%A0%E6%9D%90/variant-calling/022-gatk-variant-calling/reference.fa
+@SQ	SN:contig2	LN:3000	M5:c824982478fdbe557ecffa786fbffd96	UR:file:///mnt/d/1.WorkDir/RedBook/content/%E7%B4%A0%E6%9D%90/variant-calling/022-gatk-variant-calling/reference.fa
+@SQ	SN:contig3	LN:3000	M5:e484a6735b8118dfeac96167ce5b9c10	UR:file:///mnt/d/1.WorkDir/RedBook/content/%E7%B4%A0%E6%9D%90/variant-calling/022-gatk-variant-calling/reference.fa
+@SQ	SN:contig4	LN:3000	M5:e7b89ff4433ff1e79841928f9277cb78	UR:file:///mnt/d/1.WorkDir/RedBook/content/%E7%B4%A0%E6%9D%90/variant-calling/022-gatk-variant-calling/reference.fa

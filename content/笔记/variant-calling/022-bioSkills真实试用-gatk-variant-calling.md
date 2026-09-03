@@ -7,15 +7,16 @@
 - **适用**：决定用 HaplotypeCaller 还是 pileup/DRAGEN 调用器；判断 BQSR 是否还有价值；是否为队列逐样本产出 GVCF；处理非二倍体、线粒体、性染色体、污染样本。
 - **不适用**：调用后的过滤深度（见 filtering-best-practices）；队列联合基因型的规模化（见 joint-calling）。
 
-## 属性表（本次环境）
+## 属性表（本次真跑环境）
 
 | 项 | 值 |
 |---|---|
-| GATK | **未安装**（本环境无 gatk 可执行文件） |
-| 比对数据 | **无 BAM/CRAM** |
-| 可真跑部分 | 下游 VCF 字段核查、QUAL 类过滤的 bcftools 等价验证 |
-| 替代数据源 | 1000G Phase3 chr22（GRCh37/hs37d5），5431 条记录、2504 样本 |
-| 结论性质 | 机制与命令为文档口径；标注的实测项均已完成 |
+| GATK | v4.6.2.0（HTSJDK 4.2.0 / Picard 3.4.0 / OpenJDK 17.0.18-internal） |
+| 安装方式 | conda env `bio-gatk`，bioconda + conda-forge 通道（WSL Ubuntu） |
+| 比对数据 | `aligned_e2e.bam`：4 contig × 3000 bp 合成参考，5954/6000 reads mapped（99.23%），50× 量级覆盖 |
+| reads 来源 | `wgsim -N 3000 -1 100 -2 100 -e 0.02 -r 0 -R 0 -X 0 -S 42`（零真实突变，仅 2% 测序错误） |
+| 主产出 | `raw.vcf.gz`（0 条变异）/ `raw.g.vcf.gz`（2946 条 hom-ref 区块） |
+| 实验产物 | `content/素材/variant-calling/022-gatk-variant-calling/` |
 
 ## 成分拆解
 
@@ -89,73 +90,80 @@ gatk VariantFiltration -R reference.fa -V sample.vcf.gz -O sample.filtered.vcf.g
 
 **污染是信任任何调用之前的门闸。** 即使 1–3% 的跨样本污染也会注入少数等位，把等位平衡推离 0/0.5/1 足够远，从而被判为低比例杂合。先估计它：**VerifyBamID2**（祖先无关、无需基因型——通过 PCA/SVD 面板建模样本祖先，避免了 v1 的群体错配偏差），或 **CHARR**（只需 gVCF/VCF，从纯合 alt 位点的参考等位渗漏估计）。惯例：FREEMIX ≥ 0.03（3%）标记可能污染/互换的样本（是指导值，不是硬常数）。
 
-## 本次实测（可真跑部分）
+## 严格复现（本次真跑，2026-09-03）
 
-**① DRAGEN-GATK 的 QUAL 硬过滤阈值**
+完整命令与输出见素材目录 `repro_transcript.txt`；环境创建、主流程、诊断各有落盘日志（`_setup_env.log` / `_run_gatk.log` / `_diag.log`）。
 
-文档给出的 DRAGEN 模式 QUAL 切点为 **10.4139**。用其 bcftools 等价式在本数据上验证：
+**评估史交代（诚实记录）**：2026-09-01 的评估稿称「GitHub release 不可达、拿不到 GATK jar、本机无 WSL，调用流程无法真跑」，据此只做了下游 VCF 核查。2026-09-03 环境已具备 WSL Ubuntu，经 bioconda 通道 `conda create -n bio-gatk -c bioconda -c conda-forge gatk4 openjdk=17` 一次成功，**原阻塞结论作废**。本节全部内容为当日真跑结果。
 
-| 表达式 | 记录数 |
+**① 主流程命令链（bio-gatk 环境）**
+
+```
+gatk CreateSequenceDictionary -R reference.fa -O reference.dict
+samtools addreplacerg -r "@RG\tID:rg1\tSM:sample1\tPL:ILLUMINA\tLB:lib1" -o aligned_rg.bam aligned_e2e.bam
+gatk HaplotypeCaller -R reference.fa -I aligned_rg.bam -O raw.vcf.gz --native-pair-hmm-threads 4
+gatk HaplotypeCaller -R reference.fa -I aligned_rg.bam -ERC GVCF -O raw.g.vcf.gz --native-pair-hmm-threads 4
+```
+
+**② 标准模式产出 0 条变异，GVCF 模式产出 2946 条 hom-ref 区块（核心实测）**
+
+| 模式 | 产出 | bcftools stats |
+|---|---|---|
+| 标准 HaplotypeCaller | `raw.vcf.gz`（3948 字节） | records = 0（SNPs 0 / indels 0） |
+| `-ERC GVCF` | `raw.g.vcf.gz`（42219 字节） | records = 2946，no-ALT = 2946，每条含 `<NON_REF>` 符号等位 |
+
+同一 BAM、同一参考、同一调用器，标准模式 0 条、GVCF 2946 条区块：这正是第 4 节参考置信度模型的实测体现——**无变异输入下，标准模式沉默，GVCF 对每个位置照样输出「这里是纯合参考」的置信度**（含 DP=0 的区块 4 个、DP>0 的区块 2942 个，覆盖均值 35.9）。
+
+**③ 「0 变异」根因诊断（结论已验证，非推测）**
+
+reads 由 011 的 `wgsim -N 3000 -1 100 -2 100 -e 0.02 -r 0 -R 0 -X 0 -S 42` 生成，`-r 0 -R 0` 意味着**模拟时零突变、零 indel**。四项独立验证：
+
+| 验证项 | 结果 |
 |---|---|
-| `QUAL >= 10.4139` | 5431 / 5431 |
-| `QUAL < 10.4139` | 0 |
+| 修正统计法 mpileup 非参考列（同时排除 `.` 与 `,`） | 4659 / 11962 列（38.9%）；原日志 11152 因未排除反向匹配逗号而虚高，作废 |
+| 跨工具对照 `bcftools mpileup \| bcftools call -mv` | 0 条变异（与 HC 一致） |
+| 真突变形态扫描（逐列） | 最高 ALT 支持 5 reads / 18.5%（contig2:815）；无任何列达「alt≥10 reads 且占比≥0.5」 |
+| samtools stats 独立复核 | error rate = 2.19%（≈ `-e 0.02`），平均碱基质量 17.0，读长 100 bp |
 
-本数据（1000G Phase3 整合集）的 QUAL 恒为 100，因此全部通过、无一被滤。这与 020 的结论一致：整合集的 QUAL 是统一占位值，**该过滤在此类 callset 上不产生筛选效果**；真实项目中 QUAL 已被校准时该阈值才有意义。
+诊断结论：参考与读段之间不存在真实突变，全基因组仅含散在的 2% 测序错误（任何单列的支持度都被错误率摊薄）。**HC 标准模式与 bcftools call 各自输出 0 条变异，是调用器对「无变异输入」的正确行为**——散在的随机错误不构成等位证据，这正是「局部组装 + 似然模型」区别于逐列数数的价值所在。
 
-**② 符号等位核查**
+**④ GVCF 区块结构（第 4 节 GQ 分带的实测形态）**
 
-本数据**不含 `<NON_REF>` 等符号等位**（0 条）——这是联合基因型产出的**最终 VCF**，而非 GVCF 中间体。GVCF 的 `<NON_REF>` 在 GenotypeGVCFs 阶段已被消解为真实 ALT 等位。因此本次无法实测 GVCF 区块结构与 `<NON_REF>` 的 PL 语义。
+解析 `raw.g.vcf.gz` 的 END 标签（2946 区块覆盖全部 12 kb 参考）：单碱基区块 1809 个，长度中位数 1 bp、均值 4.1 bp、p99 61 bp、最大 246 bp。区块极短的原因是本数据的碱基质量恒为 Q17，GQ 分带在同质低置信区间内难以折叠出长区块；即便如此，「不是每碱基一行」的压缩效应仍然存在（2946 区块 < 12000 碱基）。
 
-**③ 污染与倍性**
+### 本次出图
 
-无 BAM，无法运行 VerifyBamID2/CHARR；倍性设置需要实际调用流程，未做真跑。
+![标准模式 vs GVCF 记录构成](../../素材/variant-calling/022-gatk-variant-calling/fig1_standard_vs_gvcf.png)
 
-## 复现难度评估（2026-09-01 环境实测）
+![GVCF 区块长度分布](../../素材/variant-calling/022-gatk-variant-calling/fig2_gvcf_block_lengths.png)
 
-本节记录在 Windows 11 单机环境上尝试补跑本 skill 时的真实探测结果，供同类环境参考。
-
-**工具链：可获取，不是障碍。**
-
-| 组件 | 状态（实测） |
-|---|---|
-| GATK 4.6.1.0 | GitHub release 直连可下（`gatk-4.6.1.0.zip` 698,893,720 字节 ≈ 667 MB，本次实测下载成功） |
-| Java | GATK 4.x 需 Java 17；Adoptium/TUNA 镜像提供 Windows x64 JDK17 zip（约 190 MB，实测下载成功） |
-| samtools/bcftools | MSYS2 mingw64 仓库有 `bcftools-1.24` 包（与既往笔记真跑版本一致）；samtools 同源可取 |
-
-**输入数据：结构性困难，是真正卡点。**
-
-- GATK 调用输入必须是排序、去重标记、索引的 BAM/CRAM 加参考 FASTA（含 `.fai`/`.dict`）。
-- 1000 Genomes 的比对文件已全面迁移至 **GRCh38DH**：每样本仅提供全基因组 low-coverage CRAM（单个样本约 8–15 GB），无染色体级子集文件。
-- 旧 GRCh37 时代的 BAM 路径实测已失效（`data/<POP>/<SAMPLE>/alignment/` 返回 404；`ftp/data/` 旧根同样不可用）。
-- 可行路径是携带 `.crai` 索引对远程 CRAM 按 range 读取、切出如 `22:17.0–17.2Mb` 的小区域——但该路径要求：本机 samtools（Windows 原生二进制需自行取 MSYS2 包）、与 CRAM 编码时序列 MD5 一致的 GRCh38DH 参考（全参考压缩包约 950 MB），且 Windows + 远程 CRAM + 参考匹配的整链路未经本机验证。
-- 本机环境实测：Windows 11 无 WSL、无 Docker，PATH 中无 samtools/bcftools（既往 bcftools 1.24 环境在 2026-08-28 之后已不在当前 PATH）。
-
-**结论**：本 skill 的调用流程在本机属于「工具可获取、输入数据难」——卡点在 BAM/CRAM 数据获取与参考匹配，而非 GATK 本身。按如实呈现原则，本篇不虚构调用输出，真跑部分仅限下游 VCF 的 bcftools 可验证核查。
+![0 变异诊断：三重对照](../../素材/variant-calling/022-gatk-variant-calling/fig3_zero_variant_diagnosis.png)
 
 ## 未覆盖（诚实标注）
 
-本环境 **GATK 未安装且无比对 BAM**，以下部分未做真跑，仅为文档口径与命令模板：
+本次真跑为单样本、单倍型纯净数据的最小闭环，以下部分仍未真跑，仅为文档口径：
 
-- `HaplotypeCaller` 的单样本调用与 `-L` 靶向调用。
-- `-ERC GVCF` / `-ERC BP_RESOLUTION` 的实际产出与区块结构。
-- `GenotypeGVCFs` 的 GQ/PL 重算与 `<NON_REF>` 消解。
+- 变异阳性对照（`-r > 0` 或真实 BAM）下 HC 的 SNP/indel 召回与 QUAL 分布。
+- `GenotypeGVCFs` 的 GQ/PL 重算与 `<NON_REF>` 消解（见 023 joint-calling）。
 - BQSR（BaseRecalibrator/ApplyBQSR）、`CalibrateDragstrModel`、`--dragen-mode`。
-- AS_ 注释与 AS_VQSR。
-- 线粒体双参考比对、性染色体/PAR 倍性处理、污染估计。
-- 并行化（`--native-pair-hmm-threads`、按 contig 分散 + GatherVcfs）。
+- AS_ 注释与 AS_VQSR；线粒体双参考比对；性染色体/PAR 倍性处理；污染估计（VerifyBamID2/CHARR）。
+- 并行化（按 contig 分散 + GatherVcfs）。
 
 ## 实践要点
 
-- **先确认 callset 的 QUAL 是否被校准**：整合集常把 QUAL 统一占位，此时按 QUAL 过滤无效（实测 5431/5431 全通过）。
+- **输入信号先于工具怀疑**：调用器输出 0 条变异时，先用独立工具（bcftools call、mpileup 逐列支持度、samtools stats error rate）核查输入是否真的含变异信号，再谈参数——本次实测中 0 条正是数据的正确答案。
+- **模拟数据要留突变记录**：wgsim/dwgsim 的 `-r 0` 会让下游调用无可调用之物；若目的是测调用器，应设非零 `-r` 并保留 `.mutations.txt` 作 truth 集（本次 011 未留，属教训）。
+- **统计 pileup 列时必须同时排除 `.` 与 `,`**（正向/反向匹配），否则反向读段的参考匹配全被误计为「非参考」，数字虚高 2 倍以上（实测 11152 → 修正 4659）。
+- **GATK 从 bioconda 装最省事**：`conda create -n bio-gatk -c bioconda -c conda-forge gatk4 openjdk=17`，无需从 GitHub 下载 667 MB zip；用独立环境隔离 openjdk=17，避免降级主环境的 Java。
+- **GATK 要求 BAM 带 `@RG`**：`samtools addreplacerg` 一行补齐。
 - **调用前 MarkDuplicates 是必须的**；BQSR 视为调用器/仪器相关，不是硬要求。
-- **indel 精度的主要杠杆是 STR 感知建模（DRAGSTR/`--dragen-mode`）**，而非碱基质量重校准。
-- **DRAGEN 模式输出按 QUAL 硬过滤即可**，不要叠加 VQSR。
+- **indel 精度的主要杠杆是 STR 感知建模（DRAGSTR/`--dragen-mode`）**，而非碱基质量重校准；DRAGEN 模式输出按 QUAL 硬过滤即可。
 - **非二倍体必须显式设 `--sample-ploidy`**；线粒体走 Mutect2 且需双参考。
 - **污染估计在任何调用之前**：FREEMIX ≥ 3% 应标记。
-- **flag 默认值跨 GATK 4.x 会漂移**（`--max-alternate-alleles`、`--heterozygosity`、`--standard-min-confidence-threshold-for-calling`），须以 `gatk <Tool> --help` 确认为准。
+- **flag 默认值跨 GATK 4.x 会漂移**，须以 `gatk <Tool> --help` 确认为准。
 
 ## 小结
 
-gatk-variant-calling 的机制核心是「局部重组装 + PairHMM 全比对积分」，这解释了它为何在 indel 上优于 pileup 调用器；而 GVCF 的 `<NON_REF>` 参考置信度模型是队列可扩展调用的关键。本次受环境限制（无 GATK、无 BAM）未能真跑调用流程，但完成了可验证的下游核查：DRAGEN 模式 QUAL 阈值在本数据上全通过（因 QUAL 恒为 100），且确认本数据是已消去 `<NON_REF>` 的最终联合基因型 VCF。
+gatk-variant-calling 的机制核心是「局部重组装 + PairHMM 全比对积分」，GVCF 的 `<NON_REF>` 参考置信度模型是队列可扩展调用的关键。本次在 WSL 真跑闭环：bioconda 安装 GATK 4.6.2.0、补 `@RG`、标准模式与 `-ERC GVCF` 双模式调用，并实测到一个反直觉但有教学价值的结果——零突变输入下标准模式 0 条变异而 GVCF 仍输出 2946 条参考置信区块，二者均为正确行为；「0 变异」根因经 bcftools 对照、逐列支持度扫描与 error rate 复核三重验证，排除了工具与参数问题。
 
-（相关数据与核查记录见 020 / 023 的素材目录；本篇无独立真跑产物，故未建素材目录。）
+（数据与可复现脚本见 `content/素材/variant-calling/022-gatk-variant-calling/`，含 `_diag.sh`、`make_figs.py`、`repro_transcript.txt` 及三张图。）
