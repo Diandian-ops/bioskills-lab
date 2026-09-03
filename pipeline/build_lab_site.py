@@ -160,9 +160,17 @@ VARCALL_SUBS = [("varcall", "variant-calling", "variant-calling/variant-calling.
                 ("consensus", "consensus-sequences", "variant-calling/consensus-sequences.html"),
                 ("clinical", "clinical-interpretation", "variant-calling/clinical-interpretation.html"),
                 ("deepvariant", "deepvariant", "variant-calling/deepvariant.html")]
+READQC_SUBS = [("qcreports", "quality-reports", "read-qc/quality-reports.html"),
+               ("adaptertrim", "adapter-trimming", "read-qc/adapter-trimming.html"),
+               ("qfilter", "quality-filtering", "read-qc/quality-filtering.html"),
+               ("fastp", "fastp-workflow", "read-qc/fastp-workflow.html"),
+               ("umi", "umi-processing", "read-qc/umi-processing.html"),
+               ("contam", "contamination-screening", "read-qc/contamination-screening.html"),
+               ("rnaseqqc", "rnaseq-qc", "read-qc/rnaseq-qc.html")]
 # 同一套「family 子页」机制同时服务 alignment / read-alignment / variant-calling，避免对 category 名硬编码
 FAMILY_SUBS = {"alignment": ALIGN_SUBS, "alignment-files": ALIGN_FILES_SUBS,
-               "read-alignment": READ_ALIGN_SUBS, "variant-calling": VARCALL_SUBS}
+               "read-alignment": READ_ALIGN_SUBS, "variant-calling": VARCALL_SUBS,
+               "read-qc": READQC_SUBS}
 FAMILY_KEYS = {k for subs in FAMILY_SUBS.values() for k, _, _ in subs}
 
 def sidebar(active, prefix=""):
@@ -548,6 +556,13 @@ TRIALS = [
     ("alignment-files", "035", "duplicate-handling",    "DEEP DIVE 32", "duplicatehandling"),
     ("alignment-files", "036", "reference-operations",  "DEEP DIVE 33", "referenceoperations"),
     ("alignment-files", "037", "amplicon-clipping",     "DEEP DIVE 34", "ampliconclipping"),
+    ("read-qc",         "038", "quality-reports",         "DEEP DIVE 35", "qcreports"),
+    ("read-qc",         "039", "adapter-trimming",        "DEEP DIVE 36", "adaptertrim"),
+    ("read-qc",         "040", "quality-filtering",       "DEEP DIVE 37", "qfilter"),
+    ("read-qc",         "041", "fastp-workflow",          "DEEP DIVE 38", "fastp"),
+    ("read-qc",         "042", "umi-processing",          "DEEP DIVE 39", "umi"),
+    ("read-qc",         "043", "contamination-screening", "DEEP DIVE 40", "contam"),
+    ("read-qc",         "044", "rnaseq-qc",               "DEEP DIVE 41", "rnaseqqc"),
 ]
 def cat_page(cat):
     items = pages.get(cat, [])
