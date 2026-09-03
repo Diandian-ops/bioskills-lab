@@ -1,0 +1,256 @@
+{
+ "col9_all_rows": {
+  "annotation.gtf": true,
+  "annotation.gff3": true,
+  "annotation_chr1.gff3": true,
+  "conv_from_gff3.gtf": true,
+  "conv_from_gtf.gff3": true
+ },
+ "seqids": {
+  "annotation.gtf": [
+   "chr1"
+  ],
+  "annotation.gff3": [
+   "1"
+  ],
+  "annotation_chr1.gff3": [
+   "chr1"
+  ],
+  "conv_from_gff3.gtf": [
+   "1"
+  ],
+  "conv_from_gtf.gff3": [
+   "chr1"
+  ]
+ },
+ "seqid_intersection_gtf_vs_gff3": [],
+ "naive_shared_features": 0,
+ "attr_keys": {
+  "annotation.gtf": [
+   "exon_number",
+   "gene_id",
+   "gene_name",
+   "gene_type",
+   "transcript_id"
+  ],
+  "annotation.gff3": [
+   "ID",
+   "Name",
+   "Parent",
+   "gene_biotype",
+   "rank"
+  ],
+  "annotation_chr1.gff3": [
+   "ID",
+   "Name",
+   "Parent",
+   "gene_biotype",
+   "rank"
+  ],
+  "conv_from_gff3.gtf": [
+   "gene_id",
+   "transcript_id"
+  ],
+  "conv_from_gtf.gff3": [
+   "ID",
+   "Parent",
+   "geneID",
+   "gene_name"
+  ]
+ },
+ "versioned_id_rows": {
+  "annotation.gtf": 60,
+  "annotation.gff3": 0,
+  "annotation_chr1.gff3": 0,
+  "conv_from_gff3.gtf": 0,
+  "conv_from_gtf.gff3": 9
+ },
+ "feature_counts": {
+  "annotation.gtf": {
+   "gene": 8,
+   "transcript": 9,
+   "exon": 29,
+   "CDS": 14
+  },
+  "annotation.gff3": {
+   "gene": 8,
+   "mRNA": 9,
+   "exon": 29,
+   "CDS": 14
+  },
+  "annotation_chr1.gff3": {
+   "gene": 8,
+   "mRNA": 9,
+   "exon": 29,
+   "CDS": 14
+  },
+  "conv_from_gff3.gtf": {
+   "transcript": 9,
+   "exon": 29,
+   "CDS": 14
+  },
+  "conv_from_gtf.gff3": {
+   "transcript": 9,
+   "exon": 29,
+   "CDS": 14
+  }
+ },
+ "phase_mismatches": {
+  "annotation.gtf": 0,
+  "annotation.gff3": 0,
+  "annotation_chr1.gff3": 0,
+  "conv_from_gff3.gtf": 0,
+  "conv_from_gtf.gff3": 0
+ },
+ "exon_set_match": {
+  "matched_tx": 9,
+  "identical_exon_sets": 9
+ },
+ "cds_len_delta_gff3_minus_gtf": {
+  "T000101.1": 3,
+  "T000201.1": 3,
+  "T000301.1": 3,
+  "T000401.1": 3,
+  "T000501.1": 3,
+  "T000502.1": 3,
+  "T000601.1": 3,
+  "T000701.1": 3,
+  "T000801.1": 3
+ },
+ "cds_delta_all_plus3": true,
+ "roundtrip_gtf_to_gff3": {
+  "tx_matched": 9,
+  "tx_exons_identical": 9
+ },
+ "fasta_counts": {
+  "tx_gtf": 9,
+  "tx_gff3": 9,
+  "cds_gtf": 9,
+  "cds_gff3": 9,
+  "prot_gtf": 9,
+  "prot_gff3": 9,
+  "tx_gff3_asis": 0,
+  "bed_concat": 9,
+  "bed_concat_overcorrected": 9
+ },
+ "header_join": {
+  "naive_intersection": 0,
+  "after_strip_version": 9
+ },
+ "bed_vs_gffread_tx": {
+  "n": 9,
+  "same_len": 9,
+  "same_seq_exact": 9
+ },
+ "overcorrected_deficit": {
+  "T000101": 2,
+  "T000201": 5,
+  "T000301": 2,
+  "T000401": 5,
+  "T000501": 4,
+  "T000502": 3,
+  "T000601": 3,
+  "T000701": 2,
+  "T000801": 3
+ },
+ "overcorrected_total_bp_lost": 29,
+ "cds_fasta_delta": {
+  "T000101": 3,
+  "T000201": 3,
+  "T000301": 3,
+  "T000401": 3,
+  "T000501": 3,
+  "T000502": 3,
+  "T000601": 3,
+  "T000701": 3,
+  "T000801": 3
+ },
+ "protein": {
+  "identical": 9,
+  "trailing_star_gtf": 0,
+  "trailing_star_gff3": 0,
+  "n": 9
+ },
+ "tx_len_stats": {
+  "n_tx": 9,
+  "median_tx_len": 905,
+  "min_tx_len": 523,
+  "max_tx_len": 1622,
+  "median_cds_len": 357,
+  "median_prot_len": 119
+ },
+ "per_tx": {
+  "T000101": {
+   "tx_len": 533,
+   "cds_len_gtf": 444,
+   "cds_len_gff3": 447,
+   "prot_len": 148,
+   "n_exons": 2,
+   "bed_deficit": 2
+  },
+  "T000201": {
+   "tx_len": 1622,
+   "cds_len_gtf": 357,
+   "cds_len_gff3": 360,
+   "prot_len": 119,
+   "n_exons": 5,
+   "bed_deficit": 5
+  },
+  "T000301": {
+   "tx_len": 737,
+   "cds_len_gtf": 357,
+   "cds_len_gff3": 360,
+   "prot_len": 119,
+   "n_exons": 2,
+   "bed_deficit": 2
+  },
+  "T000401": {
+   "tx_len": 1549,
+   "cds_len_gtf": 147,
+   "cds_len_gff3": 150,
+   "prot_len": 49,
+   "n_exons": 5,
+   "bed_deficit": 5
+  },
+  "T000501": {
+   "tx_len": 1273,
+   "cds_len_gtf": 195,
+   "cds_len_gff3": 198,
+   "prot_len": 65,
+   "n_exons": 4,
+   "bed_deficit": 4
+  },
+  "T000502": {
+   "tx_len": 905,
+   "cds_len_gtf": 195,
+   "cds_len_gff3": 198,
+   "prot_len": 65,
+   "n_exons": 3,
+   "bed_deficit": 3
+  },
+  "T000601": {
+   "tx_len": 975,
+   "cds_len_gtf": 444,
+   "cds_len_gff3": 447,
+   "prot_len": 148,
+   "n_exons": 3,
+   "bed_deficit": 3
+  },
+  "T000701": {
+   "tx_len": 523,
+   "cds_len_gtf": 357,
+   "cds_len_gff3": 360,
+   "prot_len": 119,
+   "n_exons": 2,
+   "bed_deficit": 2
+  },
+  "T000801": {
+   "tx_len": 891,
+   "cds_len_gtf": 195,
+   "cds_len_gff3": 198,
+   "prot_len": 65,
+   "n_exons": 3,
+   "bed_deficit": 3
+  }
+ }
+}

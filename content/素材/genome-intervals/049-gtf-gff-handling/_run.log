@@ -1,0 +1,90 @@
+### date: 2026-09-03 22:53:11
+### versions
+0.12.9
+bedtools v2.31.1
+Python 3.11.16
+### [1] generate inputs
+seed=49 chr_len=2000000 genes=8 tx=9 exons=29 CDS_segs_gtf=14 CDS_segs_gff3=14 designed_bases=2520
+### [2] conversions
+-- GFF3 -> GTF (-T)
+exit=0
+-- GTF -> GFF3 (default output)
+exit=0
+1	test	transcript	52191	53788	.	+	.	transcript_id "transcript:T000101"; gene_id "gene:G0001"
+1	test	exon	52191	52534	.	+	.	transcript_id "transcript:T000101"; gene_id "gene:G0001";
+1	test	exon	53600	53788	.	+	.	transcript_id "transcript:T000101"; gene_id "gene:G0001";
+--
+##gff-version 3
+# gffread v0.12.9
+# gffread annotation.gtf -o conv_from_gtf.gff3
+chr1	test	transcript	52191	53788	.	+	.	ID=T000101.1;geneID=G0001.1;gene_name=gene_G0001
+### [3] extract from GTF (seqid chr1 == genome)
+tx_from_gtf.fa:9
+cds_from_gtf.fa:9
+prot_from_gtf.fa:9
+### [4] extract from GFF3 as-is (seqid '1' vs genome 'chr1')
+Warning: couldn't find fasta record for '1'!
+Error: no genomic sequence available (check -g option!).
+exit=1
+0
+0 tx_from_gff3_asis.fa
+### [5] BED per skill: start-1 only (+ over-corrected control), seqid remap
+bed rows: exons=29 overcorrected=29 genes=9; remapped gff3 written
+Warning: the index file is older than the FASTA file.
+Warning: the index file is older than the FASTA file.
+### [6] extract from renamed GFF3 (seqid 1 -> chr1)
+tx_from_gff3.fa:9
+cds_from_gff3.fa:9
+prot_from_gff3.fa:9
+### [7] audit: 9-column walk, phase, namespaces, consistency
+== 049 audit report ==
+9 columns in every row: {'annotation.gtf': True, 'annotation.gff3': True, 'annotation_chr1.gff3': True, 'conv_from_gff3.gtf': True, 'conv_from_gtf.gff3': True}
+seqids: {'annotation.gtf': ['chr1'], 'annotation.gff3': ['1'], 'annotation_chr1.gff3': ['chr1'], 'conv_from_gff3.gtf': ['1'], 'conv_from_gtf.gff3': ['chr1']}
+gtf-vs-gff3 seqid intersection: [] -> naive shared features = 0
+feature counts: {"annotation.gtf": {"gene": 8, "transcript": 9, "exon": 29, "CDS": 14}, "annotation.gff3": {"gene": 8, "mRNA": 9, "exon": 29, "CDS": 14}, "annotation_chr1.gff3": {"gene": 8, "mRNA": 9, "exon": 29, "CDS": 14}, "conv_from_gff3.gtf": {"transcript": 9, "exon": 29, "CDS": 14}, "conv_from_gtf.gff3": {"transcript": 9, "exon": 29, "CDS": 14}}
+attr keys gtf: ['exon_number', 'gene_id', 'gene_name', 'gene_type', 'transcript_id']
+attr keys gff3: ['ID', 'Name', 'Parent', 'gene_biotype', 'rank']
+versioned-ID rows: {'annotation.gtf': 60, 'annotation.gff3': 0, 'annotation_chr1.gff3': 0, 'conv_from_gff3.gtf': 0, 'conv_from_gtf.gff3': 9}
+phase mismatches vs recomputed: {'annotation.gtf': 0, 'annotation.gff3': 0, 'annotation_chr1.gff3': 0, 'conv_from_gff3.gtf': 0, 'conv_from_gtf.gff3': 0}
+exon sets gtf vs gff3->gtf: 9/9 identical
+CDS len delta (gff3 - gtf) all +3: True; deltas: [3]
+roundtrip gtf->gff3: {'tx_matched': 9, 'tx_exons_identical': 9}
+fasta counts: {"tx_gtf": 9, "tx_gff3": 9, "cds_gtf": 9, "cds_gff3": 9, "prot_gtf": 9, "prot_gff3": 9, "tx_gff3_asis": 0, "bed_concat": 9, "bed_concat_overcorrected": 9}
+header join bed vs versioned gtf fasta: {'naive_intersection': 0, 'after_strip_version': 9}
+bed(start-1) concat vs gffread -w: {'n': 9, 'same_len': 9, 'same_seq_exact': 9}
+over-corrected bed deficit per tx (bp): total=29 across 9 tx
+CDS fasta delta per tx: [3]
+proteins: identical=9/9, trailing '*': gtf=0 gff3=0
+tx/cds/prot lengths: {"n_tx": 9, "median_tx_len": 905, "min_tx_len": 523, "max_tx_len": 1622, "median_cds_len": 357, "median_prot_len": 119}
+### [8] file inventory
+total 2148
+drwxrwxrwx 1 devah devah    4096 Sep  3 22:47 .
+drwxrwxrwx 1 devah devah    4096 Sep  3 22:41 ..
+-rwxrwxrwx 1 devah devah    3457 Sep  3 22:53 _run.log
+-rwxrwxrwx 1 devah devah    2029 Sep  3 22:45 _run.sh
+-rwxrwxrwx 1 devah devah    5107 Sep  3 22:53 annotation.gff3
+-rwxrwxrwx 1 devah devah    7313 Sep  3 22:53 annotation.gtf
+-rwxrwxrwx 1 devah devah    5287 Sep  3 22:53 annotation_chr1.gff3
+-rwxrwxrwx 1 devah devah    4314 Sep  3 22:53 audit.json
+-rwxrwxrwx 1 devah devah   11137 Sep  3 22:52 audit.py
+-rwxrwxrwx 1 devah devah    1984 Sep  3 22:53 audit_report.txt
+-rwxrwxrwx 1 devah devah    2942 Sep  3 22:53 cds_from_gff3.fa
+-rwxrwxrwx 1 devah devah    2834 Sep  3 22:53 cds_from_gtf.fa
+-rwxrwxrwx 1 devah devah    4733 Sep  3 22:53 conv_from_gff3.gtf
+-rwxrwxrwx 1 devah devah    3135 Sep  3 22:53 conv_from_gtf.gff3
+-rwxrwxrwx 1 devah devah     911 Sep  3 22:53 exons.bed
+-rwxrwxrwx 1 devah devah    9948 Sep  3 22:53 exons_bed_overcor.fa
+-rwxrwxrwx 1 devah devah    9977 Sep  3 22:53 exons_bed_sense.fa
+-rwxrwxrwx 1 devah devah     911 Sep  3 22:53 exons_overcorrected.bed
+-rwxrwxrwx 1 devah devah     283 Sep  3 22:53 genes.bed
+-rwxrwxrwx 1 devah devah 2033340 Sep  3 22:53 genome.fa
+-rwxrwxrwx 1 devah devah      21 Sep  3 22:45 genome.fa.fai
+-rwxrwxrwx 1 devah devah    1771 Sep  3 22:44 make_bed.py
+-rwxrwxrwx 1 devah devah   10206 Sep  3 22:52 make_inputs.py
+-rwxrwxrwx 1 devah devah    1093 Sep  3 22:53 prot_from_gff3.fa
+-rwxrwxrwx 1 devah devah    1012 Sep  3 22:53 prot_from_gtf.fa
+-rwxrwxrwx 1 devah devah    3399 Sep  3 22:53 truth.json
+-rwxrwxrwx 1 devah devah    9431 Sep  3 22:53 tx_from_gff3.fa
+-rwxrwxrwx 1 devah devah       0 Sep  3 22:53 tx_from_gff3_asis.fa
+-rwxrwxrwx 1 devah devah    9350 Sep  3 22:53 tx_from_gtf.fa
+### done
