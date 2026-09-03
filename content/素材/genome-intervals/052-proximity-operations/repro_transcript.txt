@@ -1,0 +1,82 @@
+========================================================================
+052 proximity-operations — 真实复现记录（repro transcript）
+日期：2026-09-03（WSL Ubuntu / Windows 11，全部命令真跑，输出落盘）
+目录：content/素材/genome-intervals/052-proximity-operations/
+========================================================================
+
+[0] 环境（_run.sh 内 source conda activate bio）
+    bedtools v2.31.1 / pybedtools 0.12.1（_versions.txt 实测）
+    注：SKILL.md 版本要求 bedtools 2.31+ / pybedtools 0.10+，满足。
+
+[1] 数据生成（make_inputs.py，seed 20260903 → _make_inputs.log）
+    模拟 3 条染色体：chr1 2,000,000 bp / chr2 1,200,000 bp / chr3 600,000 bp
+    基因 BED6 59 条（chr1 35 / chr2 24；minus 链 31 条；chr3 无基因 → 哨兵用例）
+    峰 BED 72 条（chr1 26 / chr2 34 / chr3 12）
+    设计的边界用例：
+      g001  chr1 + 链 TSS 距 contig 起点 500 bp（slop 起点截断）
+      g002/g003  chr1 头对头双向启动子 + peak_tie1 正好居中（closest 平局）
+      g008/g007  chr2 头对头 + peak_tie2（第二处平局）
+      peak_io1   完全落在 g004 基因体内（-io 排除用例）
+      g006  chr2 起点 0（flank 左侧整个被丢弃）
+      g009  chr2 minus 链 TSS 距 contig 终点 1,000 bp（slop 终点截断）
+    真值（truth.json）：每峰最近非重叠基因（-D b 符号）、平局数、
+    w=50 kb 窗口命中数、预期启动子区间、预期 flank 数。
+
+[2] bedtools 真跑（_run.sh → _run.log，set -x 全程留痕）
+    a) bedtools sort genes/peaks（closest 前置排序，SKILL 要求）
+    b) bedtools closest -a peaks.sorted -b genes.sorted -D b -io -t first
+       → nearest_db_io_first.bed（72 行，12 列 = A5 + B6 + 距离）
+    c) closest -d -t all（默认 t=all 口径）→ nearest_all_d.bed（74 行）
+    d) closest -D ref -io -t first → nearest_ref_io_first.bed
+    e) closest -k 3 -d → top3_k3_d.bed（192 行）
+    f) bedtools window -a peaks.sorted -b genes.sorted -w 50000 -c
+       → window_counts.bed（72 行）
+    g) awk 基因→TSS（SKILL 原样 awk）→ tss.bed（59 行）
+       bedtools slop -i tss.bed -g genome.txt -s -l 2000 -r 200 → promoters.bed
+    h) 对照组：bedtools slop -i genes.bed -g genome.txt -b 2000
+       → genebody_slop_b2000.bed（错误启动子示范）
+    i) bedtools flank -i genes.bed -g genome.txt -s -b 1000 → gene_flanks.bed
+
+[3] pybedtools API 对照（_pybed_check.py → _pybed_check.log）
+    peaks.closest(genes, D='b', io=True, t='first') 与 CLI 输出逐行一致（72 行）
+    peaks.window(genes, w=50000, c=True) 一致（72 行）
+    tss.slop(g='genome.txt', s=True, l=2000, r=200) 一致（59 行）
+    注：str(interval) 自带行尾 \n，比对时需 rstrip，属比对口径非内容差异。
+
+[4] 真值对账（parse_results.py → _parse.log / results.json）
+    closest -D b -io -t first：
+      最近基因指认 72/72 正确（100%，含 12 条 chr3 哨兵行 none/-1 也判对）
+      非零符号距离值 60/60 与真值相等；方向符号 60/60 正确
+    -t all：74 行 = 72 峰 + 2 平局峰各多 1 行；逐峰平局数与真值一致
+    -D ref vs -D b：60 个非零 call 中 30 个符号翻转 = 全部 minus 链基因
+      （与真值预期 30 一致；-D b 0 个翻转）
+    -k 3 -d（无 -io）：31 个与基因重叠的峰首行即重叠基因、距离 0；
+      其余 29 峰首行 29/29 与真值一致（192 行 = 60 峰 x3 + 12 哨兵 x1）
+    window -w 50000 -c：逐峰计数 72/72 与真值相等；总命中 148 = 预期 148；
+      均值 2.06 基因/峰；最大 5；chr3 12 峰为 0
+    启动子 slop -s -l 2000 -r 200：59/59 区间坐标与真值逐条相等；
+      56 条 2,201 bp（= 1 bp TSS + 2000 + 200，半开 BED 下限宽不是 2200）；
+      3 条被静默截断：201 bp（chr2 起点 TSS=0）、701 bp（chr1 起点 500）、
+      1201 bp（chr2 终点 minus 链）
+    基因体 slop -b 2000 对照：均值 28,583.5 bp（最大 62,544 bp），
+      与真启动子均值 2,124.7 bp 差一个数量级 —— 「基因体 slop 不是启动子」实测
+    flank -s -b 1000：117 区 = 118 - 1（g006 起点为 0，左 flank 零长被丢弃）；
+      g001 左 flank 截断为 [0,500) 但非空仍输出（每输入 2:1 假设只在内部成立）
+
+[5] 口径发现（对账过程中确认，非文档转录）
+    - closest -d 对不重叠特征报告的距离 = 间隔 bp 数 + 1（BED 半开坐标下
+      bedtools 按含端点口径计距），写真值时须按 gap+1 对齐，实测 60/60 吻合。
+    - slop 的 -l/-r 直接作用于 interval 的 start/end（-s 才按链交换），
+      对 1 bp TSS 加 -l 2000 -r 200 得 2,201 bp 而非 2,200 bp。
+    - flank 只丢弃零长侧翼；截断后非空的侧翼照常输出。
+
+[6] 出图（make_figs.py → 3 张 PNG，全部真实解析数据）
+    fig1_closest_signed_distance.png   closest -D b 符号距离分布（上游/下游）
+    fig2_window_gene_counts.png        window 逐峰候选基因计数分布
+    fig3_artifacts_tie_refsign_clipping.png  平局增行 / -D ref 翻符号 / 边界截断
+    自检：check_figs.py make_figs.py → FIGURE QUALITY: TOTAL FAILS = 0（2026-09-03）
+
+[7] 门禁（pipeline/gate_lint.py，2026-09-03）
+    052-bioSkills真实试用-proximity-operations.md        → ERROR=0 WARN=0
+    052-bioSkills小红书-proximity-operations-正文.md      → ERROR=0 WARN=0
+========================================================================

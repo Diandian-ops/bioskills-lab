@@ -1,0 +1,29 @@
+{
+  "n_chroms": 3,
+  "chrom_sizes": {
+    "chr1": 2000000,
+    "chr2": 1200000,
+    "chr3": 600000
+  },
+  "n_genes": 59,
+  "n_genes_chr1": 35,
+  "n_genes_chr2": 24,
+  "n_peaks": 72,
+  "n_peaks_chr1": 26,
+  "n_peaks_chr2": 34,
+  "n_peaks_chr3": 12,
+  "n_peaks_with_gene": 60,
+  "n_peaks_no_gene": 12,
+  "n_tied_peaks": 2,
+  "n_minus_strand_genes": 31,
+  "expected_flank_regions": 117,
+  "expected_flanks_if_no_clip": 118,
+  "ref_vs_db_mismatch_expected": 30,
+  "n_promoters_clipped": 3,
+  "w_window": 50000,
+  "prom_up": 2000,
+  "prom_down": 200,
+  "flank_b": 1000,
+  "seed": 20260903
+}
+make_inputs.py: wrote genes.bed (59), peaks.bed (72), genome.txt, truth.json

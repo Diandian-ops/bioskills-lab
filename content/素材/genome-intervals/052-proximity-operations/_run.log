@@ -1,0 +1,111 @@
+RUN DONE exit=0
+rkDir/RedBook/content/素材/genome-intervals/052-proximity-operations
++ source /opt/miniconda3/etc/profile.d/conda.sh
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CONDA_EXE=/opt/miniconda3/bin/conda
+++ _CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ export _CONDA_ROOT=/opt/miniconda3
+++ _CONDA_ROOT=/opt/miniconda3
+++ '[' -z '' ']'
+++ export CONDA_SHLVL=0
+++ CONDA_SHLVL=0
+++ '[' -n '' ']'
+++++ dirname /opt/miniconda3/bin/conda
++++ dirname /opt/miniconda3/bin
+++ PATH='/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin'
+++ export PATH
+++ '[' -z '' ']'
+++ PS1=
++ conda activate bio
++ local cmd=activate
++ case "$cmd" in
++ __conda_activate activate bio
++ '[' -n '' ']'
++ local ask_conda
+++ PS1=
+++ __conda_exe shell.posix activate bio
+++ '[' -n '' ']'
+++ /opt/miniconda3/bin/conda shell.posix activate bio
++ ask_conda=$'export _CE_M=\'\'\nexport _CE_CONDA=\'\'\nPS1=\'(bio) \'\nexport PATH=\'/opt/miniconda3/envs/bio/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin\'\nexport CONDA_PREFIX=\'/opt/miniconda3/envs/bio\'\nexport CONDA_SHLVL=\'1\'\nexport CONDA_DEFAULT_ENV=\'bio\'\nexport CONDA_PROMPT_MODIFIER=\'(bio) \'\nexport CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport _CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport CONDA_PYTHON_EXE=\'/opt/miniconda3/bin/python\'\nexport _CONDA_ROOT=\'/opt/miniconda3\'\n. "/opt/miniconda3/envs/bio/etc/conda/activate.d/libglib_activate.sh"\n. "/opt/miniconda3/envs/bio/etc/conda/activate.d/libxml2-split_activate.sh"\n. "/opt/miniconda3/envs/bio/etc/conda/activate.d/openjdk_activate.sh"'
++ eval $'export _CE_M=\'\'\nexport _CE_CONDA=\'\'\nPS1=\'(bio) \'\nexport PATH=\'/opt/miniconda3/envs/bio/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin\'\nexport CONDA_PREFIX=\'/opt/miniconda3/envs/bio\'\nexport CONDA_SHLVL=\'1\'\nexport CONDA_DEFAULT_ENV=\'bio\'\nexport CONDA_PROMPT_MODIFIER=\'(bio) \'\nexport CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport _CONDA_EXE=\'/opt/miniconda3/bin/conda\'\nexport CONDA_PYTHON_EXE=\'/opt/miniconda3/bin/python\'\nexport _CONDA_ROOT=\'/opt/miniconda3\'\n. "/opt/miniconda3/envs/bio/etc/conda/activate.d/libglib_activate.sh"\n. "/opt/miniconda3/envs/bio/etc/conda/activate.d/libxml2-split_activate.sh"\n. "/opt/miniconda3/envs/bio/etc/conda/activate.d/openjdk_activate.sh"'
+++ export _CE_M=
+++ _CE_M=
+++ export _CE_CONDA=
+++ _CE_CONDA=
+++ PS1='(bio) '
+++ export 'PATH=/opt/miniconda3/envs/bio/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin'
+++ PATH='/opt/miniconda3/envs/bio/bin:/opt/miniconda3/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/lib/wsl/lib:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12.old.8652:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/3.13.12:/mnt/c/Users/Admin/.workbuddy/binaries/python/versions/.locks:/mnt/c/Users/Admin/.workbuddy/binaries/node/cli-connector-packages:/mnt/c/Users/Admin/.workbuddy/binaries/python/envs/default/Scripts:/mnt/d/Program Files/WorkBuddy/resources/app.asar.unpacked/cli/vendor/shim/safe-bin:/mnt/c/Users/Admin/.local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/local/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/mingw64/bin:/mnt/c/Users/Admin/.workbuddy/binaries/PortableGit/versions/1.2.0/usr/bin:/mnt/c/Users/Admin/bin:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/22.22.2-2:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.22.22.2.deleting.8652.1788175082371:/mnt/c/Users/Admin/.workbuddy/binaries/node/versions/.locks:/mnt/c/Python314/Scripts:/mnt/c/Python314:/mnt/d/Program Files/Python313/Scripts:/mnt/d/Program Files/Python313:/mnt/c/windows/system32:/mnt/c/windows:/mnt/c/windows/System32/Wbem:/mnt/c/windows/System32/WindowsPowerShell/v1.0:/mnt/c/windows/System32/OpenSSH:/mnt/d/Program Files (x86)/NetSarang/Xftp 8:/mnt/c/Program Files/cursor/resources/app/bin:/mnt/d/Program Files/nodejs:/mnt/c/ProgramData/chocolatey/bin:/mnt/c/Program Files/NVIDIA Corporation/NVIDIA App/NvDLISR:/mnt/c/Program Files (x86)/NVIDIA Corporation/PhysX/Common:/mnt/d/Program Files/Git/cmd:/mnt/c/Program Files/Pandoc:/mnt/c/Users/Admin/AppData/Local/Programs/Trae/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Python/Launcher:/mnt/c/Users/Admin/AppData/Local/Microsoft/WindowsApps:/mnt/c/Users/Admin/AppData/Local/Programs/Qoder/bin:/mnt/d/Program Files/Microsoft VS Code/bin:/mnt/c/Users/Admin/AppData/Roaming/npm:/mnt/d/Users/Admin/AppData/Local/Programs/Kiro/bin:/mnt/c/Users/Admin/AppData/Local/Programs/Antigravity/bin'
+++ export CONDA_PREFIX=/opt/miniconda3/envs/bio
+++ CONDA_PREFIX=/opt/miniconda3/envs/bio
+++ export CONDA_SHLVL=1
+++ CONDA_SHLVL=1
+++ export CONDA_DEFAULT_ENV=bio
+++ CONDA_DEFAULT_ENV=bio
+++ export 'CONDA_PROMPT_MODIFIER=(bio) '
+++ CONDA_PROMPT_MODIFIER='(bio) '
+++ export CONDA_EXE=/opt/miniconda3/bin/conda
+++ CONDA_EXE=/opt/miniconda3/bin/conda
+++ export _CONDA_EXE=/opt/miniconda3/bin/conda
+++ _CONDA_EXE=/opt/miniconda3/bin/conda
+++ export CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ CONDA_PYTHON_EXE=/opt/miniconda3/bin/python
+++ export _CONDA_ROOT=/opt/miniconda3
+++ _CONDA_ROOT=/opt/miniconda3
+++ . /opt/miniconda3/envs/bio/etc/conda/activate.d/libglib_activate.sh
++++ export GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ GSETTINGS_SCHEMA_DIR_CONDA_BACKUP=
++++ export GSETTINGS_SCHEMA_DIR=/opt/miniconda3/envs/bio/share/glib-2.0/schemas
++++ GSETTINGS_SCHEMA_DIR=/opt/miniconda3/envs/bio/share/glib-2.0/schemas
+++ . /opt/miniconda3/envs/bio/etc/conda/activate.d/libxml2-split_activate.sh
++++ test -n ''
++++ xml_catalog_files_libxml2=
++++ XML_CATALOG_FILES=
++++ conda_catalog_files=
++++ ifs_libxml2=$' \t\n'
++++ IFS=' '
++++ rem=/opt/miniconda3/envs/bio
++++ for pre in ${rem}
++++ test '' = /opt/miniconda3/envs/bio
++++ conda_catalog_files=/opt/miniconda3/envs/bio
++++ rem=
++++ IFS=$' \t\n'
++++ conda_catalog_files='file:///opt/miniconda3/envs/bio/etc/xml/catalog file:///etc/xml/catalog'
++++ export 'XML_CATALOG_FILES=file:///opt/miniconda3/envs/bio/etc/xml/catalog file:///etc/xml/catalog'
++++ XML_CATALOG_FILES='file:///opt/miniconda3/envs/bio/etc/xml/catalog file:///etc/xml/catalog'
++++ unset conda_catalog_files ifs_libxml2 rem
+++ . /opt/miniconda3/envs/bio/etc/conda/activate.d/openjdk_activate.sh
++++ '[' '' ']'
++++ export JAVA_HOME=/opt/miniconda3/envs/bio/lib/jvm
++++ JAVA_HOME=/opt/miniconda3/envs/bio/lib/jvm
++++ '[' '' ']'
++++ export JAVA_LD_LIBRARY_PATH=/opt/miniconda3/envs/bio/lib/jvm/lib/server
++++ JAVA_LD_LIBRARY_PATH=/opt/miniconda3/envs/bio/lib/jvm/lib/server
++ __conda_hashr
++ '[' -n '' ']'
++ '[' -n '' ']'
++ hash -r
++ bedtools --version
++ python3 -c 'import pybedtools'
++ echo 'pybedtools AVAILABLE'
++ python3 make_inputs.py
++ bedtools sort -i genes.bed
++ bedtools sort -i peaks.bed
++ bedtools closest -a peaks.sorted.bed -b genes.sorted.bed -D b -io -t first
++ bedtools closest -a peaks.sorted.bed -b genes.sorted.bed -d -t all
++ bedtools closest -a peaks.sorted.bed -b genes.sorted.bed -D ref -io -t first
++ bedtools closest -a peaks.sorted.bed -b genes.sorted.bed -k 3 -d
++ bedtools window -a peaks.sorted.bed -b genes.sorted.bed -w 50000 -c
++ awk -v 'OFS=\t' '{ if ($6=="+") print $1,$2,$2+1,$4,$5,$6; else print $1,$3-1,$3,$4,$5,$6 }' genes.bed
++ bedtools slop -i tss.bed -g genome.txt -s -l 2000 -r 200
++ bedtools slop -i genes.bed -g genome.txt -b 2000
++ bedtools flank -i genes.bed -g genome.txt -s -b 1000
++ python3 _pybed_check.py
++ python3 parse_results.py
++ echo 'RUN DONE exit=0'
