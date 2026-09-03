@@ -1,0 +1,5 @@
+TrimmomaticSE: Started with arguments:
+ -phred33 input_grad.fq.gz out_trimm_sw.fq.gz LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+Automatically using 1 threads
+Input Reads: 20000 Surviving: 18416 (92.08%) Dropped: 1584 (7.92%)
+TrimmomaticSE: Completed successfully

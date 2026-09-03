@@ -1,0 +1,77 @@
+========================================================================
+040 quality-filtering — 真实复现记录（repro transcript）
+日期：2026-09-03（WSL Ubuntu / Windows 11，全部命令真跑，输出落盘）
+目录：content/素材/read-qc/040-quality-filtering/
+========================================================================
+
+[0] 环境（已就绪，bio-qc conda 环境；_run.sh → _run.log / _wsl_run.log）
+    fastp        v1.3.6
+    cutadapt     v5.2（Python 3.13.15）
+    trimmomatic  v0.41
+    skill 兼容口径：Trimmomatic 0.39+ / fastp 0.23+ / Cutadapt 4.4+，均满足
+
+[1] 输入数据（make_inputs.py，seed 20260903，可复现）
+    input_grad.fq.gz：20,000 reads × 150 bp（合计 3,000,000 bp）
+    质量设计：
+      92% reads 逐 cycle 质量从 5' 端 Q36.9 线性衰减到 3' 端 Q11.9
+        （带逐 read 抖动；测序错误按 P(error)=10^(-Q/10) 注入）
+      8% 全局低质量 junk 亚群（Q8-14 波动；实测 1,584 条 / 7.9%）
+    实测输入质量：
+      整体平均 Q24.73
+      cycle1 平均 Q36.90，cycle150 平均 Q11.86
+      Q20 以上碱基 67.52%，Q30 以上碱基 34.62%（fastp before_filtering）
+    无接头（adapter 移除属 adapter-trimming skill，不在本 skill 范围）
+
+[2] 五组过滤（_run.sh，bio-qc 环境，同一输入）
+    a) fastp 逐条过滤：
+       fastp -i input_grad.fq.gz -o out_fastp_filter.fq.gz \
+             -q 20 -u 40 -n 5 -l 36 -j _fastp_filter.json -h _fastp_filter.html
+       → exit 0；kept 18,357（91.78%）
+         filtering_result: low_quality_reads=1643, too_many_N=0
+    b) fastp 窗口修剪：
+       fastp -i input_grad.fq.gz -o out_fastp_cutright.fq.gz \
+             --cut_right --cut_window_size 4 --cut_mean_quality 20 -l 36 \
+             -j _fastp_cutright.json -h _fastp_cutright.html
+       → exit 0；kept 18,416（92.08%）
+         filtering_result: low_quality_reads=0, too_short_reads=1584
+         （窗口修剪先移除坏尾后，逐条过滤不再有可剔除对象）
+    c) cutadapt（BWA running-sum 3' 修剪）：
+       cutadapt -q 20 -m 36 -o out_cutadapt.fq.gz input_grad.fq.gz
+       → exit 0；Reads written 18,416（92.1%）
+         Quality-trimmed 1,011,140 bp（33.7%）；Total written 1,988,860 bp（66.3%）
+    d) trimmomatic 滑动窗口：
+       trimmomatic SE -phred33 input_grad.fq.gz out_trimm_sw.fq.gz \
+             LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+       → Input Reads: 20000 Surviving: 18416 (92.08%) Dropped: 1584 (7.92%)
+    e) trimmomatic MAXINFO：
+       trimmomatic SE -phred33 input_grad.fq.gz out_trimm_maxinfo.fq.gz \
+             MAXINFO:40:0.5 MINLEN:36
+       → Input Reads: 20000 Surviving: 20000 (100.00%) Dropped: 0 (0.00%)
+
+[3] 指标解析（parse_results.py → results.json，全部来自真跑产物）
+    配置                保留reads  保留率    碱基保留率  平均Q   平均读长
+    input（不过滤）      20,000    100%      100%       24.73   150.0 bp
+    fastp_filter         18,357    91.78%    91.78%     25.97   150.0 bp
+    fastp_cutright       18,416    92.08%    64.92%     30.17   105.8 bp
+    cutadapt             18,416    92.08%    66.30%     29.97   108.0 bp
+    trimm_sw             18,416    92.08%    65.63%     30.06   106.9 bp
+    trimm_maxinfo        20,000    100.00%   68.15%     29.37   102.2 bp
+    补充实测：
+      - fastp 过滤后 Q30 碱基占 37.63%（输入 34.62%）；
+        --cut_right 后 Q30 碱基占 53.33%
+      - MAXINFO 读长分布：36-60 bp 区间 1,584 条、61-85 bp 4 条、
+        86-110 bp 12,553 条、111-135 bp 5,847 条、136-150 bp 12 条
+      - 三种窗口修剪保留集合完全一致（18,416 条），丢弃全部由 36 bp
+        长度门槛完成（各 1,584 条，与 junk 亚群规模一致）
+
+[4] 出图（make_figs.py → 3 张 PNG，全部真实数据，英文标签）
+    fig1_reads_kept.png          五组配置保留 reads 数（横向条形）
+    fig2_per_cycle_quality.png   逐 cycle 平均质量曲线（输入 vs 五组输出）
+    fig3_q_vs_length.png         修剪后平均 Q / 平均读长双面板
+    自检：check_figs.py make_figs.py → 3 × [PASS]
+          FIGURE QUALITY: TOTAL FAILS = 0   （2026-09-03）
+
+[5] 门禁（gate_lint.py，2026-09-03）
+    040-bioSkills真实试用-quality-filtering.md    → ERROR=0 WARN=0
+    040-bioSkills小红书-quality-filtering-正文.md → ERROR=0 WARN=0
+========================================================================

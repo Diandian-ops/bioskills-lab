@@ -1,0 +1,108 @@
+==== [0] versions ====
+Thu Sep  3 20:11:34 CST 2026
+fastp 1.3.6
+5.2
+0.41
+Python 3.13.15
+==== [1] generate quality-gradient FASTQ (seed 20260903) ====
+wrote input_grad.fq.gz: 20000 reads x 150 bp
+input mean Q = 24.73
+cycle1 mean Q = 36.90, cycle150 mean Q = 11.86
+junk-like reads (whole-read mean Q<14): ~1584 (7.9%, 设计值 8%)
+==== [2] fastp per-read filter (-q 20 -u 40 -n 5 -l 36) ====
+Detecting adapter sequence for read1...
+No adapter detected for read1
+
+Read1 before filtering:
+total reads: 20000
+total bases: 3000000
+Q20 bases: 2025603(67.5201%)
+Q30 bases: 1038611(34.6204%)
+Q40 bases: 112141(3.73803%)
+
+Read1 after filtering:
+total reads: 18357
+total bases: 2753550
+Q20 bases: 2020450(73.3762%)
+Q30 bases: 1036145(37.6294%)
+Q40 bases: 112044(4.06907%)
+
+Filtering result:
+reads passed filter: 18357
+reads failed due to low quality: 1643
+reads failed due to too many N: 0
+reads failed due to too short: 0
+reads failed due to adapter dimer: 0
+reads with adapter trimmed: 0
+bases trimmed due to adapters: 0
+
+Duplication rate (may be overestimated since this is SE data): 0%
+
+JSON report: _fastp_filter.json
+HTML report: _fastp_filter.html
+
+fastp -i input_grad.fq.gz -o out_fastp_filter.fq.gz -q 20 -u 40 -n 5 -l 36 -j _fastp_filter.json -h _fastp_filter.html 
+fastp v1.3.6, time used: 4 seconds
+fastp_filter exit: 0
+==== [3] fastp window trim --cut_right (SKILL 口径: --cut_right --cut_window_size 4 --cut_mean_quality 20 -l 36) ====
+Detecting adapter sequence for read1...
+No adapter detected for read1
+
+Read1 before filtering:
+total reads: 20000
+total bases: 3000000
+Q20 bases: 2025603(67.5201%)
+Q30 bases: 1038611(34.6204%)
+Q40 bases: 112141(3.73803%)
+
+Read1 after filtering:
+total reads: 18416
+total bases: 1947501
+Q20 bases: 1931811(99.1944%)
+Q30 bases: 1038611(53.3304%)
+Q40 bases: 112141(5.7582%)
+
+Filtering result:
+reads passed filter: 18416
+reads failed due to low quality: 0
+reads failed due to too many N: 0
+reads failed due to too short: 1584
+reads failed due to adapter dimer: 0
+reads with adapter trimmed: 0
+bases trimmed due to adapters: 0
+
+Duplication rate (may be overestimated since this is SE data): 0%
+
+JSON report: _fastp_cutright.json
+HTML report: _fastp_cutright.html
+
+fastp -i input_grad.fq.gz -o out_fastp_cutright.fq.gz --cut_right --cut_window_size 4 --cut_mean_quality 20 -l 36 -j _fastp_cutright.json -h _fastp_cutright.html 
+fastp v1.3.6, time used: 3 seconds
+fastp_cutright exit: 0
+==== [4] cutadapt -q 20 -m 36 (BWA running-sum 3' trim) ====
+cutadapt exit: 0
+==== [5] trimmomatic LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36 ====
+trimmomatic SW exit: 0
+TrimmomaticSE: Started with arguments:
+ -phred33 input_grad.fq.gz out_trimm_sw.fq.gz LEADING:3 TRAILING:3 SLIDINGWINDOW:4:20 MINLEN:36
+Automatically using 1 threads
+Input Reads: 20000 Surviving: 18416 (92.08%) Dropped: 1584 (7.92%)
+TrimmomaticSE: Completed successfully
+==== [6] trimmomatic MAXINFO:40:0.5 MINLEN:36 ====
+trimmomatic MAXINFO exit: 0
+TrimmomaticSE: Started with arguments:
+ -phred33 input_grad.fq.gz out_trimm_maxinfo.fq.gz MAXINFO:40:0.5 MINLEN:36
+Automatically using 1 threads
+Input Reads: 20000 Surviving: 20000 (100.00%) Dropped: 0 (0.00%)
+TrimmomaticSE: Completed successfully
+==== [7] parse metrics ====
+Traceback (most recent call last):
+  File "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/040-quality-filtering/parse_results.py", line 134, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/040-quality-filtering/parse_results.py", line 92, in main
+    res["cutadapt_report"]["reads_written"] = int(line.split("(")[0].split(":")[1].strip().replace(",", ""))
+                                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+==== done ====
+Thu Sep  3 20:11:51 CST 2026

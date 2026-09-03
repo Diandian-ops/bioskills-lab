@@ -1,0 +1,15 @@
+This is cutadapt 5.2 with Python 3.13.15
+Command line parameters: -q 20 -m 36 -o out_cutadapt.fq.gz input_grad.fq.gz
+Processing single-end reads on 1 core ...
+
+=== Summary ===
+
+Total reads processed:                  20,000
+
+== Read fate breakdown ==
+Reads that were too short:               1,584 (7.9%)
+Reads written (passing filters):        18,416 (92.1%)
+
+Total basepairs processed:     3,000,000 bp
+Quality-trimmed:               1,011,140 bp (33.7%)
+Total written (filtered):      1,988,860 bp (66.3%)

@@ -1,0 +1,5 @@
+TrimmomaticSE: Started with arguments:
+ -phred33 input_grad.fq.gz out_trimm_maxinfo.fq.gz MAXINFO:40:0.5 MINLEN:36
+Automatically using 1 threads
+Input Reads: 20000 Surviving: 20000 (100.00%) Dropped: 0 (0.00%)
+TrimmomaticSE: Completed successfully
