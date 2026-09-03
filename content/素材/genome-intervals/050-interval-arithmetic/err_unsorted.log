@@ -1,0 +1,2 @@
+Error: Sorted input specified, but the file peaks.bed has the following out of order record
+chr2	55296	55739	peak086	128

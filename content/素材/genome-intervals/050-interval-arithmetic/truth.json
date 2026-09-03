@@ -1,0 +1,163 @@
+{
+  "seed": 42,
+  "genome": {
+    "chroms": {
+      "chr1": 100000,
+      "chr2": 80000
+    },
+    "total_bp": 180000
+  },
+  "counts": {
+    "peaks": 150,
+    "genes": 40,
+    "blacklist": 25,
+    "exons": 80,
+    "transcripts": 25,
+    "true_loci": 60,
+    "grid_bins": 360
+  },
+  "coverage": {
+    "peaks_bp": 84943,
+    "genes_bp": 67441,
+    "peaks_frac": 0.4719
+  },
+  "intersect": {
+    "u": 73,
+    "v": 77,
+    "pairs": 84,
+    "wo_bp": 49087,
+    "loj_lines": 161,
+    "wao_lines": 161,
+    "f05_u": 59,
+    "f05r_u": 7,
+    "f05_u_swapped": 6
+  },
+  "subtract": {
+    "residual_bp": 94033,
+    "residual_ivs": 137,
+    "minusA_dropped": 41,
+    "minusA_remaining": 109
+  },
+  "complement": {
+    "bp": 95057,
+    "n": 83
+  },
+  "merge": {
+    "sorted_d0": 81,
+    "sorted_d1": 81,
+    "sorted_d100": 76,
+    "sorted_d0_bp": 84943
+  },
+  "cluster": {
+    "n": 81
+  },
+  "map_mean": {
+    "gene000": 82.33333333333333,
+    "gene001": 25.5,
+    "gene002": 60.6,
+    "gene003": 42.333333333333336,
+    "gene004": 43.5,
+    "gene005": 22.5,
+    "gene006": 50.8,
+    "gene007": 49.0,
+    "gene008": 57.6,
+    "gene009": 58.8,
+    "gene010": 68.33333333333333,
+    "gene011": 23.333333333333332,
+    "gene012": 44.333333333333336,
+    "gene013": 53.0,
+    "gene014": 55.2,
+    "gene015": 56.0,
+    "gene016": 65.83333333333333,
+    "gene017": 60.0,
+    "gene018": 57.6,
+    "gene019": 46.25,
+    "gene020": 28.666666666666668,
+    "gene021": 67.66666666666667,
+    "gene022": 35.8,
+    "gene023": 54.0,
+    "gene024": 61.6,
+    "gene025": 59.4,
+    "gene026": 45.0,
+    "gene027": 44.75,
+    "gene028": 33.4,
+    "gene029": 36.333333333333336,
+    "gene030": 71.5,
+    "gene031": 57.5,
+    "gene032": 56.6,
+    "gene033": 62.5,
+    "gene034": 73.0,
+    "gene035": 38.333333333333336,
+    "gene036": 46.5,
+    "gene037": 52.8,
+    "gene038": 65.0,
+    "gene039": 58.5
+  },
+  "multiinter": {
+    "n3": 41,
+    "bp3": 20286
+  },
+  "unionbedg": {
+    "rows": 350,
+    "present1": 256,
+    "present2": 265,
+    "present3": 253
+  },
+  "jaccard": {
+    "inter_bp": 33703,
+    "union_bp": 118681,
+    "jaccard": 0.283979744019683,
+    "n_intersections": 41
+  },
+  "split": {
+    "env_u": 14,
+    "env_bp": 5590,
+    "block_u": 10,
+    "block_bp": 1519
+  },
+  "chrom_mismatch": {
+    "u": 0
+  },
+  "groupby_sum_bp": {
+    "gene000": 0,
+    "gene001": 1400,
+    "gene002": 4650,
+    "gene003": 1392,
+    "gene004": 1368,
+    "gene005": 1430,
+    "gene006": 1515,
+    "gene007": 372,
+    "gene008": 1603,
+    "gene009": 417,
+    "gene010": 1019,
+    "gene011": 1015,
+    "gene012": 4709,
+    "gene013": 567,
+    "gene014": 377,
+    "gene015": 0,
+    "gene016": 2414,
+    "gene017": 2250,
+    "gene018": 1185,
+    "gene019": 782,
+    "gene020": 1064,
+    "gene021": 126,
+    "gene022": 1872,
+    "gene023": 667,
+    "gene024": 1428,
+    "gene025": 630,
+    "gene026": 1962,
+    "gene027": 90,
+    "gene028": 458,
+    "gene029": 374,
+    "gene030": 755,
+    "gene031": 1650,
+    "gene032": 1254,
+    "gene033": 655,
+    "gene034": 1460,
+    "gene035": 681,
+    "gene036": 3446,
+    "gene037": 0,
+    "gene038": 0,
+    "gene039": 2050
+  }
+}

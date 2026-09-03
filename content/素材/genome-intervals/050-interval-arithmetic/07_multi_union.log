@@ -1,0 +1,6 @@
+multiinter all-3 rows: 41
+multiinter all-3 bp:   20286
+unionbedg rows: 351
+chrom	start	end	rep1	rep2	rep3
+chr1	0	250	0	65	52
+chr1	500	750	70	0	0

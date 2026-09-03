@@ -1,0 +1,4 @@
+bedtools: bedtools v2.31.1
+python3: Python 3.11.16
+bedtools                     2.31.1           h13024bc_3            bioconda
+pybedtools                   0.12.1           py311h9a0eb59_0       bioconda

@@ -1,0 +1,247 @@
+# 050 interval-arithmetic repro transcript
+# generated: 2026-09-03T23:02:11+08:00
+
+===== 00_env.log =====
+bedtools: bedtools v2.31.1
+python3: Python 3.11.16
+bedtools                     2.31.1           h13024bc_3            bioconda
+pybedtools                   0.12.1           py311h9a0eb59_0       bioconda
+
+===== 01_make_inputs.log =====
+inputs written: peaks=150 genes=40 blacklist=25 exons=80 tx=25 grid_bins=360
+expected: intersect -u=73 -v=77 pairs=84 wo_bp=49087 f05=59 f05r=7 swapped=6
+expected: merge sorted d0=81 d1=81 d100=76 complement_bp=95057 subtract_residual_bp=94033 minusA_dropped=41
+expected: multiinter all3 n=41 bp=20286 unionbedg_rows=350 jaccard=0.283980 n_inter=41 split env_bp=5590 block_bp=1519
+
+===== 02_sort.log =====
+  150 peaks.bed
+  150 peaks_sorted.bed
+   40 genes_sorted.bed
+   80 exons_sorted.bed
+  420 total
+
+===== 03_intersect.log =====
+i_u lines: 73
+i_v lines: 77
+i_wawb lines: 84
+i_loj lines: 161
+i_wo lines: 84
+i_wao lines: 161
+i_c lines: 150
+
+===== 04_frac.log =====
+f05(A=peaks)=59  f05r=7  f05_swapped(A=genes)=6
+
+===== 05_setops.log =====
+merge_unsorted exit=1  err: Error: Sorted input specified, but the file peaks.bed has the following out of order record
+sub_plain ivs=137  sub_A remaining=109
+merge blocks: unsorted=0 d0=81 d1=81 d100=76
+complement ivs=83
+cluster ids max: 81
+--- merge_co head ---
+chr1	425	1189	peak050	322
+chr1	2757	3970	peak070,peak145	1307
+chr1	4207	5580	peak030,peak136	1618
+
+===== 06_map_groupby.log =====
+--- map head ---
+chr1	2671	4079	gene004	46	-	43.5
+chr1	4067	6611	gene003	55	-	42.33333333
+chr1	8993	11324	gene002	61	-	60.6
+--- groupby head ---
+chr1	2671	4079	gene004	1368
+chr1	4067	6611	gene003	1392
+chr1	8993	11324	gene002	4650
+
+===== 07_multi_union.log =====
+multiinter all-3 rows: 41
+multiinter all-3 bp:   20286
+unionbedg rows: 351
+chrom	start	end	rep1	rep2	rep3
+chr1	0	250	0	65	52
+chr1	500	750	70	0	0
+
+===== 08_jaccard_fisher.log =====
+intersection	union	jaccard	n_intersections
+33703	118681	0.28398	41
+--- fisher ---
+# Number of query intervals: 81
+# Number of db intervals: 27
+# Number of overlaps: 41
+# Number of possible intervals (estimated): 81
+# phyper(41 - 1, 81, 81 - 81, 27, lower.tail=F)
+# Contingency Table Of Counts
+#_________________________________________
+#           |  in -b       | not in -b    |
+#     in -a | 41           | 40           |
+# not in -a | 0            | 0            |
+#_________________________________________
+# p-values for fisher's exact test
+left	right	two-tail	ratio
+1	1	1	-nan
+
+===== 09_split.log =====
+transcripts hitting exons: envelope=14 split=10
+overlap bp: envelope=5590 split=1519
+
+===== 10_sorted_contract.log =====
+exit_unsorted=1
+Error: Sorted input specified, but the file peaks.bed has the following out of order record
+chr2	55296	55739	peak086	128
+exit_revorder=1
+Error: Sorted input specified, but the file genes_revorder.bed has the following record with a different sort order than the genomeFile genome.txt
+chr1	2671	4079	gene004	46	-
+sweep_u=73 inmem_u=73
+
+===== 11_mismatch.log =====
+exit=0
+mismatch -u lines: 0  stderr bytes: 220
+
+===== 11_pybedtools.log =====
+pybedtools 0.12.1
+pybedtools intersect u_count = 73  (CLI i_u.bed lines: see parse)
+pybedtools merge d0 blocks = 81
+pybedtools map mean first3 = ['43.5', '42.33333333', '60.6']
+pybedtools parity numbers written to pybedtools_numbers.txt
+
+===== 12_perf.log =====
+perf fixtures: big_a.bed / big_b.bed, 300000 intervals each, chrB1 250000000 bp
+inmem elapsed_s: 0.50
+sorted elapsed_s: 0.35
+inmem maxrss_kb: 105568
+sorted maxrss_kb: 9996
+
+===== perf_summary.txt =====
+perf fixtures: big_a.bed / big_b.bed, 300000 intervals each, chrB1 250000000 bp
+inmem elapsed_s: 0.50
+sorted elapsed_s: 0.35
+inmem maxrss_kb: 105568
+sorted maxrss_kb: 9996
+
+===== 13_parse.log =====
+== 050 interval-arithmetic: bedtools measured vs expected ==
+intersect -u (A kept)                          measured=73           expected=73           OK
+intersect -v (A dropped)                       measured=77           expected=77           OK
+intersect -wa -wb pairs                        measured=84           expected=84           OK
+intersect -wo overlap bp                       measured=49087        expected=49087        OK
+intersect -c lines                             measured=150          expected=150          OK
+intersect -c A with count>0                    measured=73           expected=73           OK
+intersect -c total hits = pairs                measured=84           expected=84           OK
+intersect -loj lines = pairs + no-hit A        measured=161          expected=161          OK
+intersect -wao lines = pairs + no-hit A        measured=161          expected=161          OK
+-f 0.5 -u (A=peaks)                            measured=59           expected=59           OK
+-f 0.5 -r -u (reciprocal)                      measured=7            expected=7            OK
+-f 0.5 -u (A=genes, roles swapped)             measured=6            expected=6            OK
+subtract residual bp                           measured=94033        expected=94033        OK
+subtract residual interval count               measured=137          expected=137          OK
+subtract -A remaining                          measured=109          expected=109          OK
+merge on UNSORTED file refused (exit 1)        measured=1            expected=1            OK
+merge on UNSORTED file output empty            measured=0            expected=0            OK
+merge -d 0 sorted                              measured=81           expected=81           OK
+merge -d 1                                     measured=81           expected=81           OK
+merge -d 100                                   measured=76           expected=76           OK
+merged coverage bp (d0)                        measured=84943        expected=84943        OK
+merge -c 5 -o sum preserves score total        measured=78826        expected=78826        OK
+complement interval count                      measured=83           expected=83           OK
+complement bp                                  measured=95057        expected=95057        OK
+cluster count = merge d0 blocks                measured=81           expected=81           OK
+map mean per gene mismatches                   measured=0            expected=0            OK
+groupby per-gene overlap bp mismatches         measured=0            expected=0            OK
+multiinter intervals covered by all 3          measured=41           expected=41           OK
+multiinter all-3 bp                            measured=20286        expected=20286        OK
+unionbedg rows                                 measured=350          expected=350          OK
+jaccard value (6 dp)                           measured=0.28398      expected=0.28398      OK
+jaccard intersection bp                        measured=33703        expected=33703        OK
+jaccard union bp                               measured=118681       expected=118681       OK
+jaccard n_intersections                        measured=41           expected=41           OK
+BED12 envelope -u                              measured=14           expected=14           OK
+BED12 -split -u                                measured=10           expected=10           OK
+BED12 envelope overlap bp                      measured=5590         expected=5590         OK
+BED12 -split overlap bp                        measured=1519         expected=1519         OK
+intersect -sorted -g equals in-memory result   measured=73           expected=73           OK
+chr1-vs-1 silent empty result                  measured=0            expected=0            OK
+
+checks: 40/40 OK, all_ok=True
+
+
+===== results.txt =====
+== 050 interval-arithmetic: bedtools measured vs expected ==
+intersect -u (A kept)                          measured=73           expected=73           OK
+intersect -v (A dropped)                       measured=77           expected=77           OK
+intersect -wa -wb pairs                        measured=84           expected=84           OK
+intersect -wo overlap bp                       measured=49087        expected=49087        OK
+intersect -c lines                             measured=150          expected=150          OK
+intersect -c A with count>0                    measured=73           expected=73           OK
+intersect -c total hits = pairs                measured=84           expected=84           OK
+intersect -loj lines = pairs + no-hit A        measured=161          expected=161          OK
+intersect -wao lines = pairs + no-hit A        measured=161          expected=161          OK
+-f 0.5 -u (A=peaks)                            measured=59           expected=59           OK
+-f 0.5 -r -u (reciprocal)                      measured=7            expected=7            OK
+-f 0.5 -u (A=genes, roles swapped)             measured=6            expected=6            OK
+subtract residual bp                           measured=94033        expected=94033        OK
+subtract residual interval count               measured=137          expected=137          OK
+subtract -A remaining                          measured=109          expected=109          OK
+merge on UNSORTED file refused (exit 1)        measured=1            expected=1            OK
+merge on UNSORTED file output empty            measured=0            expected=0            OK
+merge -d 0 sorted                              measured=81           expected=81           OK
+merge -d 1                                     measured=81           expected=81           OK
+merge -d 100                                   measured=76           expected=76           OK
+merged coverage bp (d0)                        measured=84943        expected=84943        OK
+merge -c 5 -o sum preserves score total        measured=78826        expected=78826        OK
+complement interval count                      measured=83           expected=83           OK
+complement bp                                  measured=95057        expected=95057        OK
+cluster count = merge d0 blocks                measured=81           expected=81           OK
+map mean per gene mismatches                   measured=0            expected=0            OK
+groupby per-gene overlap bp mismatches         measured=0            expected=0            OK
+multiinter intervals covered by all 3          measured=41           expected=41           OK
+multiinter all-3 bp                            measured=20286        expected=20286        OK
+unionbedg rows                                 measured=350          expected=350          OK
+jaccard value (6 dp)                           measured=0.28398      expected=0.28398      OK
+jaccard intersection bp                        measured=33703        expected=33703        OK
+jaccard union bp                               measured=118681       expected=118681       OK
+jaccard n_intersections                        measured=41           expected=41           OK
+BED12 envelope -u                              measured=14           expected=14           OK
+BED12 -split -u                                measured=10           expected=10           OK
+BED12 envelope overlap bp                      measured=5590         expected=5590         OK
+BED12 -split overlap bp                        measured=1519         expected=1519         OK
+intersect -sorted -g equals in-memory result   measured=73           expected=73           OK
+chr1-vs-1 silent empty result                  measured=0            expected=0            OK
+
+checks: 40/40 OK, all_ok=True
+
+===== jac.txt =====
+intersection	union	jaccard	n_intersections
+33703	118681	0.28398	41
+
+===== fisher.txt =====
+# Number of query intervals: 81
+# Number of db intervals: 27
+# Number of overlaps: 41
+# Number of possible intervals (estimated): 81
+# phyper(41 - 1, 81, 81 - 81, 27, lower.tail=F)
+# Contingency Table Of Counts
+#_________________________________________
+#           |  in -b       | not in -b    |
+#     in -a | 41           | 40           |
+# not in -a | 0            | 0            |
+#_________________________________________
+# p-values for fisher's exact test
+left	right	two-tail	ratio
+1	1	1	-nan
+
+===== err_unsorted.log =====
+Error: Sorted input specified, but the file peaks.bed has the following out of order record
+chr2	55296	55739	peak086	128
+
+===== err_revorder.log =====
+Error: Sorted input specified, but the file genes_revorder.bed has the following record with a different sort order than the genomeFile genome.txt
+chr1	2671	4079	gene004	46	-
+
+===== merge_unsorted.err =====
+Error: Sorted input specified, but the file peaks.bed has the following out of order record
+chr2	55296	55739	peak086	128
+
+===== pybedtools_numbers.txt =====
+u_count=73
+merge_d0=81
+map_first3=43.5,42.33333333,60.6

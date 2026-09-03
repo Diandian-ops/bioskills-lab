@@ -1,0 +1,5 @@
+pybedtools 0.12.1
+pybedtools intersect u_count = 73  (CLI i_u.bed lines: see parse)
+pybedtools merge d0 blocks = 81
+pybedtools map mean first3 = ['43.5', '42.33333333', '60.6']
+pybedtools parity numbers written to pybedtools_numbers.txt

@@ -1,0 +1,5 @@
+perf fixtures: big_a.bed / big_b.bed, 300000 intervals each, chrB1 250000000 bp
+inmem elapsed_s: 0.50
+sorted elapsed_s: 0.35
+inmem maxrss_kb: 105568
+sorted maxrss_kb: 9996

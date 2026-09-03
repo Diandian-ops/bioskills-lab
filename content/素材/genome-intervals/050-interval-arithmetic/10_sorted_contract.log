@@ -1,0 +1,7 @@
+exit_unsorted=1
+Error: Sorted input specified, but the file peaks.bed has the following out of order record
+chr2	55296	55739	peak086	128
+exit_revorder=1
+Error: Sorted input specified, but the file genes_revorder.bed has the following record with a different sort order than the genomeFile genome.txt
+chr1	2671	4079	gene004	46	-
+sweep_u=73 inmem_u=73

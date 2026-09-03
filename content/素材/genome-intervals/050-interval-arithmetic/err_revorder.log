@@ -1,0 +1,2 @@
+Error: Sorted input specified, but the file genes_revorder.bed has the following record with a different sort order than the genomeFile genome.txt
+chr1	2671	4079	gene004	46	-

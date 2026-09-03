@@ -1,0 +1,44 @@
+== 050 interval-arithmetic: bedtools measured vs expected ==
+intersect -u (A kept)                          measured=73           expected=73           OK
+intersect -v (A dropped)                       measured=77           expected=77           OK
+intersect -wa -wb pairs                        measured=84           expected=84           OK
+intersect -wo overlap bp                       measured=49087        expected=49087        OK
+intersect -c lines                             measured=150          expected=150          OK
+intersect -c A with count>0                    measured=73           expected=73           OK
+intersect -c total hits = pairs                measured=84           expected=84           OK
+intersect -loj lines = pairs + no-hit A        measured=161          expected=161          OK
+intersect -wao lines = pairs + no-hit A        measured=161          expected=161          OK
+-f 0.5 -u (A=peaks)                            measured=59           expected=59           OK
+-f 0.5 -r -u (reciprocal)                      measured=7            expected=7            OK
+-f 0.5 -u (A=genes, roles swapped)             measured=6            expected=6            OK
+subtract residual bp                           measured=94033        expected=94033        OK
+subtract residual interval count               measured=137          expected=137          OK
+subtract -A remaining                          measured=109          expected=109          OK
+merge on UNSORTED file refused (exit 1)        measured=1            expected=1            OK
+merge on UNSORTED file output empty            measured=0            expected=0            OK
+merge -d 0 sorted                              measured=81           expected=81           OK
+merge -d 1                                     measured=81           expected=81           OK
+merge -d 100                                   measured=76           expected=76           OK
+merged coverage bp (d0)                        measured=84943        expected=84943        OK
+merge -c 5 -o sum preserves score total        measured=78826        expected=78826        OK
+complement interval count                      measured=83           expected=83           OK
+complement bp                                  measured=95057        expected=95057        OK
+cluster count = merge d0 blocks                measured=81           expected=81           OK
+map mean per gene mismatches                   measured=0            expected=0            OK
+groupby per-gene overlap bp mismatches         measured=0            expected=0            OK
+multiinter intervals covered by all 3          measured=41           expected=41           OK
+multiinter all-3 bp                            measured=20286        expected=20286        OK
+unionbedg rows                                 measured=350          expected=350          OK
+jaccard value (6 dp)                           measured=0.28398      expected=0.28398      OK
+jaccard intersection bp                        measured=33703        expected=33703        OK
+jaccard union bp                               measured=118681       expected=118681       OK
+jaccard n_intersections                        measured=41           expected=41           OK
+BED12 envelope -u                              measured=14           expected=14           OK
+BED12 -split -u                                measured=10           expected=10           OK
+BED12 envelope overlap bp                      measured=5590         expected=5590         OK
+BED12 -split overlap bp                        measured=1519         expected=1519         OK
+intersect -sorted -g equals in-memory result   measured=73           expected=73           OK
+chr1-vs-1 silent empty result                  measured=0            expected=0            OK
+
+checks: 40/40 OK, all_ok=True
+

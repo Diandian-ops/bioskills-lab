@@ -1,0 +1,9 @@
+merge_unsorted exit=1  err: Error: Sorted input specified, but the file peaks.bed has the following out of order record
+sub_plain ivs=137  sub_A remaining=109
+merge blocks: unsorted=0 d0=81 d1=81 d100=76
+complement ivs=83
+cluster ids max: 81
+--- merge_co head ---
+chr1	425	1189	peak050	322
+chr1	2757	3970	peak070,peak145	1307
+chr1	4207	5580	peak030,peak136	1618

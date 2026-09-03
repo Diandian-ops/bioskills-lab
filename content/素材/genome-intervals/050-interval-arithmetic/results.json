@@ -1,0 +1,352 @@
+{
+  "measured": {
+    "u": 73,
+    "v": 77,
+    "pairs": 84,
+    "loj_lines": 161,
+    "wao_lines": 161,
+    "wo_bp": 49087,
+    "c_lines": 150,
+    "c_pos": 73,
+    "c_total_hits": 84,
+    "f05_u": 59,
+    "f05r_u": 7,
+    "f05_u_swapped": 6,
+    "sub_residual_bp": 94033,
+    "sub_residual_ivs": 137,
+    "subA_remaining": 109,
+    "merge_unsorted_exit": 1,
+    "merge_unsorted_lines": 0,
+    "merge_unsorted_msg": "Error: Sorted input specified, but the file peaks.bed has the following out of order record",
+    "merge_d0": 81,
+    "merge_d1": 81,
+    "merge_d100": 76,
+    "merge_d0_bp": 84943,
+    "comp_n": 83,
+    "comp_bp": 95057,
+    "cluster_n": 81,
+    "map_genes": 40,
+    "map_mismatch": 0,
+    "groupby_genes": 36,
+    "groupby_mismatch": 0,
+    "multi_n3": 41,
+    "multi_bp3": 20286,
+    "unionbedg_rows": 350,
+    "jaccard": 0.28398,
+    "jaccard_inter_bp": 33703,
+    "jaccard_union_bp": 118681,
+    "jaccard_n_inter": 41,
+    "split_env_u": 14,
+    "split_block_u": 10,
+    "split_env_bp": 5590,
+    "split_block_bp": 1519,
+    "sorted_inmem_u": 73,
+    "sorted_sweep_u": 73,
+    "mismatch_u": 0,
+    "err_unsorted_exit": 1,
+    "err_unsorted_msg": "chr2\t55296\t55739\tpeak086\t128",
+    "err_revorder_exit": 1,
+    "err_revorder_msg": "chr1\t2671\t4079\tgene004\t46\t-"
+  },
+  "checks": [
+    {
+      "name": "intersect -u (A kept)",
+      "measured": 73,
+      "expected": 73,
+      "ok": true
+    },
+    {
+      "name": "intersect -v (A dropped)",
+      "measured": 77,
+      "expected": 77,
+      "ok": true
+    },
+    {
+      "name": "intersect -wa -wb pairs",
+      "measured": 84,
+      "expected": 84,
+      "ok": true
+    },
+    {
+      "name": "intersect -wo overlap bp",
+      "measured": 49087,
+      "expected": 49087,
+      "ok": true
+    },
+    {
+      "name": "intersect -c lines",
+      "measured": 150,
+      "expected": 150,
+      "ok": true
+    },
+    {
+      "name": "intersect -c A with count>0",
+      "measured": 73,
+      "expected": 73,
+      "ok": true
+    },
+    {
+      "name": "intersect -c total hits = pairs",
+      "measured": 84,
+      "expected": 84,
+      "ok": true
+    },
+    {
+      "name": "intersect -loj lines = pairs + no-hit A",
+      "measured": 161,
+      "expected": 161,
+      "ok": true
+    },
+    {
+      "name": "intersect -wao lines = pairs + no-hit A",
+      "measured": 161,
+      "expected": 161,
+      "ok": true
+    },
+    {
+      "name": "-f 0.5 -u (A=peaks)",
+      "measured": 59,
+      "expected": 59,
+      "ok": true
+    },
+    {
+      "name": "-f 0.5 -r -u (reciprocal)",
+      "measured": 7,
+      "expected": 7,
+      "ok": true
+    },
+    {
+      "name": "-f 0.5 -u (A=genes, roles swapped)",
+      "measured": 6,
+      "expected": 6,
+      "ok": true
+    },
+    {
+      "name": "subtract residual bp",
+      "measured": 94033,
+      "expected": 94033,
+      "ok": true
+    },
+    {
+      "name": "subtract residual interval count",
+      "measured": 137,
+      "expected": 137,
+      "ok": true
+    },
+    {
+      "name": "subtract -A remaining",
+      "measured": 109,
+      "expected": 109,
+      "ok": true
+    },
+    {
+      "name": "merge on UNSORTED file refused (exit 1)",
+      "measured": 1,
+      "expected": 1,
+      "ok": true
+    },
+    {
+      "name": "merge on UNSORTED file output empty",
+      "measured": 0,
+      "expected": 0,
+      "ok": true
+    },
+    {
+      "name": "merge -d 0 sorted",
+      "measured": 81,
+      "expected": 81,
+      "ok": true
+    },
+    {
+      "name": "merge -d 1",
+      "measured": 81,
+      "expected": 81,
+      "ok": true
+    },
+    {
+      "name": "merge -d 100",
+      "measured": 76,
+      "expected": 76,
+      "ok": true
+    },
+    {
+      "name": "merged coverage bp (d0)",
+      "measured": 84943,
+      "expected": 84943,
+      "ok": true
+    },
+    {
+      "name": "merge -c 5 -o sum preserves score total",
+      "measured": 78826,
+      "expected": 78826,
+      "ok": true
+    },
+    {
+      "name": "complement interval count",
+      "measured": 83,
+      "expected": 83,
+      "ok": true
+    },
+    {
+      "name": "complement bp",
+      "measured": 95057,
+      "expected": 95057,
+      "ok": true
+    },
+    {
+      "name": "cluster count = merge d0 blocks",
+      "measured": 81,
+      "expected": 81,
+      "ok": true
+    },
+    {
+      "name": "map mean per gene mismatches",
+      "measured": 0,
+      "expected": 0,
+      "ok": true
+    },
+    {
+      "name": "groupby per-gene overlap bp mismatches",
+      "measured": 0,
+      "expected": 0,
+      "ok": true
+    },
+    {
+      "name": "multiinter intervals covered by all 3",
+      "measured": 41,
+      "expected": 41,
+      "ok": true
+    },
+    {
+      "name": "multiinter all-3 bp",
+      "measured": 20286,
+      "expected": 20286,
+      "ok": true
+    },
+    {
+      "name": "unionbedg rows",
+      "measured": 350,
+      "expected": 350,
+      "ok": true
+    },
+    {
+      "name": "jaccard value (6 dp)",
+      "measured": 0.28398,
+      "expected": 0.28398,
+      "ok": true
+    },
+    {
+      "name": "jaccard intersection bp",
+      "measured": 33703,
+      "expected": 33703,
+      "ok": true
+    },
+    {
+      "name": "jaccard union bp",
+      "measured": 118681,
+      "expected": 118681,
+      "ok": true
+    },
+    {
+      "name": "jaccard n_intersections",
+      "measured": 41,
+      "expected": 41,
+      "ok": true
+    },
+    {
+      "name": "BED12 envelope -u",
+      "measured": 14,
+      "expected": 14,
+      "ok": true
+    },
+    {
+      "name": "BED12 -split -u",
+      "measured": 10,
+      "expected": 10,
+      "ok": true
+    },
+    {
+      "name": "BED12 envelope overlap bp",
+      "measured": 5590,
+      "expected": 5590,
+      "ok": true
+    },
+    {
+      "name": "BED12 -split overlap bp",
+      "measured": 1519,
+      "expected": 1519,
+      "ok": true
+    },
+    {
+      "name": "intersect -sorted -g equals in-memory result",
+      "measured": 73,
+      "expected": 73,
+      "ok": true
+    },
+    {
+      "name": "chr1-vs-1 silent empty result",
+      "measured": 0,
+      "expected": 0,
+      "ok": true
+    }
+  ],
+  "all_ok": true,
+  "n_checks": 40,
+  "n_ok": 40,
+  "err_unsorted_msg": "chr2\t55296\t55739\tpeak086\t128",
+  "err_revorder_msg": "chr1\t2671\t4079\tgene004\t46\t-",
+  "fisher_text": "# Number of query intervals: 81\n# Number of db intervals: 27\n# Number of overlaps: 41\n# Number of possible intervals (estimated): 81\n# phyper(41 - 1, 81, 81 - 81, 27, lower.tail=F)\n# Contingency Table Of Counts\n#_________________________________________\n#           |  in -b       | not in -b    |\n#     in -a | 41           | 40           |\n# not in -a | 0            | 0            |\n#_________________________________________\n# p-values for fisher's exact test\nleft\tright\ttwo-tail\tratio\n1\t1\t1\t-nan\n",
+  "perf": {
+    "inmem_elapsed_s": 0.5,
+    "sorted_elapsed_s": 0.35,
+    "inmem_maxrss_kb": 105568.0,
+    "sorted_maxrss_kb": 9996.0
+  },
+  "pybedtools": {
+    "u_count": "73",
+    "merge_d0": "81",
+    "map_first3": "43.5,42.33333333,60.6"
+  },
+  "map_measured": {
+    "gene004": 43.5,
+    "gene003": 42.33333333,
+    "gene002": 60.6,
+    "gene005": 22.5,
+    "gene010": 68.33333333,
+    "gene023": 54.0,
+    "gene031": 57.5,
+    "gene039": 58.5,
+    "gene035": 38.33333333,
+    "gene012": 44.33333333,
+    "gene001": 25.5,
+    "gene027": 44.75,
+    "gene028": 33.4,
+    "gene037": 52.8,
+    "gene017": 60.0,
+    "gene009": 58.8,
+    "gene019": 46.25,
+    "gene014": 55.2,
+    "gene015": 56.0,
+    "gene007": 49.0,
+    "gene034": 73.0,
+    "gene038": 65.0,
+    "gene029": 36.33333333,
+    "gene006": 50.8,
+    "gene016": 65.83333333,
+    "gene013": 53.0,
+    "gene026": 45.0,
+    "gene032": 56.6,
+    "gene030": 71.5,
+    "gene008": 57.6,
+    "gene018": 57.6,
+    "gene020": 28.66666667,
+    "gene021": 67.66666667,
+    "gene025": 59.4,
+    "gene022": 35.8,
+    "gene024": 61.6,
+    "gene000": 82.33333333,
+    "gene036": 46.5,
+    "gene011": 23.33333333,
+    "gene033": 62.5
+  }
+}
