@@ -11,14 +11,15 @@
 
 | 项 | 值 |
 |---|---|
-| DeepVariant | **未安装** |
-| Docker | **无**（2026-09-01 复核：PATH 与 Program Files 均未检出 docker.exe；初稿记录的「可执行文件存在但守护进程未运行」与本日实测不符，以本日实测为准） |
-| 比对数据 | **无 BAM/CRAM** |
-| 参考基因组 | 未本地部署（017 起改用远程 range 提取） |
-| 可真跑部分 | **无** |
+| DeepVariant | **未安装**（2026-09-03 复核：PyPI 无该发行包、无容器运行时、GitHub 不可达） |
+| Docker | **无**（2026-09-03 复核：WSL Ubuntu 与宿主机 `command -v docker` 均未检出） |
+| WSL Linux 子系统 | **已有 Ubuntu 分发版**（2026-09-02 起；原"无 Linux 子系统"结论作废） |
+| 比对数据 | **已有** BAM 及 .bai（read-alignment 011/014；dwgsim 模拟 reads，**非真实样本**） |
+| 参考基因组 | **已有**本地 FASTA（read-alignment 011/014 的 reference.fasta），samtools 1.24 可建 .fai |
+| 可真跑部分 | **无**（工具本体无法获取，非缺输入数据） |
 | 结论性质 | 全篇为文档口径与命令模板，未做任何真跑 |
 
-**未真跑的直接原因**：DeepVariant 以容器分发（`docker pull google/deepvariant:1.6.1`，镜像数 GB），需要（a）运行中的容器守护进程、（b）去重标记且排序索引的 BAM/CRAM、（c）本地参考 FASTA 及其索引。本环境三项**均不满足**，且模型推理对 WGS 需约 4–6 h CPU / 64 GB 内存。因此本篇为严谨的概念稿，不做任何伪实测。
+**未真跑的直接原因（2026-09-03 重新核实）**：原记录称三项条件均不满足，其中两项现已不成立——BAM 与本地参考 FASTA 已具备（来自 read-alignment 011/014，dwgsim 模拟 reads 及其合成参考）。阻塞条件收敛为**工具本体的可获取性**：DeepVariant 以容器分发（`docker pull google/deepvariant:1.6.1`，镜像数 GB），本环境无容器运行时；PyPI 上不存在该发行包（`pip index versions deepvariant` 返回 `from versions: none`）；GitHub 当前不可达（HTTP 000），无法获取任何额外分发物。此外 WGS 推理约需 4–6 h CPU 与 64 GB 内存。因此本篇仍为严谨的概念稿，不做任何伪实测。
 
 ## 成分拆解
 
@@ -193,26 +194,31 @@ GIAB HG002/HG003/HG004（GRCh38）上的近似 F1；具体数值随样本、覆�
 | PacBio HiFi 30× | 64 GB | ~3–5 h | ~1–2 h | 读段更少但更长 |
 | ONT 50× | 64 GB | ~6–8 h | ~2–3 h | 错误率更高 → 候选位点更多 |
 
-## 复现难度评估（2026-09-01 环境实测）
+## 复现难度评估（2026-09-03 重新核实，取代 2026-09-01 版）
 
-本节记录在 Windows 11 单机环境上尝试补跑本 skill 时的真实探测结果。
+2026-09-02 起本机已部署 WSL Ubuntu 分发版，原版评估中"无 Linux 子系统"的前提已失效，本节按当前环境重写。
 
-**分发形态决定了本机上限：DeepVariant 官方只发布 Docker 容器（`google/deepvariant:1.6.1`，镜像数 GB）与 Linux 预编译二进制，无 Windows 原生版本。**
+**分发形态仍是上限：DeepVariant 官方以 Docker 容器（`google/deepvariant:1.6.1`，镜像数 GB）为主要分发方式，无 Windows 原生版本，PyPI 上亦无同名发行包。**
 
-| 必要条件 | 本机状态（实测） |
+| 必要条件 | 本机状态（2026-09-03 实测） |
 |---|---|
-| 容器运行时 | 无 Docker、无 WSL、无 Singularity/Apptainer（PATH 与 Program Files 均未检出） |
-| Linux 二进制直跑 | 不适用（宿主为 Windows 11，无 Linux 子系统） |
-| 输入 BAM/CRAM | 无本地比对文件；公开源的获取困难与 022 评估一致（1000G 已迁 GRCh38DH 全基因组 CRAM） |
-| 参考与算力 | WGS 推理约需 64 GB 内存与 4–6 h CPU 时间 |
+| 容器运行时 | Docker **无**；Singularity/Apptainer **无**（WSL 与宿主机 `command -v` 均未检出） |
+| PyPI 发行包 | **不存在**：`pip index versions deepvariant` → `from versions: none` |
+| GitHub 托管分发物 | GitHub 当前不可达（HTTP 000），无法拉取镜像或任何其托管的发布物 |
+| WSL Linux 子系统 | **已有** Ubuntu 分发版（原"无子系统"结论作废） |
+| 输入 BAM/CRAM | **已有**：read-alignment 011/014 目录下有 BAM 及 .bai（dwgsim 模拟 reads，非真实样本） |
+| 参考与索引 | **已有**本地 FASTA（011/014 的 reference.fasta），samtools 1.24 可建 .fai |
+| 算力 | WGS 推理约需 64 GB 内存与 4–6 h CPU 时间 |
 
-三个缺口里，容器运行时是**结构性**的：在 Windows 上补齐它意味着安装 Docker Desktop 或 WSL2（涉及管理员权限与系统重启），超出笔记级复现的合理范围。相比之下，022（GATK）只差输入数据，本篇连工具都无原生形态。
+阻塞点已从"结构性缺子系统"变为"**工具本体不可获取**"：子系统、BAM、参考三项现已齐备，唯一缺口是拿不到 DeepVariant 可执行文件（无容器运行时、PyPI 无包、GitHub 不可达）。这已不再涉及管理员权限或系统重启。
 
-**结论**：本篇在当前环境不存在补跑路径；「未真跑」是分发形态与环境的事实约束，而非可简单修复的缺工具状态。若未来部署了 Docker Desktop/WSL2，按第 5 节命令模板即可开跑（输入侧仍需先解决 022 评估中的 BAM 获取问题）。
+**结论**：本篇在当前网络与运行时条件下不存在补跑路径；「未真跑」的成因是**分发物不可获取**，而非原记录的"缺 BAM / 缺参考 / 缺子系统"。若 GitHub 恢复、且能以非容器形态取得 Linux 分发物，WSL 已具备运行条件。
 
 ## 未覆盖（诚实标注）
 
-本篇**未做任何真跑**。本环境缺少三项必要条件：运行中的容器守护进程（`docker info` 失败）、去重标记的 BAM/CRAM、本地参考 FASTA 与索引。因此以下内容仅为文档口径与命令模板，未经验证：
+本篇**未做任何真跑**（2026-09-03 复核）。阻塞条件为**工具本体不可获取**：无容器运行时（WSL 与宿主机均未检出 docker / Singularity / Apptainer），PyPI 无 `deepvariant` 发行包（`pip index versions` → `from versions: none`），GitHub 当前不可达（HTTP 000），无法获取其他分发物。
+
+需更正原记录：早期版本称"缺去重标记的 BAM/CRAM 与本地参考 FASTA"，该表述已不成立——read-alignment 011/014 目录下现已有 BAM（含 .bai 索引）与本地 reference.fasta（均为 dwgsim 模拟 reads 与其合成参考，非真实样本）。以下未验证内容的成因仅是拿不到 DeepVariant 本体，而非缺输入数据：
 
 - 容器拉取与 `--model_type` 令牌的实际枚举（新版本会新增模型并重命名镜像标签，须以所用容器的 `--helpfull` 为准）。
 - `run_deepvariant` 与三阶段流程的实际产出、耗时与张量维度。
@@ -232,6 +238,6 @@ GIAB HG002/HG003/HG004（GRCh38）上的近似 F1；具体数值随样本、覆�
 
 ## 小结
 
-deepvariant 的机制核心是「把 pileup 渲染成图像、用 CNN 分类基因型」，由此带来两条刚性后果：输出已由 CNN 校准因而**禁止叠加 GATK 过滤器**，以及上游**应跳过 BQSR**。本篇因环境缺容器守护进程与 BAM，未能做任何真跑；为避免伪实测，全篇按文档口径完整记录了机制、模型选择、命令模板、资源需求与 GIAB 循环性告诫，并明确标注未验证范围。
+deepvariant 的机制核心是「把 pileup 渲染成图像、用 CNN 分类基因型」，由此带来两条刚性后果：输出已由 CNN 校准因而**禁止叠加 GATK 过滤器**，以及上游**应跳过 BQSR**。本篇因**拿不到 DeepVariant 本体**（无容器运行时、PyPI 无包、GitHub 不可达）而未能做任何真跑；需说明的是，输入侧（BAM 与本地参考）自 read-alignment 011/014 完成后已具备，故阻塞点不在数据。为避免伪实测，全篇按文档口径完整记录了机制、模型选择、命令模板、资源需求与 GIAB 循环性告诫，并明确标注未验证范围。
 
 （本篇无真跑产物，故未建素材目录。）

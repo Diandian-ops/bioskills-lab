@@ -1,12 +1,12 @@
 <!--
 META
-标题建议: DeepVariant 过滤与 BQSR 处理
+标题建议: DeepVariant 过滤与BQSR
 / META
 -->
 
 # DeepVariant 两条铁律：别叠 GATK 过滤，别做 BQSR
 
-（编号 027 · 本篇为概念稿：本机 docker 守护进程未运行、无 BAM 与本地参考，未做真跑）
+（编号 027 · 本篇为概念稿：本机无容器运行时、PyPI 无 deepvariant 发行包、GitHub 不可达，工具本体无法获取，未做真跑；BAM 与本地参考已具备，阻塞点不在数据）
 
 **要点一｜它的输出已经过滤过了**
 DeepVariant 把每个候选位点的 pileup 渲染成多通道图像（行是读段、列是参考位置，通道编码碱基、质量、比对质量、链方向、是否支持候选等位、是否与参考不同），再用训练好的 CNN 分类成 hom-ref / het / hom-alt。

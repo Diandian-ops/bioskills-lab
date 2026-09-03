@@ -10,7 +10,7 @@ date: "2026-09-03"
 
 封面卡：比对完别急着统计，先清空位列和重复序列
 
-用 BioPython 的 AlignIO 真跑 msa-parsing SKILL.md 的解析与过滤函数，输入是 5 条 × 30 列的小 DNA MSA，把预处理要点记下来。
+用 BioPython 的 AlignIO 真跑 msa-parsing SKILL.md 的解析与过滤函数，输入是 5 条 × 30 列的小 DNA MSA（多序列比对），把预处理要点记下来。
 
 发现一：空位比例超 50% 的列是伪影，先删。本例 cols 20-24 有 3/5 序列带空位（gap=0.6），被标成 gappy 列，remove_gappy_columns 一下把 30 列裁到 25 列。这种列不做下游统计，否则拉低整列指标。
 

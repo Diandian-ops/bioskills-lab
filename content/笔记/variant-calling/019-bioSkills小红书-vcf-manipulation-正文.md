@@ -1,6 +1,6 @@
 <!--
 META
-标题建议: VCF 拼接合并与 bcftools 操作
+标题建议: VCF 拼接合并与 bcftools
 / META
 -->
 

@@ -10,7 +10,7 @@ date: "2026-09-03"
 
 封面卡：比对完了怎么判断好坏？保守度、空位、一致性三张图
 
-用 BioPython 的 AlignIO 真跑了一遍 msa-statistics SKILL.md 的统计函数，输入是一个 6 条 × 40 列的小蛋白 MSA，把关键指标记下来。
+用 BioPython 的 AlignIO 真跑了一遍 msa-statistics SKILL.md 的统计函数，输入是一个 6 条 × 40 列的小蛋白 MSA（多序列比对），把关键指标记下来。
 
 发现一：保守度曲线和熵曲线是镜像的。保守核心列保守度 100%、熵接近 0 bits；可变区保守度掉到约 17%、熵升到 2.5 bits 左右。蛋白的信息量别用均匀熵，要用 KL 散度对 Robinson & Robinson 1991 经验背景算——本例平均熵 1.03 bits，但 KL 信息量平均 3.34 bits，差出三倍，因为氨基酸频率本来就不均匀。
 
