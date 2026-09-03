@@ -1,0 +1,17 @@
+[main] CMD: bwa index ref.fa
+[main] Real time: 0.073 sec; CPU: 0.007 sec
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 32890 sequences (3091660 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (0, 16445, 0, 0)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (149, 149, 149)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (149, 149)
+[M::mem_pestat] mean and std.dev: (149.00, 0.00)
+[M::mem_pestat] low and high boundaries for proper pairs: (149, 149)
+[M::mem_pestat] skip orientation RF as there are not enough pairs
+[M::mem_pestat] skip orientation RR as there are not enough pairs
+[M::mem_process_seqs] Processed 32890 reads in 0.477 CPU sec, 0.137 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 4 -R @RG\tID:rg1\tSM:sample1\tLB:lib1\tPL:ILLUMINA ref.fa R1_umi.fq.gz R2_umi.fq.gz
+[main] Real time: 0.190 sec; CPU: 0.501 sec

@@ -1,0 +1,96 @@
+== truth ==
+{
+  "seed": 42,
+  "n_molecules": 6000,
+  "n_pairs": 16445,
+  "n_umi_err_copies": 869,
+  "n_n_umi_pairs": 167,
+  "umi_len": 12,
+  "family_hist": {
+    "1": 1661,
+    "2": 1332,
+    "3": 1349,
+    "4": 862,
+    "5": 425,
+    "6": 234,
+    "8": 137
+  },
+  "distinct_coords": 5313,
+  "n_pairs_same_coord": 300,
+  "n_pairs_hamming1": 150,
+  "umi_space": 16777216,
+  "umi_err_prob": 0.08,
+  "seq_err_prob": 0.01,
+  "n_frac": 0.01
+}
+== extract ==
+{
+  "reads_extracted": 16445,
+  "umi_len_hist": {
+    "12": 16445
+  },
+  "n_umi_with_n": 167,
+  "distinct_umi_seqs": 7010
+}
+extract.log 结果行:
+  2026-09-03 20:19:31,152 INFO Starting barcode extraction
+  2026-09-03 20:19:31,553 INFO Input Reads: 16445
+  2026-09-03 20:19:31,554 INFO Reads output: 16445
+== align ==
+{
+  "reads_total": 32890,
+  "reads_mapped": 32890,
+  "mapped_pct": 100.0,
+  "flagstat_head": [
+    "32890 + 0 in total (QC-passed reads + QC-failed reads)",
+    "32890 + 0 primary",
+    "0 + 0 secondary",
+    "0 + 0 supplementary",
+    "0 + 0 duplicates",
+    "0 + 0 primary duplicates",
+    "32890 + 0 mapped (100.00% : N/A)",
+    "32890 + 0 primary mapped (100.00% : N/A)"
+  ]
+}
+== markdup ==
+{
+  "DUPLICATE PAIR": "22264",
+  "ESTIMATED_LIBRARY_SIZE": "5612"
+}
+== methods (molecule estimates, truth=6000) ==
+  coordinate_only    5313  (err  -11.45%)
+  unique             7036  (err  +17.27%)
+  directional        6013  (err   +0.22%)
+  cluster            5891  (err   -1.82%)
+retention directional = 36.56% of read pairs
+== hamming1 干扰对实证（both kept / total pairs）==
+  directional  hamming1 both kept: 123/150  diverse pairs: 150
+  unique       hamming1 both kept: 150/150  diverse pairs: 150
+  cluster      hamming1 both kept: 1/150  diverse pairs: 150
+== edit_distance: distance | unique_obs unique_null | dir_obs dir_null ==
+  Single_UMI  unique=4052   null=4052.00  dir=4734   null=4734.00
+  0           unique=0      null=0.00     dir=0      null=0.00
+  1           unique=674    null=0.00     dir=102    null=0.00
+  2           unique=123    null=0.00     dir=13     null=0.00
+  3           unique=0      null=0.00     dir=0      null=0.00
+  4           unique=5      null=2.00     dir=2      null=0.00
+  5           unique=23     null=10.00    dir=5      null=5.00
+  6           unique=74     null=38.00    dir=26     null=20.00
+  7           unique=80     null=116.00   dir=49     null=70.00
+  8           unique=87     null=251.00   dir=100    null=127.00
+  9           unique=93     null=368.00   dir=119    null=148.00
+  10          unique=73     null=342.00   dir=111    null=159.00
+  11          unique=47     null=128.00   dir=64     null=57.00
+  12          unique=9      null=33.00    dir=15     null=20.00
+  13          unique=0      null=0.00     dir=0      null=0.00
+== family size: counts instances_pre instances_post ==
+  size=1 pre=2852 post=1710
+  size=2 pre=1458 post=1331
+  size=3 pre=1313 post=1310
+  size=4 pre=783 post=841
+  size=5 pre=355 post=428
+  size=6 pre=159 post=241
+  size=7 pre=51 post=23
+  size=8 pre=65 post=129
+  totals pre=7036 post=6013
+

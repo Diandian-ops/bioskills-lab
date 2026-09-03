@@ -1,0 +1,54 @@
+Collecting umi-tools
+  Using cached umi_tools-1.1.6.tar.gz (121 kB)
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'error'
+  error: subprocess-exited-with-error
+  
+  × Getting requirements to build wheel did not run successfully.
+  │ exit code: 1
+  ╰─> [39 lines of output]
+      Downloading https://pypi.io/packages/source/s/setuptools/setuptools-10.0.zip
+      Extracting in /tmp/tmppsv0blk1
+      Now working in /tmp/tmppsv0blk1/setuptools-10.0
+      Building a Setuptools egg in /tmp/pip-install-kvm1unpl/umi-tools_cc940e80c96b4c4a8dae10af1647fa4f
+      Traceback (most recent call last):
+        File "/tmp/tmppsv0blk1/setuptools-10.0/setup.py", line 14, in <module>
+          from distutils.util import convert_path
+      ModuleNotFoundError: No module named 'distutils'
+      /tmp/pip-install-kvm1unpl/umi-tools_cc940e80c96b4c4a8dae10af1647fa4f/setuptools-10.0-py3.13.egg
+      Traceback (most recent call last):
+        File "/opt/miniconda3/envs/umi-py313/lib/python3.13/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 389, in <module>
+          main()
+          ~~~~^^
+        File "/opt/miniconda3/envs/umi-py313/lib/python3.13/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 373, in main
+          json_out["return_val"] = hook(**hook_input["kwargs"])
+                                   ~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/opt/miniconda3/envs/umi-py313/lib/python3.13/site-packages/pip/_vendor/pyproject_hooks/_in_process/_in_process.py", line 143, in get_requires_for_build_wheel
+          return hook(config_settings)
+        File "/tmp/pip-build-env-uyjaypdx/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 333, in get_requires_for_build_wheel
+          return self._get_build_requires(config_settings, requirements=[])
+                 ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-uyjaypdx/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 301, in _get_build_requires
+          self.run_setup()
+          ~~~~~~~~~~~~~~^^
+        File "/tmp/pip-build-env-uyjaypdx/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 520, in run_setup
+          super().run_setup(setup_script=setup_script)
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-build-env-uyjaypdx/overlay/lib/python3.13/site-packages/setuptools/build_meta.py", line 317, in run_setup
+          exec(code, locals())  # noqa: S102 # exec is intentional here
+          ~~~~^^^^^^^^^^^^^^^^
+        File "<string>", line 8, in <module>
+        File "/tmp/pip-install-kvm1unpl/umi-tools_cc940e80c96b4c4a8dae10af1647fa4f/ez_setup.py", line 178, in use_setuptools
+          return _do_download(version, download_base, to_dir, download_delay)
+        File "/tmp/pip-install-kvm1unpl/umi-tools_cc940e80c96b4c4a8dae10af1647fa4f/ez_setup.py", line 129, in _do_download
+          _build_egg(egg, archive, to_dir)
+          ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+        File "/tmp/pip-install-kvm1unpl/umi-tools_cc940e80c96b4c4a8dae10af1647fa4f/ez_setup.py", line 75, in _build_egg
+          raise IOError('Could not build the egg.')
+      OSError: Could not build the egg.
+      [end of output]
+  
+  note: This error originates from a subprocess, and is likely not a problem with pip.
+ERROR: Failed to build 'umi-tools' when getting requirements to build wheel

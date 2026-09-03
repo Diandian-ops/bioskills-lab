@@ -1,0 +1,2 @@
+molecules=6000 pairs=16445 umi_err_copies=869 n_umi_pairs=167 distinct_coords=5313
+family_hist={'1': 1661, '2': 1332, '3': 1349, '4': 862, '5': 425, '6': 234, '8': 137}
