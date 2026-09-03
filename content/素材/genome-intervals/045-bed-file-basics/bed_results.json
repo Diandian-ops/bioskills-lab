@@ -1,0 +1,333 @@
+{
+  "versions": {
+    "bedtools": "bedtools v2.31.1",
+    "samtools": "samtools 1.24",
+    "python": "Python 3.11.16",
+    "pybedtools": "pybedtools 0.12.1",
+    "pyranges": "not installed (ModuleNotFoundError)"
+  },
+  "inputs": {
+    "chr_len": 2000000,
+    "genes": 40,
+    "exons": 215,
+    "cpg": 30,
+    "peaks": 10,
+    "transcripts_bed12": 8,
+    "variants": 30,
+    "sam_reads": 6,
+    "genome_txt": [
+      "chr1\t2000000"
+    ],
+    "exon_len_min": 50,
+    "exon_len_max": 300,
+    "gene_len_median_bp": 9708
+  },
+  "field_counts_unique": {
+    "genes": 6,
+    "exons": 6,
+    "cpg": 6,
+    "peaks_narrowPeak": 10,
+    "bed12": 12
+  },
+  "sort": {
+    "bedtools_eq_coreutils": true,
+    "command": "bedtools sort -i cpg.bed  vs  sort -k1,1 -k2,2n cpg.bed"
+  },
+  "slop": {
+    "edge_before": [
+      [
+        "0",
+        "100"
+      ],
+      [
+        "1999500",
+        "2000000"
+      ]
+    ],
+    "edge_after": [
+      [
+        "0",
+        "600"
+      ],
+      [
+        "1999000",
+        "2000000"
+      ]
+    ],
+    "clipped_records": 2,
+    "genes_slop500": 40
+  },
+  "flank": {
+    "promoters": 40,
+    "promoters_with_cpg": 0,
+    "promoter_cpg_pairs": 40
+  },
+  "merge": {
+    "cpg_raw": 30,
+    "cpg_merged": 20,
+    "cpg_merged_d200": 19,
+    "cpg_raw_bp": 36369,
+    "cpg_merged_bp": 30862,
+    "cpg_merged_d200_bp": 30941,
+    "genes_raw": 40,
+    "genes_merged": 40,
+    "exons_raw": 215,
+    "exons_merged": 215
+  },
+  "intersect": {
+    "exons_with_cpg": 7,
+    "exon_cpg_pairs": 9,
+    "overlap_bp": 994
+  },
+  "complement_identity": {
+    "cpg_merged_bp": 30862,
+    "non_cpg_bp": 1969138,
+    "sum": 2000000,
+    "genes_bp": 365304,
+    "non_genes_bp": 1634696,
+    "genes_sum": 2000000,
+    "chr_len": 2000000
+  },
+  "windows": {
+    "fixed_10kb": 200,
+    "slide_10kb_step5kb": 400,
+    "last_slide_win": "chr1\t1995000\t2000000\t400",
+    "bins_100kb": 20,
+    "per_bin": [
+      [
+        1,
+        0,
+        100000,
+        2,
+        9,
+        0
+      ],
+      [
+        2,
+        100000,
+        200000,
+        3,
+        16,
+        4
+      ],
+      [
+        3,
+        200000,
+        300000,
+        2,
+        15,
+        3
+      ],
+      [
+        4,
+        300000,
+        400000,
+        3,
+        9,
+        0
+      ],
+      [
+        5,
+        400000,
+        500000,
+        3,
+        17,
+        3
+      ],
+      [
+        6,
+        500000,
+        600000,
+        3,
+        10,
+        0
+      ],
+      [
+        7,
+        600000,
+        700000,
+        2,
+        9,
+        1
+      ],
+      [
+        8,
+        700000,
+        800000,
+        3,
+        13,
+        0
+      ],
+      [
+        9,
+        800000,
+        900000,
+        2,
+        12,
+        3
+      ],
+      [
+        10,
+        900000,
+        1000000,
+        2,
+        12,
+        0
+      ],
+      [
+        11,
+        1000000,
+        1100000,
+        3,
+        15,
+        1
+      ],
+      [
+        12,
+        1100000,
+        1200000,
+        2,
+        6,
+        2
+      ],
+      [
+        13,
+        1200000,
+        1300000,
+        3,
+        19,
+        0
+      ],
+      [
+        14,
+        1300000,
+        1400000,
+        3,
+        12,
+        1
+      ],
+      [
+        15,
+        1400000,
+        1500000,
+        3,
+        21,
+        1
+      ],
+      [
+        16,
+        1500000,
+        1600000,
+        2,
+        10,
+        1
+      ],
+      [
+        17,
+        1600000,
+        1700000,
+        2,
+        10,
+        0
+      ],
+      [
+        18,
+        1700000,
+        1800000,
+        1,
+        1,
+        5
+      ],
+      [
+        19,
+        1800000,
+        1900000,
+        0,
+        0,
+        4
+      ],
+      [
+        20,
+        1900000,
+        2000000,
+        0,
+        0,
+        1
+      ]
+    ]
+  },
+  "getfasta": {
+    "records": 215,
+    "len_eq_end_minus_start": 215,
+    "first_header": "gene001.E1::chr1:30450-30739",
+    "first_len": 289
+  },
+  "vcf_to_bed": {
+    "variants": 30,
+    "first_vcf_row": "chr1\t1000\tsnp01\tT\tA\t457\tPASS\t.",
+    "first_bed_row": "chr1\t999\t1000",
+    "gff_landmark_1based": "chr1:1000-1000 (1-based closed, 1 bp)",
+    "bed_landmark_0based": "chr1\t999\t1000",
+    "faidx_base_at_1000": "T",
+    "bedtools_base_999_1000": "T",
+    "vcf_ref_at_pos1000": "T",
+    "base_match": true
+  },
+  "bamtobed": {
+    "reads": 6,
+    "read1_sam_pos_1based": 50001,
+    "read1_bed_start_0based": "50000",
+    "start_eq_pos_minus_1_all": true,
+    "spliced_blocks": 2
+  },
+  "bed12": {
+    "models": 8,
+    "total_blocks": 47,
+    "invariants_all_pass": true,
+    "bed12tobed6_records": 47
+  },
+  "narrowpeak": {
+    "peaks": 10,
+    "summit_offsets_used_col": "peak (col 10)",
+    "summit_examples": [
+      [
+        "chr1",
+        575414,
+        1,
+        575797
+      ],
+      [
+        "chr1",
+        740975,
+        2,
+        741035
+      ],
+      [
+        "chr1",
+        1481932,
+        3,
+        1482291
+      ]
+    ],
+    "peak_minus1_not_assigned": 1
+  },
+  "fail_mismatch": {
+    "intersect_lines": 0,
+    "rc": 0,
+    "bedtools_warning": true,
+    "bare_chrom_names": "1"
+  },
+  "fail_crlf": {
+    "crlf_lines": 5,
+    "catA_sample": [
+      "chr1^I111290^I112523^Icpg001^I500^I.^M$",
+      "chr1^I111846^I112457^Icpg002^I500^I.^M$"
+    ],
+    "fixed_eq_original": true
+  },
+  "fail_sorted": {
+    "rc": 1,
+    "error": "Error: Sorted input specified, but the file cpg.unsorted.bed has the following out of order record\nchr1\t1890839\t1892325\tcpg029\t312\t.",
+    "unsorted_intersect_lines_no_flag": 9
+  }
+}

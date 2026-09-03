@@ -1,0 +1,259 @@
+=== 0) versions ===
+bedtools v2.31.1
+samtools 1.24
+Using htslib 1.24
+Python 3.11.16
+pybedtools 0.12.1
+ModuleNotFoundError: No module named 'pyranges'
+=== 1) inputs (make_inputs.py, seed=45) ===
+chr1_len=2000000
+genes=40
+exons=215
+cpg=30
+peaks=10
+transcripts_bed12=8
+variants=30
+sam_reads=6
+=== 2) genome.txt from the SAME reference FASTA ===
+chr1	2000000
+=== 3) validation: field count / inverted / chrom names ===
+-- genes.bed field counts (expect one unique value):
+6
+-- exons.bed field counts (expect one unique value):
+6
+-- cpg.bed field counts (expect one unique value):
+6
+-- peaks.bed field counts (expect one unique value):
+10
+-- transcripts.bed12 field counts (expect one unique value):
+12
+-- negative or inverted intervals (expect none):
+(rc=0)
+-- chrom names per file:
+genes.bed: chr1 
+exons.bed: chr1 
+cpg.bed: chr1 
+=== 4) sort: bedtools sort vs coreutils sort -k1,1 -k2,2n ===
+bedtools sort == sort -k1,1 -k2,2n : IDENTICAL
+  30 cpg.bed
+  30 cpg.sorted.bed
+  30 cpg.unsorted.bed
+  90 total
+=== 5) slop needs genome.txt; boundary clipping at chromosome ends ===
+chr1	0	100	edge_left	500	.
+chr1	1999500	2000000	edge_right	500	.
+chr1	0	600	edge_left	500	.
+chr1	1999000	2000000	edge_right	500	.
+40 genes.slop500.bed
+2 slop_clipped.txt
+=== 6) flank: 1 kb upstream promoters, overlap CpG ===
+40 promoters.bed
+0
+40 promoters_cpg_pairs.txt
+=== 7) merge: only overlapping/book-ended intervals collapse ===
+   30 cpg.bed
+   20 cpg.merged.bed
+   19 cpg.merged.d200.bed
+   40 genes.bed
+   40 genes.merged.bed
+  215 exons.bed
+  215 exons.merged.bed
+  579 total
+cpg_merged_bp=30862
+cpg_merged_d200_bp=30941
+=== 8) intersect: exons vs CpG islands ===
+7
+9 exons_cpg_pairs.bed
+994
+=== 9) complement: coverage identity vs genome ===
+21 non_cpg.bed
+-- identity check: cpg_merged_bp + non_cpg_bp must equal 2000000
+cpg_merged_bp=30862
+non_cpg_bp=1969138
+genes_bp=365304
+non_genes_bp=1634696
+=== 9b) shuffle: random relocation, also needs genome.txt ===
+30 cpg.shuffled.bed
+chr1	1659611	1660844	cpg001	136	.
+chr1	1719088	1719699	cpg002	341	.
+chr1	1969531	1970164	cpg003	712	.
+3
+=== 10) makewindows: fixed vs sliding ===
+  200 windows_fixed.bed
+  400 windows_slide.bed
+  600 total
+chr1	1990000	2000000	399
+chr1	1995000	2000000	400
+-- per-100kb-bin feature counts -> per_bin.tsv
+bin	bin_start	bin_end	genes	exons	cpg
+1	0	100000	2	9	0
+2	100000	200000	3	16	4
+3	200000	300000	2	15	3
+4	300000	400000	3	9	0
+5	400000	500000	3	17	3
+6	500000	600000	3	10	0
+7	600000	700000	2	9	1
+8	700000	800000	3	13	0
+9	800000	900000	2	12	3
+10	900000	1000000	2	12	0
+11	1000000	1100000	3	15	1
+12	1100000	1200000	2	6	2
+13	1200000	1300000	3	19	0
+14	1300000	1400000	3	12	1
+15	1400000	1500000	3	21	1
+16	1500000	1600000	2	10	1
+17	1600000	1700000	2	10	0
+18	1700000	1800000	1	1	5
+19	1800000	1900000	0	0	4
+20	1900000	2000000	0	0	1
+=== 11) getfasta: extract sequences, verify len == end - start ===
+215
+getfasta_records=215 len_eq_end_minus_start=215
+first=gene001.E1::chr1:30450-30739 len=289
+=== 12) VCF(1-based) -> BED(0-based): start-1, end unchanged ===
+30 variants.bed
+chr1	999	1000
+chr1	44214	44215
+chr1	149795	149796
+-- 1-bp round trip: GFF 1000-1000 (1-based closed) -> BED 999-1000
+chr1	999	1000
+-- base identity: samtools faidx chr1:1000-1000 vs VCF POS=1000 REF
+>chr1:1000-1000
+T
+chr1	1000	snp01	T	A	457	PASS	.
+>chr1:999-1000
+T
+=== 13) bamtobed: SAM 1-based POS -> BED 0-based start (POS-1) ===
+chr1	50000	50100	read1	60	+
+chr1	150000	150200	read2_spliced	60	+
+chr1	300000	300100	read3	60	+
+chr1	999950	1000050	read4	60	+
+chr1	1234566	1234666	read5	60	+
+chr1	1999900	2000000	read6	60	+
+-- spliced read (50M100N50M) with -split:
+chr1	150000	150050	read2_spliced	60	+
+chr1	150150	150200	read2_spliced	60	+
+=== 14) BED12 block invariants + bed12tobed6 ===
+47 transcripts_exons.bed6
+bed12_models=8 total_blocks=47 invariants_all_pass=True
+=== 15) narrowPeak: summit = chromStart + peak (0-based offset, col 10) ===
+chr1	575414	575855	peak01	575797
+chr1	740975	741671	peak02	741035
+chr1	1481932	1482468	peak03	1482291
+chr1	213002	213285	peak04	213151
+chr1	1126777	1127015	peak05	1126917
+chr1	1948632	1948939	peak06	1948761
+chr1	1344336	1344932	peak07	1344758
+chr1	746045	746304	peak08	746156
+chr1	139980	140608	peak09	140187
+chr1	1534134	1534392	peak10	1534133
+peak_offset_-1 (not assigned): peak10
+=== 16) failure demo A: chrom-name mismatch (chr1 vs 1) is SILENT ===
+***** WARNING: File cpg.sorted.bed has inconsistent naming convention for record:
+chr1	111290	112523	cpg001	136	.
+
+***** WARNING: File cpg.sorted.bed has inconsistent naming convention for record:
+chr1	111290	112523	cpg001	136	.
+
+intersect lines: 0  rc=0
+1
+=== 17) failure demo B: CRLF endings ===
+chr1^I111290^I112523^Icpg001^I500^I.^M$
+chr1^I111846^I112457^Icpg002^I500^I.^M$
+crlf_lines=5
+last_field=[.] on line 1
+=== 18) failure demo C: -sorted with unsorted input errors out ===
+rc=1
+Error: Sorted input specified, but the file cpg.unsorted.bed has the following out of order record
+chr1	1890839	1892325	cpg029	312	.
+-- same pair without -sorted (in-memory path tolerates any order):
+9
+=== 19) parse results into bed_results.json ===
+bed_results.json written
+versions ok
+inputs ok
+field_counts_unique ok
+sort ok
+slop ok
+flank ok
+merge ok
+intersect ok
+complement_identity ok
+windows ok
+getfasta ok
+vcf_to_bed ok
+bamtobed ok
+bed12 ok
+narrowpeak ok
+fail_mismatch ok
+fail_crlf ok
+fail_sorted ok
+=== 20) done ===
+total 2388
+drwxrwxrwx 1 devah devah    4096 Sep  3 22:53 .
+drwxrwxrwx 1 devah devah    4096 Sep  3 22:41 ..
+-rwxrwxrwx 1 devah devah    7497 Sep  3 22:50 _parse.py
+-rwxrwxrwx 1 devah devah    5344 Sep  3 22:53 _run.log
+-rwxrwxrwx 1 devah devah    9613 Sep  3 22:53 _run.sh
+-rwxrwxrwx 1 devah devah     191 Sep  3 22:53 alignments.bed
+-rwxrwxrwx 1 devah devah    5559 Sep  3 22:53 bed_results.json
+-rwxrwxrwx 1 devah devah      40 Sep  3 22:53 bin_cpg.txt
+-rwxrwxrwx 1 devah devah      53 Sep  3 22:53 bin_exons.txt
+-rwxrwxrwx 1 devah devah      40 Sep  3 22:53 bin_genes.txt
+-rwxrwxrwx 1 devah devah     396 Sep  3 22:53 bins100k.bed
+-rwxrwxrwx 1 devah devah 2033340 Sep  3 22:53 chr1.fa
+-rwxrwxrwx 1 devah devah      21 Sep  3 22:53 chr1.fa.fai
+-rwxrwxrwx 1 devah devah     992 Sep  3 22:53 cpg.bed
+-rwxrwxrwx 1 devah devah     992 Sep  3 22:53 cpg.coreutils.bed
+-rwxrwxrwx 1 devah devah     404 Sep  3 22:53 cpg.merged.bed
+-rwxrwxrwx 1 devah devah     385 Sep  3 22:53 cpg.merged.d200.bed
+-rwxrwxrwx 1 devah devah     988 Sep  3 22:53 cpg.shuffled.bed
+-rwxrwxrwx 1 devah devah     992 Sep  3 22:53 cpg.sorted.bed
+-rwxrwxrwx 1 devah devah     992 Sep  3 22:53 cpg.unsorted.bed
+-rwxrwxrwx 1 devah devah     902 Sep  3 22:53 cpg_bare.bed
+-rwxrwxrwx 1 devah devah     165 Sep  3 22:53 cpg_crlf.bed
+-rwxrwxrwx 1 devah devah     160 Sep  3 22:53 cpg_crlf_fixed.bed
+-rwxrwxrwx 1 devah devah      80 Sep  3 22:53 crlf_catA.txt
+-rwxrwxrwx 1 devah devah      65 Sep  3 22:53 edge.bed
+-rwxrwxrwx 1 devah devah      65 Sep  3 22:53 edge.slop.bed
+-rwxrwxrwx 1 devah devah    7910 Sep  3 22:53 exons.bed
+-rwxrwxrwx 1 devah devah   46454 Sep  3 22:53 exons.fa
+-rwxrwxrwx 1 devah devah    4255 Sep  3 22:53 exons.merged.bed
+-rwxrwxrwx 1 devah devah    7910 Sep  3 22:53 exons.sorted.bed
+-rwxrwxrwx 1 devah devah    8340 Sep  3 22:53 exons_cpg.txt
+-rwxrwxrwx 1 devah devah     326 Sep  3 22:53 exons_cpg_pairs.bed
+-rwxrwxrwx 1 devah devah   44691 Sep  3 22:52 fig1_merge_counts.png
+-rwxrwxrwx 1 devah devah   85420 Sep  3 22:52 fig2_per_bin_distribution.png
+-rwxrwxrwx 1 devah devah   41524 Sep  3 22:52 fig3_complement_identity.png
+-rwxrwxrwx 1 devah devah    1350 Sep  3 22:53 genes.bed
+-rwxrwxrwx 1 devah devah     790 Sep  3 22:53 genes.merged.bed
+-rwxrwxrwx 1 devah devah    1350 Sep  3 22:53 genes.slop500.bed
+-rwxrwxrwx 1 devah devah    1350 Sep  3 22:53 genes.sorted.bed
+-rwxrwxrwx 1 devah devah      13 Sep  3 22:53 genome.txt
+-rwxrwxrwx 1 devah devah      14 Sep  3 22:53 landmark.bed
+-rwxrwxrwx 1 devah devah      41 Sep  3 22:53 landmark.gff
+-rwxrwxrwx 1 devah devah      18 Sep  3 22:53 landmark_base.txt
+-rwxrwxrwx 1 devah devah      17 Sep  3 22:53 landmark_base_bedtools.txt
+-rwxrwxrwx 1 devah devah    6026 Sep  3 22:52 make_figs.py
+-rwxrwxrwx 1 devah devah    7285 Sep  3 22:46 make_inputs.py
+-rwxrwxrwx 1 devah devah       0 Sep  3 22:53 mismatch_result.bed
+-rwxrwxrwx 1 devah devah     419 Sep  3 22:53 non_cpg.bed
+-rwxrwxrwx 1 devah devah     805 Sep  3 22:53 non_genes.bed
+-rwxrwxrwx 1 devah devah     534 Sep  3 22:53 peaks.bed
+-rwxrwxrwx 1 devah devah     518 Sep  3 22:53 per_bin.tsv
+-rwxrwxrwx 1 devah devah    1350 Sep  3 22:53 promoters.bed
+-rwxrwxrwx 1 devah devah    1430 Sep  3 22:53 promoters_cpg.txt
+-rwxrwxrwx 1 devah devah    2030 Sep  3 22:53 promoters_cpg_pairs.txt
+-rwxrwxrwx 1 devah devah     541 Sep  3 22:53 reads.bam
+-rwxrwxrwx 1 devah devah    1477 Sep  3 22:53 reads.sam
+-rwxrwxrwx 1 devah devah      65 Sep  3 22:53 slop_clipped.txt
+-rwxrwxrwx 1 devah devah     133 Sep  3 22:53 sorted_demo.err
+-rwxrwxrwx 1 devah devah       0 Sep  3 22:53 sorted_demo.out
+-rwxrwxrwx 1 devah devah     229 Sep  3 22:53 spliced.bed
+-rwxrwxrwx 1 devah devah     345 Sep  3 22:53 summits.tsv
+-rwxrwxrwx 1 devah devah     811 Sep  3 22:53 transcripts.bed12
+-rwxrwxrwx 1 devah devah    1580 Sep  3 22:53 transcripts_exons.bed6
+-rwxrwxrwx 1 devah devah     599 Sep  3 22:53 variants.bed
+-rwxrwxrwx 1 devah devah    1095 Sep  3 22:53 variants.vcf
+-rwxrwxrwx 1 devah devah    3978 Sep  3 22:53 windows_fixed.bed
+-rwxrwxrwx 1 devah devah    9451 Sep  3 22:53 windows_slide.bed
