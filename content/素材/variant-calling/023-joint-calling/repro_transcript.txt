@@ -1,0 +1,130 @@
+================================================================================
+023 joint-calling — 真实复现记录 (repro_transcript.txt)
+================================================================================
+
+本文件证明 023-bioSkills真实试用-joint-calling 笔记报告的产物均来自真实执行。
+
+环境 (honesty disclosure)
+-------------------------
+[REAL-RUN] 2026-09-03，WSL Ubuntu（root），conda env `bio`：
+           bcftools 1.24 / htslib 1.24（`bcftools --version` 实查）。
+           执行脚本：run.sh（同目录），日志：run_log.txt（31 行，全文可查）。
+           数据源：chr22_slice.vcf.gz —— 1000 Genomes Phase3 chr22:17.0-17.2 Mb
+           切片（GRCh37/hs37d5），2504 样本 × 5431 条记录（已联合基因型的整合集）。
+
+诚实边界：joint6.vcf.gz 是对既有联合 callset 做 `bcftools view -s` 的 6 样本
+子集抽取，以其平方化矩阵代表「真·联合基因型产物」；本机无 GATK/GLnexus，
+未从 BAM 重跑 HaplotypeCaller→GenotypeGVCFs。naive merge 分支为真实反模式演示。
+
+================================================================================
+A. 命令清单（run.sh 骨架，$HERE = /mnt/d/1.WorkDir/RedBook/content/素材/variant-calling/023-joint-calling）
+================================================================================
+
+# 0. 输入概览
+bcftools view -H $IN | wc -l                      # input_records
+bcftools query -l $IN | wc -l                     # input_samples
+sed -n '1p;420p;840p;1260p;1680p;2100p' all_samples.txt | paste -sd, -
+#   → SAMPLES=HG00096,HG01280,HG02220,HG03295,NA11894,NA19320
+
+# 1) 逐样本 callset（两步法：先选样本，再排除该样本为纯合参考的位点；
+#    模拟「单样本调用只报变异位点」的产物形态）
+for s in $SAMPLES; do
+  bcftools view -s $s $IN -Ou | bcftools view -e 'GT="ref"' -Oz -o per_${s}.vcf.gz
+  bcftools index -t per_${s}.vcf.gz
+done
+
+# 2) 朴素合并（反模式）
+bcftools merge -Oz -o merged_naive.vcf.gz per_*.vcf.gz
+
+# 3) 真·联合口径对照（6 样本子集，平方化矩阵）
+bcftools view -s $SAMPLES $IN -Oz -o joint6.vcf.gz
+
+# 4) 逐样本 ./. 统计（bcftools query -f '[%GT]\n' + awk 计数）
+
+# 5) GT 一致性：仅在该样本被调用的位点上逐位点比对 merge vs joint
+
+# 6) 汇总 joint_calling_stats.json（python3，供 make_figs.py）
+
+================================================================================
+B. run_log.txt 关键输出节选（全文 31 行）
+================================================================================
+
+=== 0. 输入概览 ===
+input_records=5431
+input_samples=2504
+SAMPLES=HG00096,HG01280,HG02220,HG03295,NA11894,NA19320
+per_sample_variant_sites HG00096 = 332
+per_sample_variant_sites HG01280 = 344
+per_sample_variant_sites HG02220 = 286
+per_sample_variant_sites HG03295 = 354
+per_sample_variant_sites NA11894 = 268
+per_sample_variant_sites NA19320 = 308
+merged_naive_records=636
+joint6_records=5431
+naive_missing HG00096 = 304
+joint_missing HG00096 = 0
+naive_missing HG01280 = 292
+joint_missing HG01280 = 0
+naive_missing HG02220 = 350
+joint_missing HG02220 = 0
+naive_missing HG03295 = 282
+joint_missing HG03295 = 0
+naive_missing NA11894 = 368
+joint_missing NA11894 = 0
+naive_missing NA19320 = 328
+joint_missing NA19320 = 0
+=== GT consistency (called sites only) ===
+gtcheck HG00096 called_in_merge=636 mismatches_vs_joint=1
+gtcheck HG01280 called_in_merge=636 mismatches_vs_joint=1
+gtcheck HG02220 called_in_merge=636 mismatches_vs_joint=2
+gtcheck HG03295 called_in_merge=636 mismatches_vs_joint=3
+gtcheck NA11894 called_in_merge=636 mismatches_vs_joint=1
+gtcheck NA19320 called_in_merge=636 mismatches_vs_joint=0
+
+================================================================================
+C. joint_calling_stats.json 摘要
+================================================================================
+
+source:                chr22_slice.vcf.gz (1000G Phase3 chr22:17.0-17.2Mb, GRCh37/hs37d5)
+input_records:         5431        input_samples: 2504
+merged_records:        636         joint_records: 5431
+total_missing_naive:   1924        （= 304+292+350+282+368+328，全部回填）
+total_genotypes_joint: 32586       total_genotypes_naive: 3816
+
+per_sample（variant_sites / naive_missing / joint_missing / gt_mismatch / backfilled）:
+  HG00096:  332 / 304 / 0 / 1 / 304
+  HG01280:  344 / 292 / 0 / 1 / 292
+  HG02220:  286 / 350 / 0 / 2 / 350
+  HG03295:  354 / 282 / 0 / 3 / 282
+  NA11894:  268 / 368 / 0 / 1 / 368
+  NA19320:  308 / 328 / 0 / 0 / 328
+
+口径说明：gt_mismatch 为「该样本在 merge 中被调用的 636 个位点上，GT 字符串
+与 joint 口径不一致的个数」（run_log 第 26-31 行 mismatches_vs_joint 列）；
+每样本 GT 一致性 = (636 − mismatches) / 636，最低 HG03295 = 99.53%，
+最高 NA19320 = 100.00%。
+
+================================================================================
+D. 出图与自检（2026-09-03，Windows 侧受管 venv python，matplotlib）
+================================================================================
+
+$ make_figs.py   # 读 joint_calling_stats.json + merged_naive.vcf.gz，纯 python
+  [PASS] fig1_per_sample_sites.png: text within axes, no overlap
+  [PASS] fig2_backfill.png: text within axes, no overlap
+  [PASS] fig3_matrix.png: text within axes, no overlap
+  FIGURE QUALITY: TOTAL FAILS = 0
+
+$ check_figs.py make_figs.py   # bioSkills-figure-quality 程序化自检
+  TOTAL FAILS = 0   （退出码 0）
+
+产物：fig1_per_sample_sites.png / fig2_backfill.png / fig3_matrix.png（各 ~40-46 KB）
+
+================================================================================
+E. 评估史（诚实记录）
+================================================================================
+
+- 2026-09-01 复现难度评估：本机无 WSL/Docker、GLnexus 无 Windows 原生二进制，
+  GATK 侧虽可下载但输入（逐样本 gVCF）获取成本高，当时结论为「无法真跑」。
+- 2026-09-02 起 WSL Ubuntu bio 环境具备 bcftools，上述阻塞结论作废。
+- 2026-09-03 用 bcftools 1.24 完成 A 节全链路真跑，本文件即为证据。
+================================================================================

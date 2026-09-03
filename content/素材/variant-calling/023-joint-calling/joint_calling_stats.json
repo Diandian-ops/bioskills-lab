@@ -1,0 +1,68 @@
+{
+  "source": "chr22_slice.vcf.gz (1000G Phase3 chr22:17.0-17.2Mb, GRCh37/hs37d5)",
+  "samples": [
+    "HG00096",
+    "HG01280",
+    "HG02220",
+    "HG03295",
+    "NA11894",
+    "NA19320"
+  ],
+  "input_records": 5431,
+  "input_samples": 2504,
+  "merged_records": 636,
+  "joint_records": 5431,
+  "per_sample": {
+    "HG00096": {
+      "variant_sites": 332,
+      "naive_missing": 304,
+      "joint_missing": 0,
+      "called_in_merge": 636,
+      "gt_mismatch": 1,
+      "backfilled": 304
+    },
+    "HG01280": {
+      "variant_sites": 344,
+      "naive_missing": 292,
+      "joint_missing": 0,
+      "called_in_merge": 636,
+      "gt_mismatch": 1,
+      "backfilled": 292
+    },
+    "HG02220": {
+      "variant_sites": 286,
+      "naive_missing": 350,
+      "joint_missing": 0,
+      "called_in_merge": 636,
+      "gt_mismatch": 2,
+      "backfilled": 350
+    },
+    "HG03295": {
+      "variant_sites": 354,
+      "naive_missing": 282,
+      "joint_missing": 0,
+      "called_in_merge": 636,
+      "gt_mismatch": 3,
+      "backfilled": 282
+    },
+    "NA11894": {
+      "variant_sites": 268,
+      "naive_missing": 368,
+      "joint_missing": 0,
+      "called_in_merge": 636,
+      "gt_mismatch": 1,
+      "backfilled": 368
+    },
+    "NA19320": {
+      "variant_sites": 308,
+      "naive_missing": 328,
+      "joint_missing": 0,
+      "called_in_merge": 636,
+      "gt_mismatch": 0,
+      "backfilled": 328
+    }
+  },
+  "total_missing_naive": 1924,
+  "total_genotypes_joint": 32586,
+  "total_genotypes_naive": 3816
+}

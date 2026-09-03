@@ -1,0 +1,31 @@
+=== 0. 输入概览 ===
+input_records=5431
+input_samples=2504
+SAMPLES=HG00096,HG01280,HG02220,HG03295,NA11894,NA19320
+per_sample_variant_sites HG00096 = 332
+per_sample_variant_sites HG01280 = 344
+per_sample_variant_sites HG02220 = 286
+per_sample_variant_sites HG03295 = 354
+per_sample_variant_sites NA11894 = 268
+per_sample_variant_sites NA19320 = 308
+merged_naive_records=636
+joint6_records=5431
+naive_missing HG00096 = 304
+joint_missing HG00096 = 0
+naive_missing HG01280 = 292
+joint_missing HG01280 = 0
+naive_missing HG02220 = 350
+joint_missing HG02220 = 0
+naive_missing HG03295 = 282
+joint_missing HG03295 = 0
+naive_missing NA11894 = 368
+joint_missing NA11894 = 0
+naive_missing NA19320 = 328
+joint_missing NA19320 = 0
+=== GT consistency (called sites only) ===
+gtcheck HG00096 called_in_merge=636 mismatches_vs_joint=1
+gtcheck HG01280 called_in_merge=636 mismatches_vs_joint=1
+gtcheck HG02220 called_in_merge=636 mismatches_vs_joint=2
+gtcheck HG03295 called_in_merge=636 mismatches_vs_joint=3
+gtcheck NA11894 called_in_merge=636 mismatches_vs_joint=1
+gtcheck NA19320 called_in_merge=636 mismatches_vs_joint=0
