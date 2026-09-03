@@ -1,0 +1,13 @@
+version: 4
+isCompressed: yes
+isSwapped: 0
+primaryDataSize: 905,259
+primaryIndexSize: 7,436
+zoomLevels: 8
+chromCount: 1
+	chrSim 0 2000000
+basesCovered: 1,580,000
+mean: 1.103765
+min: 0.073000
+max: 794.882996
+std: 6.302343

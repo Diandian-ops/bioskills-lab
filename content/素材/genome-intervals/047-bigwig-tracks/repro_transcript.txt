@@ -1,0 +1,133 @@
+047 bigwig-tracks -- real-run reproduction transcript
+Date: 2026-09-03
+Environment: WSL Ubuntu (root), conda env `bio`
+  bedGraphToBigWig v2.10 (bbi version 4)
+  bigWigInfo (UCSC Kent tools, same build)
+  bigWigAverageOverBed v2
+  bedtools v2.31.1 (not used by this skill's core loop; present in env)
+  Python 3.11.16 (stdlib only for make_inputs.py / reconcile.py)
+NOT available in env (honestly noted): bigWigSummary, bigWigToBedGraph, pyBigWig,
+deepTools. Skill sections covering those are documented, not executed.
+
+======================================================================
+0. Files in this directory
+======================================================================
+make_inputs.py        generates sim.bedGraph + chrom.sizes + regions.bed + truth.json (seed=42)
+_run.sh               the full pipeline below, executed once end-to-end
+_run.log              raw stdout/stderr of the run
+reconcile.py          reconciles bigWigAverageOverBed output vs truth.json
+parsed_results.tsv    per-region reconciliation table
+make_figs.py          builds fig1/fig2/fig3 from the real outputs
+sim.bedGraph          158,000 lines, 4,359,932 bytes
+sim.sorted.bedGraph   sort -k1,1 -k2,2n of sim.bedGraph (build input)
+chrom.sizes           "chrSim 2000000"
+regions.bed           7 named query regions (BED4)
+truth.json            design ground truth per region
+track.bw              1,234,797 bytes (kept; < 50 MB)
+regions_avg.tab       bigWigAverageOverBed output (no header; name size covered sum mean0 mean)
+_bigwiginfo.txt       bigWigInfo output
+_bigwiginfo_chroms.txt bigWigInfo -chroms output
+fig1_signal_track.png / fig2_region_reconciliation.png / fig3_dilution.png
+
+======================================================================
+1. Design of the simulated track (make_inputs.py, seed=42)
+======================================================================
+Chromosome chrSim = 2,000,000 bp; 10 bp bins; background ~ N(1.0, 0.2) clipped at 0.05.
+6 Gaussian peaks (sigma 40 bp):
+  peak1 center 200,000    amplitude   50
+  peak2 center 400,000    amplitude  100
+  peak3 center 700,000    amplitude  200
+  peak4 center 1,000,000  amplitude  400
+  peak5 center 1,250,000  amplitude  800
+  peak6 center 1,700,000  amplitude  400  (inside sparse zone)
+Gap:      1,500,000-1,600,000  no data at all
+Sparse:   1,600,000-2,000,000  only every 5th bin kept (20% coverage)
+Console output:
+  bins written: 158000
+  covered bases: 1580000 / 2000000 (79.0%)
+  max value: 794.883
+
+======================================================================
+2. Build the bigWig (skill: "Build a Valid bigWig")
+======================================================================
+export LC_ALL=C
+sort -k1,1 -k2,2n sim.bedGraph > sim.sorted.bedGraph
+sort -c -k1,1 -k2,2n sim.sorted.bedGraph && echo "sorted OK"     # -> sorted OK
+bedGraphToBigWig sim.sorted.bedGraph chrom.sizes track.bw        # exit 0
+File sizes:
+  sim.bedGraph        4,359,932 bytes
+  sim.sorted.bedGraph 4,359,932 bytes
+  track.bw            1,234,797 bytes   (3.5x smaller than bedGraph; skill's ~10x is
+                       order-of-magnitude, exact ratio is data-dependent)
+
+======================================================================
+3. bigWigInfo (skill: "Inspect a File Before Trusting It")
+======================================================================
+$ bigWigInfo track.bw
+version: 4
+isCompressed: yes
+isSwapped: 0
+primaryDataSize: 905,259
+primaryIndexSize: 7,436
+zoomLevels: 8
+chromCount: 1
+basesCovered: 1,580,000
+mean: 1.103765
+min: 0.073000
+max: 794.882996
+std: 6.302343
+
+basesCovered 1,580,000 matches the design exactly (1,500,000 full + 0.2 x 400,000 sparse).
+max 794.883 is the top bin of peak5 (800 x exp(-25/3200) = 793.8 + background noise).
+primaryIndexSize / primaryDataSize = 7,436 / 905,259 = 0.8% (skill: index < ~1% of data).
+
+$ bigWigInfo -chroms track.bw
+	chrSim 0 2000000
+
+======================================================================
+4. bigWigAverageOverBed (skill: "Mean Signal per Region")
+======================================================================
+regions.bed (BED4, unique names):
+  chrSim 199800   200200   peak1_400bp
+  chrSim 999800   1000200  peak4_400bp
+  chrSim 1249800  1250200  peak5_400bp
+  chrSim 10000    60000    bg_50kb
+  chrSim 500000   1500000  wide_1Mb_peak5
+  chrSim 1690000  1710000  sparse_20kb_peak6
+  chrSim 1500000  1550000  gap_50kb
+
+$ bigWigAverageOverBed track.bw regions.bed regions_avg.tab
+peak1_400bp        400    400    5415.47      13.5387    13.5387
+peak4_400bp        400    400    40496.6      101.241    101.241
+peak5_400bp        400    400    80604.5      201.511    201.511
+bg_50kb            50000  50000  49955.2      0.999105   0.999105
+wide_1Mb_peak5     1000000 1000000 1.1407e+06  1.1407     1.1407
+sparse_20kb_peak6  20000  4000   12035.5      0.601777   3.00889
+gap_50kb           50000  0      0            0          0
+(columns: name size covered sum mean0 mean)
+
+======================================================================
+5. Reconciliation vs design truth (reconcile.py; float32 tolerance 1e-3)
+======================================================================
+peak1_400bp        covered 400/400      mean 13.5387  / 13.5387   PASS
+peak4_400bp        covered 400/400      mean 101.2410 / 101.2414  PASS
+peak5_400bp        covered 400/400      mean 201.5110 / 201.5111  PASS
+bg_50kb            covered 50000/50000  mean 0.9991   / 0.9991    PASS
+wide_1Mb_peak5     covered 1000000/1000000 mean 1.1407 / 1.1407   PASS
+sparse_20kb_peak6  covered 4000/4000    mean 3.0089   / 3.0089    PASS
+gap_50kb           covered 0/0          mean 0 (no covered base; truth NA) PASS
+worst relative error: 3.70e-06 (tolerance 1e-03)
+RECONCILIATION: ALL PASS
+
+======================================================================
+6. Headline numbers used in the notes (all from the outputs above)
+======================================================================
+- Zoom/dilution demo: peak5 amplitude ~794.9 (max) -> 201.51 (400 bp window mean)
+  -> 1.1407 (1 Mb window mean) vs background 0.999105: the same file read with the
+  same statistic over a wide window buries an 800-tall peak at 1.14.
+- mean vs mean0 fork: sparse_20kb_peak6 mean = 3.00889 vs mean0 = 0.601777 (5.0x).
+  Which column is correct depends on track biology (depth -> mean0; rate -> mean).
+- Build requirement reproduced: sorted bedGraph + matching chrom.sizes -> exit 0.
+- Note: pyBigWig / bigWigSummary / deepTools paths of the skill were NOT executed
+  (not installed in env); the zoom-approximation behavior of exact=False is cited
+  from the skill, not measured here.

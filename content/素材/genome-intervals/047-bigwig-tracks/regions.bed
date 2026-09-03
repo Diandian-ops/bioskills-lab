@@ -1,0 +1,7 @@
+chrSim	199800	200200	peak1_400bp
+chrSim	999800	1000200	peak4_400bp
+chrSim	1249800	1250200	peak5_400bp
+chrSim	10000	60000	bg_50kb
+chrSim	500000	1500000	wide_1Mb_peak5
+chrSim	1690000	1710000	sparse_20kb_peak6
+chrSim	1500000	1550000	gap_50kb

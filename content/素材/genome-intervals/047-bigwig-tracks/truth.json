@@ -1,0 +1,72 @@
+{
+ "peak1_400bp": {
+  "chrom": "chrSim",
+  "start": 199800,
+  "end": 200200,
+  "size": 400,
+  "covered": 400,
+  "sum": 5415.47,
+  "mean": 13.538675,
+  "mean0": 13.538675
+ },
+ "peak4_400bp": {
+  "chrom": "chrSim",
+  "start": 999800,
+  "end": 1000200,
+  "size": 400,
+  "covered": 400,
+  "sum": 40496.55,
+  "mean": 101.241375,
+  "mean0": 101.241375
+ },
+ "peak5_400bp": {
+  "chrom": "chrSim",
+  "start": 1249800,
+  "end": 1250200,
+  "size": 400,
+  "covered": 400,
+  "sum": 80604.46,
+  "mean": 201.51115,
+  "mean0": 201.51115
+ },
+ "bg_50kb": {
+  "chrom": "chrSim",
+  "start": 10000,
+  "end": 60000,
+  "size": 50000,
+  "covered": 50000,
+  "sum": 49955.25,
+  "mean": 0.999105,
+  "mean0": 0.999105
+ },
+ "wide_1Mb_peak5": {
+  "chrom": "chrSim",
+  "start": 500000,
+  "end": 1500000,
+  "size": 1000000,
+  "covered": 1000000,
+  "sum": 1140698.39,
+  "mean": 1.140698,
+  "mean0": 1.140698
+ },
+ "sparse_20kb_peak6": {
+  "chrom": "chrSim",
+  "start": 1690000,
+  "end": 1710000,
+  "size": 20000,
+  "covered": 4000,
+  "sum": 12035.54,
+  "mean": 3.008885,
+  "mean0": 0.601777
+ },
+ "gap_50kb": {
+  "chrom": "chrSim",
+  "start": 1500000,
+  "end": 1550000,
+  "size": 50000,
+  "covered": 0,
+  "sum": 0.0,
+  "mean": null,
+  "mean0": 0.0
+ }
+}

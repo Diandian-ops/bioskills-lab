@@ -1,0 +1,70 @@
+== tool versions ==
+bedGraphToBigWig v 2.10 - Convert a bedGraph file to bigWig format (bbi version: 4).
+bigWigInfo - Print out information about bigWig file.
+bigWigAverageOverBed v2 - Compute average score of big wig over each bed, which may have introns.
+bedtools v2.31.1
+Python 3.11.16
+== step 1: make simulated inputs (seed=42) ==
+bins written: 158000
+covered bases: 1580000 / 2000000 (79.0%)
+max value: 794.883
+== step 2: sort bedGraph (skill requirement) ==
+sorted OK
+ 158000 sim.bedGraph
+ 158000 sim.sorted.bedGraph
+      1 chrom.sizes
+      7 regions.bed
+ 316008 total
+== step 3: build bigWig ==
+bedGraphToBigWig exit: 0
+-rwxrwxrwx 1 devah devah 4359932 Sep  3 22:42 sim.bedGraph
+-rwxrwxrwx 1 devah devah 4359932 Sep  3 22:42 sim.sorted.bedGraph
+-rwxrwxrwx 1 devah devah 1234797 Sep  3 22:42 track.bw
+== step 4: bigWigInfo (header sanity check) ==
+version: 4
+isCompressed: yes
+isSwapped: 0
+primaryDataSize: 905,259
+primaryIndexSize: 7,436
+zoomLevels: 8
+chromCount: 1
+basesCovered: 1,580,000
+mean: 1.103765
+min: 0.073000
+max: 794.882996
+std: 6.302343
+-- bigWigInfo -chroms --
+version: 4
+isCompressed: yes
+isSwapped: 0
+primaryDataSize: 905,259
+primaryIndexSize: 7,436
+zoomLevels: 8
+chromCount: 1
+	chrSim 0 2000000
+basesCovered: 1,580,000
+mean: 1.103765
+min: 0.073000
+max: 794.882996
+std: 6.302343
+== step 5: bigWigAverageOverBed (per-region means) ==
+bigWigAverageOverBed exit: 0
+peak1_400bp	400	400	5415.47	13.5387	13.5387
+peak4_400bp	400	400	40496.6	101.241	101.241
+peak5_400bp	400	400	80604.5	201.511	201.511
+bg_50kb	50000	50000	49955.2	0.999105	0.999105
+wide_1Mb_peak5	1000000	1000000	1.1407e+06	1.1407	1.1407
+sparse_20kb_peak6	20000	4000	12035.5	0.601777	3.00889
+gap_50kb	50000	0	0	0	0
+== step 6: reconcile against design truth ==
+peak1_400bp            covered=400/400 sum=5415.47/5415.47 mean0=13.5387/13.5387 mean=13.5387/13.5387 -> PASS
+peak4_400bp            covered=400/400 sum=40496.60/40496.55 mean0=101.2410/101.2414 mean=101.2410/101.2414 -> PASS
+peak5_400bp            covered=400/400 sum=80604.50/80604.46 mean0=201.5110/201.5111 mean=201.5110/201.5111 -> PASS
+bg_50kb                covered=50000/50000 sum=49955.20/49955.25 mean0=0.9991/0.9991 mean=0.9991/0.9991 -> PASS
+wide_1Mb_peak5         covered=1000000/1000000 sum=1140700.00/1140698.39 mean0=1.1407/1.1407 mean=1.1407/1.1407 -> PASS
+sparse_20kb_peak6      covered=4000/4000 sum=12035.50/12035.54 mean0=0.6018/0.6018 mean=3.0089/3.0089 -> PASS
+gap_50kb               covered=0/0 sum=0.00/0.00 mean0=0.0000/0.0000 mean=0.0000/NA -> PASS
+worst relative error: 3.70e-06 (tolerance 1e-03)
+RECONCILIATION: ALL PASS
+reconcile exit: 0
+== done ==
