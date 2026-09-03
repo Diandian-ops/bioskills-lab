@@ -1,0 +1,4 @@
+sample	total_sequences	percent_gc	dedup_percentage	mean_quality_first10	mean_quality_last10	min_mean_quality	max_adapter_percent	overrepresented_max_percent	n_status_pass	n_status_warn	n_status_fail
+S1_good	20000	49.0	100.0	35.81	35.0	34.948125000000005	0.01	0.0	0	0	0
+S2_degraded	20000	49.0	100.0	39.97	10.0	7.00175	0.0	0.0	0	0	0
+S3_adapter	20000	50.0	99.63499999999999	34.2	32.49	32.4511	19.51	0.37	0	0	0

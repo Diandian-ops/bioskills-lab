@@ -1,0 +1,4 @@
+Sample	fastqc-percent_duplicates	fastqc-percent_gc	fastqc-avg_sequence_length	fastqc-median_sequence_length	fastqc-percent_fails	fastqc-total_sequences
+S1_good	0.0	49.0	100.0	100	0.0	0.02
+S2_degraded	0.0	49.0	100.0	100	10.0	0.02
+S3_adapter	0.3650000000000091	50.0	100.0	100	10.0	0.02

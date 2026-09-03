@@ -1,0 +1,4 @@
+Sample	Unique Reads	Duplicate Reads
+S1_good	20000.0	0.0
+S2_degraded	20000.0	0.0
+S3_adapter	19927.0	73.0

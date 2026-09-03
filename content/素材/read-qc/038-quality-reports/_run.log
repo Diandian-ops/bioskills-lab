@@ -1,0 +1,154 @@
+== 038 quality-reports run: 2026-09-03_20:24:01 ==
+python: Python 3.13.15
+fastqc: FastQC v0.12.1
+multiqc: multiqc, version 1.35
+
+[1/4] make inputs (make_inputs.py, seed=20260903)
+wrote /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/raw_fastq/S1_good.fastq.gz (20000 reads x 100 bp)
+wrote /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/raw_fastq/S2_degraded.fastq.gz (20000 reads x 100 bp)
+wrote /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/raw_fastq/S3_adapter.fastq.gz (20000 reads x 100 bp)
+total 5344
+drwxrwxrwx 1 devah devah    4096 Sep  3 20:11 .
+drwxrwxrwx 1 devah devah    4096 Sep  3 20:20 ..
+-rwxrwxrwx 1 devah devah 1908450 Sep  3 20:24 S1_good.fastq.gz
+-rwxrwxrwx 1 devah devah 1861173 Sep  3 20:24 S2_degraded.fastq.gz
+-rwxrwxrwx 1 devah devah 1697148 Sep  3 20:24 S3_adapter.fastq.gz
+
+[2/4] fastqc per-file QC
+application/gzip
+Started analysis of S1_good.fastq.gz
+application/gzip
+application/gzip
+Approx 5% complete for S1_good.fastq.gz
+Approx 10% complete for S1_good.fastq.gz
+Approx 15% complete for S1_good.fastq.gz
+Approx 20% complete for S1_good.fastq.gz
+Approx 25% complete for S1_good.fastq.gz
+Approx 30% complete for S1_good.fastq.gz
+Started analysis of S2_degraded.fastq.gz
+Approx 35% complete for S1_good.fastq.gz
+Approx 5% complete for S2_degraded.fastq.gz
+Approx 40% complete for S1_good.fastq.gz
+Approx 10% complete for S2_degraded.fastq.gz
+Approx 45% complete for S1_good.fastq.gz
+Approx 15% complete for S2_degraded.fastq.gz
+Approx 50% complete for S1_good.fastq.gz
+Approx 20% complete for S2_degraded.fastq.gz
+Approx 55% complete for S1_good.fastq.gz
+Approx 25% complete for S2_degraded.fastq.gz
+Approx 60% complete for S1_good.fastq.gz
+Approx 30% complete for S2_degraded.fastq.gz
+Approx 65% complete for S1_good.fastq.gz
+Started analysis of S3_adapter.fastq.gz
+Approx 35% complete for S2_degraded.fastq.gz
+Approx 70% complete for S1_good.fastq.gz
+Approx 5% complete for S3_adapter.fastq.gz
+Approx 40% complete for S2_degraded.fastq.gz
+Approx 75% complete for S1_good.fastq.gz
+Approx 10% complete for S3_adapter.fastq.gz
+Approx 45% complete for S2_degraded.fastq.gz
+Approx 80% complete for S1_good.fastq.gz
+Approx 15% complete for S3_adapter.fastq.gz
+Approx 50% complete for S2_degraded.fastq.gz
+Approx 20% complete for S3_adapter.fastq.gz
+Approx 85% complete for S1_good.fastq.gz
+Approx 55% complete for S2_degraded.fastq.gz
+Approx 25% complete for S3_adapter.fastq.gz
+Approx 90% complete for S1_good.fastq.gz
+Approx 60% complete for S2_degraded.fastq.gz
+Approx 30% complete for S3_adapter.fastq.gz
+Approx 95% complete for S1_good.fastq.gz
+Approx 35% complete for S3_adapter.fastq.gz
+Approx 65% complete for S2_degraded.fastq.gz
+Approx 100% complete for S1_good.fastq.gz
+Analysis complete for S1_good.fastq.gz
+Approx 40% complete for S3_adapter.fastq.gz
+Approx 70% complete for S2_degraded.fastq.gz
+Approx 45% complete for S3_adapter.fastq.gz
+Approx 75% complete for S2_degraded.fastq.gz
+Approx 50% complete for S3_adapter.fastq.gz
+Approx 80% complete for S2_degraded.fastq.gz
+Approx 55% complete for S3_adapter.fastq.gz
+Approx 85% complete for S2_degraded.fastq.gz
+Approx 60% complete for S3_adapter.fastq.gz
+Approx 90% complete for S2_degraded.fastq.gz
+Approx 65% complete for S3_adapter.fastq.gz
+Approx 95% complete for S2_degraded.fastq.gz
+Approx 70% complete for S3_adapter.fastq.gz
+Approx 100% complete for S2_degraded.fastq.gz
+Analysis complete for S2_degraded.fastq.gz
+Approx 75% complete for S3_adapter.fastq.gz
+Approx 80% complete for S3_adapter.fastq.gz
+Approx 85% complete for S3_adapter.fastq.gz
+Approx 90% complete for S3_adapter.fastq.gz
+Approx 95% complete for S3_adapter.fastq.gz
+Approx 100% complete for S3_adapter.fastq.gz
+Analysis complete for S3_adapter.fastq.gz
+
+[3/4] multiqc aggregation
+
+/// MultiQC 🔍 v1.35
+
+       file_search | Search path: /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/qc/raw
+            fastqc | Found 3 reports
+     write_results | Data        : qc/multiqc/multiqc_data
+     write_results | Report      : qc/multiqc/multiqc_report.html
+           multiqc | MultiQC complete
+total 496
+drwxrwxrwx 1 devah devah   4096 Sep  3 20:24 .
+drwxrwxrwx 1 devah devah   4096 Sep  3 20:24 ..
+-rwxrwxrwx 1 devah devah    342 Sep  3 20:24 fastqc-status-check-heatmap.txt
+-rwxrwxrwx 1 devah devah    849 Sep  3 20:24 fastqc_adapter_content_plot.txt
+-rwxrwxrwx 1 devah devah   1819 Sep  3 20:24 fastqc_per_base_n_content_plot.txt
+-rwxrwxrwx 1 devah devah   3043 Sep  3 20:24 fastqc_per_base_sequence_quality_plot.txt
+-rwxrwxrwx 1 devah devah   4136 Sep  3 20:24 fastqc_per_sequence_gc_content_plot_Counts.txt
+-rwxrwxrwx 1 devah devah   4576 Sep  3 20:24 fastqc_per_sequence_gc_content_plot_Percentages.txt
+-rwxrwxrwx 1 devah devah    189 Sep  3 20:24 fastqc_per_sequence_quality_scores_plot.txt
+-rwxrwxrwx 1 devah devah    104 Sep  3 20:24 fastqc_sequence_counts_plot.txt
+-rwxrwxrwx 1 devah devah    665 Sep  3 20:24 fastqc_sequence_duplication_levels_plot.txt
+-rwxrwxrwx 1 devah devah    118 Sep  3 20:24 fastqc_top_overrepresented_sequences_table.txt
+-rwxrwxrwx 1 devah devah  38920 Sep  3 20:24 llms-full.txt
+-rwxrwxrwx 1 devah devah  13205 Sep  3 20:24 multiqc.log
+-rwxrwxrwx 1 devah devah  48638 Sep  3 20:24 multiqc.parquet
+-rwxrwxrwx 1 devah devah     62 Sep  3 20:24 multiqc_citations.txt
+-rwxrwxrwx 1 devah devah 362142 Sep  3 20:24 multiqc_data.json
+-rwxrwxrwx 1 devah devah    953 Sep  3 20:24 multiqc_fastqc.txt
+-rwxrwxrwx 1 devah devah    284 Sep  3 20:24 multiqc_general_stats.txt
+
+[4/4] parse real values (parse_qc.py)
+parsed 3 samples; multiqc rows: 3
+S1_good: 20000 reads, GC 49.0%, dedup 100.0%, Q(first10) 35.81, Q(last10) 35.00, adapter max 0.01%, overrep max 0.00%
+    Basic Statistics                 pass
+    Per base sequence quality        pass
+    Per sequence quality scores      pass
+    Per base sequence content        pass
+    Per sequence GC content          pass
+    Per base N content               pass
+    Sequence Length Distribution     pass
+    Sequence Duplication Levels      pass
+    Overrepresented sequences        pass
+    Adapter Content                  pass
+S2_degraded: 20000 reads, GC 49.0%, dedup 100.0%, Q(first10) 39.97, Q(last10) 10.00, adapter max 0.00%, overrep max 0.00%
+    Basic Statistics                 pass
+    Per base sequence quality        fail
+    Per sequence quality scores      warn
+    Per base sequence content        pass
+    Per sequence GC content          pass
+    Per base N content               pass
+    Sequence Length Distribution     pass
+    Sequence Duplication Levels      pass
+    Overrepresented sequences        pass
+    Adapter Content                  pass
+S3_adapter: 20000 reads, GC 50.0%, dedup 99.63499999999999%, Q(first10) 34.20, Q(last10) 32.49, adapter max 19.51%, overrep max 0.37%
+    Basic Statistics                 pass
+    Per base sequence quality        pass
+    Per sequence quality scores      pass
+    Per base sequence content        pass
+    Per sequence GC content          pass
+    Per base N content               pass
+    Sequence Length Distribution     pass
+    Sequence Duplication Levels      pass
+    Overrepresented sequences        warn
+    Adapter Content                  fail
+
+== done: 2026-09-03_20:24:14 ==

@@ -1,0 +1,4 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	S1_good	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/qc/raw/S1_good_fastqc.zip
+FastQC	all_sections	S2_degraded	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/qc/raw/S2_degraded_fastqc.zip
+FastQC	all_sections	S3_adapter	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/038-quality-reports/qc/raw/S3_adapter_fastqc.zip
