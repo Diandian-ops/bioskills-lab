@@ -1,0 +1,422 @@
+=== 039 adapter-trimming real run ===
+Thu Sep  3 20:35:27 CST 2026
+
+--- tool versions ---
+5.2
+openjdk version "25.0.2-internal" 2026-01-20
+/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/
+--- built-in adapter files (SKILL.md: ls $CONDA_PREFIX/share/trimmomatic-*/adapters/) ---
+NexteraPE-PE.fa
+TruSeq2-PE.fa
+TruSeq2-SE.fa
+TruSeq3-PE-2-GGGGG.fa
+TruSeq3-PE-2.fa
+TruSeq3-PE.fa
+TruSeq3-SE-GGGGG.fa
+TruSeq3-SE.fa
+--- adapter fasta used: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa ---
+>PrefixPE/1
+TACACTCTTTCCCTACACGACGCTCTTCCGATCT
+>PrefixPE/2
+GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT
+>PE1
+TACACTCTTTCCCTACACGACGCTCTTCCGATCT
+>PE1_rc
+AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA
+>PE2
+GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT
+>PE2_rc
+AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+
+--- step 1: generate gradient inputs (make_inputs.py, seed 39) ---
+level 5p: read-through pairs 1025/20000, adapter reads 5.12%, adapter bases 39402
+level 20p: read-through pairs 4029/20000, adapter reads 20.14%, adapter bases 153854
+level 40p: read-through pairs 8095/20000, adapter reads 40.48%, adapter bases 309810
+wrote truth.tsv.gz (120000 rows) and truth_summary.json
+
+=== cutadapt grad 5p (SKILL.md PE 口径: -a/-A AGATCGGAAGAGC -m 20:20) ===
+4	66	78.1	0	66
+5	61	19.5	0	61
+6	35	4.9	0	35
+7	27	1.2	0	27
+8	36	0.3	0	36
+9	37	0.1	0	35 2
+10	28	0.0	1	25 3
+11	31	0.0	1	29 2
+12	32	0.0	1	27 5
+13	34	0.0	1	32 2
+14	39	0.0	1	33 6
+15	37	0.0	1	30 7
+16	40	0.0	1	34 6
+17	35	0.0	1	32 3
+18	34	0.0	1	30 4
+19	39	0.0	1	34 5
+20	34	0.0	1	31 3
+21	30	0.0	1	26 4
+22	29	0.0	1	25 4
+23	29	0.0	1	23 6
+24	33	0.0	1	30 3
+25	47	0.0	1	44 3
+26	28	0.0	1	25 3
+27	50	0.0	1	43 7
+28	36	0.0	1	32 4
+29	39	0.0	1	37 2
+30	38	0.0	1	33 5
+31	33	0.0	1	31 2
+32	39	0.0	1	34 5
+33	31	0.0	1	28 3
+44	1	0.0	1	0 1
+88	1	0.0	1	0 1
+
+=== trimmomatic grad 5p · A: SKILL.md 字面口径 (ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10:2:keepBothReads) ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad5p_R1.fq.gz grad5p_R2.fq.gz tm_5p_R1_p.fq.gz tm_5p_R1_u.fq.gz tm_5p_R2_p.fq.gz tm_5p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:keepBothReads MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 18975 (94.88%) Forward Only Surviving: 1025 (5.12%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+
+=== trimmomatic grad 5p · B: 修正布尔位 (ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10:2:true) ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad5p_R1.fq.gz grad5p_R2.fq.gz tmk_5p_R1_p.fq.gz tmk_5p_R1_u.fq.gz tmk_5p_R2_p.fq.gz tmk_5p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:true MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 20000 (100.00%) Forward Only Surviving: 0 (0.00%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+
+=== cutadapt grad 20p (SKILL.md PE 口径: -a/-A AGATCGGAAGAGC -m 20:20) ===
+4	65	78.1	0	65
+5	132	19.5	0	132
+6	145	4.9	0	145
+7	138	1.2	0	138
+8	123	0.3	0	123
+9	117	0.1	0	116 1
+10	152	0.0	1	144 8
+11	119	0.0	1	105 14
+12	148	0.0	1	131 17
+13	126	0.0	1	117 9
+14	136	0.0	1	128 8
+15	143	0.0	1	131 12
+16	129	0.0	1	113 16
+17	141	0.0	1	127 14
+18	140	0.0	1	119 21
+19	133	0.0	1	115 18
+20	140	0.0	1	125 15
+21	150	0.0	1	124 26
+22	144	0.0	1	128 16
+23	128	0.0	1	116 12
+24	146	0.0	1	123 23
+25	134	0.0	1	119 15
+26	123	0.0	1	107 16
+27	153	0.0	1	140 13
+28	120	0.0	1	108 12
+29	151	0.0	1	136 15
+30	143	0.0	1	131 12
+31	141	0.0	1	123 18
+32	131	0.0	1	113 18
+33	151	0.0	1	134 17
+46	1	0.0	1	0 1
+65	1	0.0	1	0 1
+
+=== trimmomatic grad 20p · A: SKILL.md 字面口径 (ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10:2:keepBothReads) ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad20p_R1.fq.gz grad20p_R2.fq.gz tm_20p_R1_p.fq.gz tm_20p_R1_u.fq.gz tm_20p_R2_p.fq.gz tm_20p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:keepBothReads MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 15971 (79.86%) Forward Only Surviving: 4029 (20.14%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+
+=== trimmomatic grad 20p · B: 修正布尔位 (ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10:2:true) ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad20p_R1.fq.gz grad20p_R2.fq.gz tmk_20p_R1_p.fq.gz tmk_20p_R1_u.fq.gz tmk_20p_R2_p.fq.gz tmk_20p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:true MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 20000 (100.00%) Forward Only Surviving: 0 (0.00%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+
+=== cutadapt grad 40p (SKILL.md PE 口径: -a/-A AGATCGGAAGAGC -m 20:20) ===
+4	47	78.1	0	47
+5	281	19.5	0	281
+6	239	4.9	0	239
+7	272	1.2	0	272
+8	259	0.3	0	259
+9	263	0.1	0	262 1
+10	230	0.0	1	210 20
+11	294	0.0	1	265 29
+12	281	0.0	1	256 25
+13	266	0.0	1	231 35
+14	272	0.0	1	237 35
+15	298	0.0	1	262 36
+16	268	0.0	1	239 29
+17	294	0.0	1	272 22
+18	247	0.0	1	221 26
+19	288	0.0	1	247 41
+20	257	0.0	1	230 27
+21	285	0.0	1	259 26
+22	264	0.0	1	230 34
+23	277	0.0	1	252 25
+24	289	0.0	1	256 33
+25	290	0.0	1	255 35
+26	288	0.0	1	258 30
+27	283	0.0	1	248 35
+28	263	0.0	1	226 37
+29	289	0.0	1	253 36
+30	275	0.0	1	246 29
+31	278	0.0	1	254 24
+32	288	0.0	1	258 30
+33	299	0.0	1	261 38
+52	1	0.0	1	0 1
+62	1	0.0	1	0 1
+
+=== trimmomatic grad 40p · A: SKILL.md 字面口径 (ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10:2:keepBothReads) ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad40p_R1.fq.gz grad40p_R2.fq.gz tm_40p_R1_p.fq.gz tm_40p_R1_u.fq.gz tm_40p_R2_p.fq.gz tm_40p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:keepBothReads MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 11905 (59.52%) Forward Only Surviving: 8095 (40.48%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+
+=== trimmomatic grad 40p · B: 修正布尔位 (ILLUMINACLIP:TruSeq3-PE-2.fa:2:30:10:2:true) ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad40p_R1.fq.gz grad40p_R2.fq.gz tmk_40p_R1_p.fq.gz tmk_40p_R1_u.fq.gz tmk_40p_R2_p.fq.gz tmk_40p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:true MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 20000 (100.00%) Forward Only Surviving: 0 (0.00%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+
+--- step 3: parse results ---
+== per-level ==
+{
+  "5p": {
+    "reads_in": 40000,
+    "cutadapt": {
+      "reads_out": 39998,
+      "reads_dropped": 2,
+      "truth_adapter_reads": 2050,
+      "adapter_hit_reads": 2016,
+      "recall_pct": 98.34,
+      "untouched_reads": 37157,
+      "false_clip_reads": 825,
+      "false_clip_pct_of_clean_reads": 2.17,
+      "truth_adapter_bases": 39402,
+      "bases_removed": 41976,
+      "bases_removed_pct": 1.0494,
+      "bases_removed_per_read": 1.049,
+      "bases_in": 4000000
+    },
+    "trimmomatic_skill": {
+      "reads_out": 38975,
+      "reads_dropped": 1025,
+      "truth_adapter_reads": 1025,
+      "adapter_hit_reads": 1025,
+      "recall_pct": 100.0,
+      "untouched_reads": 37950,
+      "false_clip_reads": 0,
+      "false_clip_pct_of_clean_reads": 0.0,
+      "truth_adapter_bases": 19701,
+      "bases_removed": 122201,
+      "bases_removed_pct": 3.055,
+      "bases_removed_per_read": 3.055,
+      "bases_in": 4000000
+    },
+    "trimmomatic_true": {
+      "reads_out": 40000,
+      "reads_dropped": 0,
+      "truth_adapter_reads": 2050,
+      "adapter_hit_reads": 2050,
+      "recall_pct": 100.0,
+      "untouched_reads": 37950,
+      "false_clip_reads": 0,
+      "false_clip_pct_of_clean_reads": 0.0,
+      "truth_adapter_bases": 39402,
+      "bases_removed": 39402,
+      "bases_removed_pct": 0.985,
+      "bases_removed_per_read": 0.985,
+      "bases_in": 4000000
+    }
+  },
+  "20p": {
+    "reads_in": 40000,
+    "cutadapt": {
+      "reads_out": 39998,
+      "reads_dropped": 2,
+      "truth_adapter_reads": 8058,
+      "adapter_hit_reads": 7923,
+      "recall_pct": 98.32,
+      "untouched_reads": 31429,
+      "false_clip_reads": 646,
+      "false_clip_pct_of_clean_reads": 2.02,
+      "truth_adapter_bases": 153854,
+      "bases_removed": 154698,
+      "bases_removed_pct": 3.8674,
+      "bases_removed_per_read": 3.867,
+      "bases_in": 4000000
+    },
+    "trimmomatic_skill": {
+      "reads_out": 35971,
+      "reads_dropped": 4029,
+      "truth_adapter_reads": 4029,
+      "adapter_hit_reads": 4029,
+      "recall_pct": 100.0,
+      "untouched_reads": 31942,
+      "false_clip_reads": 0,
+      "false_clip_pct_of_clean_reads": 0.0,
+      "truth_adapter_bases": 76927,
+      "bases_removed": 479827,
+      "bases_removed_pct": 11.9957,
+      "bases_removed_per_read": 11.996,
+      "bases_in": 4000000
+    },
+    "trimmomatic_true": {
+      "reads_out": 40000,
+      "reads_dropped": 0,
+      "truth_adapter_reads": 8058,
+      "adapter_hit_reads": 8058,
+      "recall_pct": 100.0,
+      "untouched_reads": 31942,
+      "false_clip_reads": 0,
+      "false_clip_pct_of_clean_reads": 0.0,
+      "truth_adapter_bases": 153854,
+      "bases_removed": 153854,
+      "bases_removed_pct": 3.8464,
+      "bases_removed_per_read": 3.846,
+      "bases_in": 4000000
+    }
+  },
+  "40p": {
+    "reads_in": 40000,
+    "cutadapt": {
+      "reads_out": 40000,
+      "reads_dropped": 0,
+      "truth_adapter_reads": 16190,
+      "adapter_hit_reads": 15938,
+      "recall_pct": 98.44,
+      "untouched_reads": 23606,
+      "false_clip_reads": 456,
+      "false_clip_pct_of_clean_reads": 1.92,
+      "truth_adapter_bases": 309810,
+      "bases_removed": 308533,
+      "bases_removed_pct": 7.7133,
+      "bases_removed_per_read": 7.713,
+      "bases_in": 4000000
+    },
+    "trimmomatic_skill": {
+      "reads_out": 31905,
+      "reads_dropped": 8095,
+      "truth_adapter_reads": 8095,
+      "adapter_hit_reads": 8095,
+      "recall_pct": 100.0,
+      "untouched_reads": 23810,
+      "false_clip_reads": 0,
+      "false_clip_pct_of_clean_reads": 0.0,
+      "truth_adapter_bases": 154905,
+      "bases_removed": 964405,
+      "bases_removed_pct": 24.1101,
+      "bases_removed_per_read": 24.11,
+      "bases_in": 4000000
+    },
+    "trimmomatic_true": {
+      "reads_out": 40000,
+      "reads_dropped": 0,
+      "truth_adapter_reads": 16190,
+      "adapter_hit_reads": 16190,
+      "recall_pct": 100.0,
+      "untouched_reads": 23810,
+      "false_clip_reads": 0,
+      "false_clip_pct_of_clean_reads": 0.0,
+      "truth_adapter_bases": 309810,
+      "bases_removed": 309810,
+      "bases_removed_pct": 7.7453,
+      "bases_removed_per_read": 7.745,
+      "bases_in": 4000000
+    }
+  }
+}
+== bins ==
+bin	n_truth	n_cutadapt_hit	cutadapt_recall_pct	n_trimmomatic_hit	trimmomatic_recall_pct
+5-9	4502	4205	93.40	4502	100.00
+10-15	5352	5330	99.59	5352	100.00
+16-24	8096	8051	99.44	8096	100.00
+25-33	8348	8291	99.32	8348	100.00
+== cutadapt report ==
+{
+  "5p": {
+    "total_read_pairs": "20,000",
+    "read1_with_adapter": {
+      "pct": "7.2",
+      "count": "1,431"
+    },
+    "read2_with_adapter": {
+      "pct": "7.1",
+      "count": "1,411"
+    },
+    "pairs_written": {
+      "count": "19,999",
+      "pct": "100.0"
+    }
+  },
+  "20p": {
+    "total_read_pairs": "20,000",
+    "read1_with_adapter": {
+      "pct": "21.4",
+      "count": "4,278"
+    },
+    "read2_with_adapter": {
+      "pct": "21.5",
+      "count": "4,292"
+    },
+    "pairs_written": {
+      "count": "19,999",
+      "pct": "100.0"
+    }
+  },
+  "40p": {
+    "total_read_pairs": "20,000",
+    "read1_with_adapter": {
+      "pct": "41.1",
+      "count": "8,211"
+    },
+    "read2_with_adapter": {
+      "pct": "40.9",
+      "count": "8,183"
+    },
+    "pairs_written": {
+      "count": "20,000",
+      "pct": "100.0"
+    }
+  }
+}
+wrote results.json, results.tsv, bins.tsv
+
+=== done ===
+Thu Sep  3 20:35:43 CST 2026

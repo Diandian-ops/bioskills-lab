@@ -1,0 +1,42 @@
+=== probe A: 4-param form ILLUMINACLIP:fa:2:30:10:true ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad5p_R1.fq.gz grad5p_R2.fq.gz tm4a_5p_R1_p.fq.gz tm4a_5p_R1_u.fq.gz tm4a_5p_R2_p.fq.gz tm4a_5p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:true MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Exception in thread "main" java.lang.NumberFormatException: For input string: "true"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at org.usadellab.trimmomatic.trim.IlluminaClippingTrimmer.makeIlluminaClippingTrimmer(IlluminaClippingTrimmer.java:111)
+	at org.usadellab.trimmomatic.trim.TrimmerFactory.makeTrimmer(TrimmerFactory.java:27)
+	at org.usadellab.trimmomatic.Trimmomatic.createTrimmers(Trimmomatic.java:51)
+	at org.usadellab.trimmomatic.TrimmomaticPE.run(TrimmomaticPE.java:394)
+	at org.usadellab.trimmomatic.Trimmomatic.main(Trimmomatic.java:88)
+
+=== probe B: 5-param form ILLUMINACLIP:fa:2:30:10:false ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad5p_R1.fq.gz grad5p_R2.fq.gz tm4b_5p_R1_p.fq.gz tm4b_5p_R1_u.fq.gz tm4b_5p_R2_p.fq.gz tm4b_5p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:false MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Exception in thread "main" java.lang.NumberFormatException: For input string: "false"
+	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
+	at java.base/java.lang.Integer.parseInt(Integer.java:565)
+	at java.base/java.lang.Integer.parseInt(Integer.java:662)
+	at org.usadellab.trimmomatic.trim.IlluminaClippingTrimmer.makeIlluminaClippingTrimmer(IlluminaClippingTrimmer.java:111)
+	at org.usadellab.trimmomatic.trim.TrimmerFactory.makeTrimmer(TrimmerFactory.java:27)
+	at org.usadellab.trimmomatic.Trimmomatic.createTrimmers(Trimmomatic.java:51)
+	at org.usadellab.trimmomatic.TrimmomaticPE.run(TrimmomaticPE.java:394)
+	at org.usadellab.trimmomatic.Trimmomatic.main(Trimmomatic.java:88)
+probe B exit=1
+
+=== probe D: 6-param form ILLUMINACLIP:fa:2:30:10:2:true ===
+TrimmomaticPE: Started with arguments:
+ -phred33 -threads 4 grad5p_R1.fq.gz grad5p_R2.fq.gz tm4d_5p_R1_p.fq.gz tm4d_5p_R1_u.fq.gz tm4d_5p_R2_p.fq.gz tm4d_5p_R2_u.fq.gz ILLUMINACLIP:/opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa:2:30:10:2:true MINLEN:36
+ILLUMINACLIP: Using adapter file from user-specified absolute path: /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+Using PrefixPair: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT' and 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA'
+Using Long Clipping Sequence: 'AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC'
+Using Long Clipping Sequence: 'GTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT'
+Using Long Clipping Sequence: 'TACACTCTTTCCCTACACGACGCTCTTCCGATCT'
+ILLUMINACLIP: Using 1 prefix pairs, 4 forward/reverse sequences, 0 forward only sequences, 0 reverse only sequences
+Input Read Pairs: 20000 Both Surviving: 20000 (100.00%) Forward Only Surviving: 0 (0.00%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+TrimmomaticPE: Completed successfully
+=== probe2 done ===

@@ -1,0 +1,121 @@
+This is cutadapt 5.2 with Python 3.13.15
+Command line parameters: -a AGATCGGAAGAGC -A AGATCGGAAGAGC -m 20:20 -o ca_5p_R1.fq.gz -p ca_5p_R2.fq.gz grad5p_R1.fq.gz grad5p_R2.fq.gz
+Processing paired-end reads on 1 core ...
+
+=== Summary ===
+
+Total read pairs processed:             20,000
+  Read 1 with adapter:                   1,431 (7.2%)
+  Read 2 with adapter:                   1,411 (7.1%)
+
+== Read fate breakdown ==
+Pairs that were too short:                   1 (0.0%)
+Pairs written (passing filters):        19,999 (100.0%)
+
+Total basepairs processed:     4,000,000 bp
+  Read 1:     2,000,000 bp
+  Read 2:     2,000,000 bp
+Total written (filtered):      3,958,024 bp (99.0%)
+  Read 1:     1,979,032 bp
+  Read 2:     1,978,992 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: AGATCGGAAGAGC; Type: regular 3'; Length: 13; Trimmed: 1431 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-13 bp: 1
+
+Bases preceding removed adapters:
+  A: 25.4%
+  C: 25.8%
+  G: 24.1%
+  T: 24.7%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	321	312.5	0	321
+4	73	78.1	0	73
+5	62	19.5	0	62
+6	27	4.9	0	27
+7	29	1.2	0	29
+8	39	0.3	0	39
+9	37	0.1	0	34 3
+10	27	0.0	1	25 2
+11	32	0.0	1	27 5
+12	32	0.0	1	29 3
+13	34	0.0	1	27 7
+14	40	0.0	1	35 5
+15	37	0.0	1	33 4
+16	40	0.0	1	33 7
+17	36	0.0	1	33 3
+18	34	0.0	1	33 1
+19	40	0.0	1	31 9
+20	34	0.0	1	30 4
+21	30	0.0	1	28 2
+22	28	0.0	1	25 3
+23	29	0.0	1	26 3
+24	32	0.0	1	28 4
+25	46	0.0	1	44 2
+26	29	0.0	1	27 2
+27	49	0.0	1	45 4
+28	36	0.0	1	32 4
+29	37	0.0	1	32 5
+30	37	0.0	1	34 3
+31	33	0.0	1	28 5
+32	39	0.0	1	35 4
+33	32	0.0	1	28 4
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: AGATCGGAAGAGC; Type: regular 3'; Length: 13; Trimmed: 1411 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-13 bp: 1
+
+Bases preceding removed adapters:
+  A: 25.4%
+  C: 24.9%
+  G: 26.1%
+  T: 23.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	302	312.5	0	302
+4	66	78.1	0	66
+5	61	19.5	0	61
+6	35	4.9	0	35
+7	27	1.2	0	27
+8	36	0.3	0	36
+9	37	0.1	0	35 2
+10	28	0.0	1	25 3
+11	31	0.0	1	29 2
+12	32	0.0	1	27 5
+13	34	0.0	1	32 2
+14	39	0.0	1	33 6
+15	37	0.0	1	30 7
+16	40	0.0	1	34 6
+17	35	0.0	1	32 3
+18	34	0.0	1	30 4
+19	39	0.0	1	34 5
+20	34	0.0	1	31 3
+21	30	0.0	1	26 4
+22	29	0.0	1	25 4
+23	29	0.0	1	23 6
+24	33	0.0	1	30 3
+25	47	0.0	1	44 3
+26	28	0.0	1	25 3
+27	50	0.0	1	43 7
+28	36	0.0	1	32 4
+29	39	0.0	1	37 2
+30	38	0.0	1	33 5
+31	33	0.0	1	31 2
+32	39	0.0	1	34 5
+33	31	0.0	1	28 3
+44	1	0.0	1	0 1
+88	1	0.0	1	0 1

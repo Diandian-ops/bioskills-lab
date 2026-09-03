@@ -1,0 +1,152 @@
+039 adapter-trimming 真实试用复现记录
+日期：2026-09-03（WSL Ubuntu，conda env bio-qc）
+主机目录：D:/1.WorkDir/RedBook/content/素材/read-qc/039-adapter-trimming/
+WSL 内路径：/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/039-adapter-trimming/
+
+================================================================
+0. 环境与版本（_run.log 开头摘录）
+================================================================
+cutadapt --version        -> 5.2
+java -version             -> openjdk version "25.0.2-internal" 2026-01-20
+ls $CONDA_PREFIX/share/trimmomatic-*/adapters/
+                          -> /opt/miniconda3/envs/bio-qc/share/trimmomatic-0.41-0/
+                             （Trimmomatic 0.41，内置 8 个接头 fasta，
+                               本次用 TruSeq3-PE-2.fa）
+
+TruSeq3-PE-2.fa 内容（ PrefixPE/1、PrefixPE/2、PE1、PE1_rc、PE2、PE2_rc ）：
+  >PE1_rc  AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGTA
+  >PE2_rc  AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+（palindrome 模式使用 PrefixPair + Long Clipping Sequence 共 6 条）
+
+================================================================
+1. 命令清单（全部封装在 _run.sh，日志 _run.log；另有参数探针 _probe.sh/_probe.log）
+================================================================
+# 激活环境
+source /opt/miniconda3/etc/profile.d/conda.sh && conda activate bio-qc
+
+# step 1 造梯度数据（固定种子 39，20000 对/档，100 bp，1% 替换错误）
+python3 make_inputs.py
+
+# step 2 三档梯度 × 三种口径（G = 5p / 20p / 40p）
+# ① cutadapt（SKILL.md PE 口径：共用 13 bp 茎环 AGATCGGAAGAGC）
+cutadapt -a AGATCGGAAGAGC -A AGATCGGAAGAGC -m 20:20 \
+  -o ca_${G}_R1.fq.gz -p ca_${G}_R2.fq.gz \
+  grad${G}_R1.fq.gz grad${G}_R2.fq.gz > cutadapt_report_${G}.txt 2>&1
+
+# ② Trimmomatic · A：SKILL.md 字面参数串
+ADAPTERS_FA=$CONDA_PREFIX/share/trimmomatic-0.41-0/adapters/TruSeq3-PE-2.fa
+trimmomatic PE -phred33 -threads 4 \
+  grad${G}_R1.fq.gz grad${G}_R2.fq.gz \
+  tm_${G}_R1_p.fq.gz tm_${G}_R1_u.fq.gz tm_${G}_R2_p.fq.gz tm_${G}_R2_u.fq.gz \
+  ILLUMINACLIP:${ADAPTERS_FA}:2:30:10:2:keepBothReads MINLEN:36
+
+# ③ Trimmomatic · B：仅把布尔位改为 true
+trimmomatic PE -phred33 -threads 4 \
+  grad${G}_R1.fq.gz grad${G}_R2.fq.gz \
+  tmk_${G}_R1_p.fq.gz tmk_${G}_R1_u.fq.gz tmk_${G}_R2_p.fq.gz tmk_${G}_R2_u.fq.gz \
+  ILLUMINACLIP:${ADAPTERS_FA}:2:30:10:2:true MINLEN:36
+
+# step 3 以 truth.tsv.gz 逐读段真值统一口径评估
+python3 analyze_results.py        # 产出 results.json / results.tsv / bins.tsv
+python3 make_figs.py              # 产出 fig1/fig2/fig3 PNG + 自检
+                                  # 末行打印 FIGURE QUALITY: TOTAL FAILS = 0
+
+# 参数探针（_probe.sh，验证 ILLUMINACLIP 参数个数语法，见第 4 节）
+wsl.exe -d Ubuntu -u root -- bash /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/039-adapter-trimming/_run.sh
+wsl.exe -d Ubuntu -u root -- bash /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/039-adapter-trimming/_probe.sh
+
+================================================================
+2. 造数据真值摘录（make_inputs.py 输出 + truth_summary.json）
+================================================================
+level 5p:  read-through pairs 1025/20000, adapter reads  5.12%, adapter bases  39402
+level 20p: read-through pairs 4029/20000, adapter reads 20.14%, adapter bases 153854
+level 40p: read-through pairs 8095/20000, adapter reads 40.48%, adapter bases 309810
+wrote truth.tsv.gz (120000 rows) and truth_summary.json
+
+设计：seed=39，每档 20000 对、读长 100 bp、1% 替换错误（错误位 Q20）；
+read-through 对插入长 67–95 bp（接头残留 5–33 bp），长插入对 120–280 bp；
+接头序列取 SKILL.md「Verified Adapter Sequences」原版：
+  R1 3' AGATCGGAAGAGCACACGTCTGAACTCCAGTCA
+  R2 3' AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT
+
+================================================================
+3. 关键输出摘录（cutadapt 官方报告 + Trimmomatic PE 统计行）
+================================================================
+--- cutadapt_report_5p.txt（tail）---
+Total read pairs processed:          20,000
+  Read 1 with adapter:               1,431 (7.2%)
+  Read 2 with adapter:               1,411 (7.1%)
+Pairs written (passing filters):    19,999 (100.0%)
+
+--- cutadapt_report_20p.txt ---
+  Read 1 with adapter:               4,278 (21.4%)
+  Read 2 with adapter:               4,292 (21.5%)
+Pairs written (passing filters):    19,999 (100.0%)
+
+--- cutadapt_report_40p.txt ---
+  Read 1 with adapter:               8,211 (41.1%)
+  Read 2 with adapter:               8,183 (40.9%)
+Pairs written (passing filters):    20,000 (100.0%)
+
+--- Trimmomatic A（SKILL.md 字面串 …:2:keepBothReads）---
+grad 5p:  Input Read Pairs: 20000 Both Surviving: 18975 (94.88%)
+          Forward Only Surviving: 1025 (5.12%)  Dropped: 0 (0.00%)
+grad 20p: Input Read Pairs: 20000 Both Surviving: 15971 (79.86%)
+          Forward Only Surviving: 4029 (20.14%) Dropped: 0 (0.00%)
+grad 40p: Input Read Pairs: 20000 Both Surviving: 11905 (59.52%)
+          Forward Only Surviving: 8095 (40.48%) Dropped: 0 (0.00%)
+（Forward Only 数 = 真值 read-through 对数：每个 read-through 对恰好丢掉 R2）
+
+--- Trimmomatic B（布尔位改为 true）---
+grad 5p/20p/40p 均为：
+Input Read Pairs: 20000 Both Surviving: 20000 (100.00%)
+Forward Only Surviving: 0 (0.00%) Reverse Only Surviving: 0 (0.00%) Dropped: 0 (0.00%)
+
+================================================================
+4. 参数探针摘录（_probe.log：ILLUMINACLIP 参数个数语法）
+================================================================
+probe A（4 参数 …:2:30:10:true） -> java.lang.NumberFormatException: For input string: "true"
+probe B（5 参数 …:2:30:10:false）-> java.lang.NumberFormatException: For input string: "false"
+probe D（6 参数 …:2:30:10:2:true）-> 正常运行，Both Surviving: 20000 (100.00%)
+结论：Trimmomatic 0.41 的 ILLUMINACLIP 必须用 6 参数形态
+  <fa>:<seedMismatches>:<palindromeClip>:<simpleClip>:<minAdapterLen>:<keepBothReads>
+第 5 位 minAdapterLen 按 Integer 解析；第 6 位 keepBothReads 按
+Boolean.parseBoolean 解析——SKILL.md 字面串里的单词 "keepBothReads"
+被解析为 false，等价于显式写 false。
+
+================================================================
+5. 汇总指标（analyze_results.py -> results.tsv，全量数据见该文件）
+================================================================
+level  tool              reads_out  dropped  recall_pct  false_clip  bases_removed  bases_removed_per_read
+5p     cutadapt              39998        2       98.34         825          41976                  1.049 bp
+5p     trimmomatic_skill     38975     1025      100.00           0         122201                  3.055 bp
+5p     trimmomatic_true      40000        0      100.00           0          39402                  0.985 bp
+20p    cutadapt              39998        2       98.32         646         154698                  3.867 bp
+20p    trimmomatic_skill     35971     4029      100.00           0         479827                 11.996 bp
+20p    trimmomatic_true      40000        0      100.00           0         153854                  3.846 bp
+40p    cutadapt              40000        0       98.44         456         308533                  7.713 bp
+40p    trimmomatic_skill     31905     8095      100.00           0         964405                 24.110 bp
+40p    trimmomatic_true      40000        0      100.00           0         309810                  7.745 bp
+
+残留长度分箱召回（bins.tsv，Trimmomatic（true 口径）各箱均 100.00%）：
+bin(bp)   n_truth  cutadapt_recall_pct
+5-9          4502               93.40
+10-15        5352               99.59
+16-24        8096               99.44
+25-33        8348               99.32
+
+口径说明：
+- trimmomatic_skill 的 dropped = 真值 read-through 对数（keepBothReads=false 丢 R2）；
+  其 bases_removed 含整条被丢 R2 的 100 bp（1025/4029/8095 条 × 100 bp）。
+- cutadapt false_clip = 干净读段上因默认 -O 3（最小 3 bp 重叠）被误剪的读段数，
+  占干净读段 2.17% / 2.02% / 1.92%。
+- 5-9 bp 残留召回 93.40% 的根因：默认 -e 0.1 按匹配区长度计错配数，
+  5-9 bp 匹配允许 0 个错误，带 1% 测序错误的残留被漏检。
+
+================================================================
+6. 复现步骤（从零）
+================================================================
+1) WSL Ubuntu 安装 bio-qc 环境（cutadapt 5.2、trimmomatic 0.41）；
+2) bash _run.sh（依次执行 make_inputs.py -> 3 档 × 3 口径 -> analyze_results.py）；
+3) python3 make_figs.py 出图并自检；
+4) 对照 results.tsv / bins.tsv / _run.log 核对本文数字。

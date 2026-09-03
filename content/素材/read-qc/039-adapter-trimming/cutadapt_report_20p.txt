@@ -1,0 +1,124 @@
+This is cutadapt 5.2 with Python 3.13.15
+Command line parameters: -a AGATCGGAAGAGC -A AGATCGGAAGAGC -m 20:20 -o ca_20p_R1.fq.gz -p ca_20p_R2.fq.gz grad20p_R1.fq.gz grad20p_R2.fq.gz
+Processing paired-end reads on 1 core ...
+
+=== Summary ===
+
+Total read pairs processed:             20,000
+  Read 1 with adapter:                   4,278 (21.4%)
+  Read 2 with adapter:                   4,292 (21.5%)
+
+== Read fate breakdown ==
+Pairs that were too short:                   1 (0.0%)
+Pairs written (passing filters):        19,999 (100.0%)
+
+Total basepairs processed:     4,000,000 bp
+  Read 1:     2,000,000 bp
+  Read 2:     2,000,000 bp
+Total written (filtered):      3,845,302 bp (96.1%)
+  Read 1:     1,922,670 bp
+  Read 2:     1,922,632 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: AGATCGGAAGAGC; Type: regular 3'; Length: 13; Trimmed: 4278 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-13 bp: 1
+
+Bases preceding removed adapters:
+  A: 25.6%
+  C: 25.8%
+  G: 24.1%
+  T: 24.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	231	312.5	0	231
+4	64	78.1	0	64
+5	136	19.5	0	136
+6	138	4.9	0	138
+7	139	1.2	0	139
+8	127	0.3	0	127
+9	118	0.1	0	118
+10	151	0.0	1	139 12
+11	120	0.0	1	109 11
+12	147	0.0	1	129 18
+13	127	0.0	1	115 12
+14	136	0.0	1	110 26
+15	142	0.0	1	126 16
+16	128	0.0	1	115 13
+17	140	0.0	1	116 24
+18	140	0.0	1	132 8
+19	134	0.0	1	121 13
+20	139	0.0	1	126 13
+21	152	0.0	1	134 18
+22	146	0.0	1	127 19
+23	128	0.0	1	116 12
+24	149	0.0	1	136 13
+25	134	0.0	1	120 14
+26	120	0.0	1	107 13
+27	155	0.0	1	139 16
+28	118	0.0	1	102 16
+29	153	0.0	1	135 18
+30	143	0.0	1	127 16
+31	141	0.0	1	125 16
+32	131	0.0	1	118 13
+33	148	0.0	1	128 20
+42	1	0.0	1	0 1
+70	1	0.0	1	0 1
+85	1	0.0	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: AGATCGGAAGAGC; Type: regular 3'; Length: 13; Trimmed: 4292 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-13 bp: 1
+
+Bases preceding removed adapters:
+  A: 25.3%
+  C: 24.9%
+  G: 24.4%
+  T: 25.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	248	312.5	0	248
+4	65	78.1	0	65
+5	132	19.5	0	132
+6	145	4.9	0	145
+7	138	1.2	0	138
+8	123	0.3	0	123
+9	117	0.1	0	116 1
+10	152	0.0	1	144 8
+11	119	0.0	1	105 14
+12	148	0.0	1	131 17
+13	126	0.0	1	117 9
+14	136	0.0	1	128 8
+15	143	0.0	1	131 12
+16	129	0.0	1	113 16
+17	141	0.0	1	127 14
+18	140	0.0	1	119 21
+19	133	0.0	1	115 18
+20	140	0.0	1	125 15
+21	150	0.0	1	124 26
+22	144	0.0	1	128 16
+23	128	0.0	1	116 12
+24	146	0.0	1	123 23
+25	134	0.0	1	119 15
+26	123	0.0	1	107 16
+27	153	0.0	1	140 13
+28	120	0.0	1	108 12
+29	151	0.0	1	136 15
+30	143	0.0	1	131 12
+31	141	0.0	1	123 18
+32	131	0.0	1	113 18
+33	151	0.0	1	134 17
+46	1	0.0	1	0 1
+65	1	0.0	1	0 1

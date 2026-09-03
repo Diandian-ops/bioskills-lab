@@ -1,0 +1,5 @@
+bin	n_truth	n_cutadapt_hit	cutadapt_recall_pct	n_trimmomatic_hit	trimmomatic_recall_pct
+5-9	4502	4205	93.40	4502	100.00
+10-15	5352	5330	99.59	5352	100.00
+16-24	8096	8051	99.44	8096	100.00
+25-33	8348	8291	99.32	8348	100.00

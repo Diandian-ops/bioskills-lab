@@ -1,0 +1,42 @@
+{
+  "seed": 39,
+  "n_pairs": 20000,
+  "read_len": 100,
+  "error_rate": 0.01,
+  "adapters": {
+    "R1_3p": "AGATCGGAAGAGCACACGTCTGAACTCCAGTCA",
+    "R2_3p": "AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT"
+  },
+  "levels": {
+    "5p": {
+      "fraction_pairs": 0.05,
+      "pairs": 20000,
+      "read_through_pairs": 1025,
+      "adapter_reads": 2050,
+      "adapter_reads_pct": 5.12,
+      "adapter_bases_total": 39402,
+      "mean_adapter_bases_per_adapter_read": 19.22,
+      "bases_total": 4000000
+    },
+    "20p": {
+      "fraction_pairs": 0.2,
+      "pairs": 20000,
+      "read_through_pairs": 4029,
+      "adapter_reads": 8058,
+      "adapter_reads_pct": 20.14,
+      "adapter_bases_total": 153854,
+      "mean_adapter_bases_per_adapter_read": 19.09,
+      "bases_total": 4000000
+    },
+    "40p": {
+      "fraction_pairs": 0.4,
+      "pairs": 20000,
+      "read_through_pairs": 8095,
+      "adapter_reads": 16190,
+      "adapter_reads_pct": 40.48,
+      "adapter_bases_total": 309810,
+      "mean_adapter_bases_per_adapter_read": 19.14,
+      "bases_total": 4000000
+    }
+  }
+}
