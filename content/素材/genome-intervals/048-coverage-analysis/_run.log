@@ -1,0 +1,70 @@
+== versions ==
+bedtools v2.31.1
+samtools 1.24
+Using htslib 1.24
+Version: 0.7.19-r1273
+mosdepth: NOT INSTALLED
+== [1] input data =
+ref.fa: chrS 2000000 bp
+fragments: bg=65000 (rejected 1666) high=20000 low=150 total=85150
+reads: 85150 pairs x 100 bp, err=0.010
+  BG chrS:100001-200000 (100000 bp): read 6.71x / frag 10.06x
+  HIGH chrS:500001-550000 (50000 bp): read 86.44x / frag 61.66x
+  LOW chrS:1000001-1030000 (30000 bp): read 1.00x / frag 1.50x
+  ZERO chrS:1500001-1520000 (20000 bp): read 0.00x / frag 0.00x
+== [2] index + align =
+[bwa_index] Pack FASTA... 0.01 sec
+[bwa_index] Construct BWT for the packed sequence...
+[bwa_index] 0.20 seconds elapse.
+[bwa_index] Update BWT... 0.00 sec
+[bwa_index] Pack forward-only FASTA... 0.01 sec
+[bwa_index] Construct SA from BWT and Occ... 0.07 sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa index ref.fa
+[main] Real time: 0.428 sec; CPU: 0.287 sec
+170300 + 0 in total (QC-passed reads + QC-failed reads)
+170300 + 0 primary
+0 + 0 secondary
+0 + 0 supplementary
+0 + 0 duplicates
+0 + 0 primary duplicates
+170300 + 0 mapped (100.00% : N/A)
+170300 + 0 primary mapped (100.00% : N/A)
+170300 + 0 paired in sequencing
+85150 + 0 read1
+85150 + 0 read2
+130020 + 0 properly paired (76.35% : N/A)
+170300 + 0 with itself and mate mapped
+0 + 0 singletons (0.00% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+== [3] bedtools genomecov (SKILL.md 口径) =
+263984 cov.bedGraph
+chrS	0	32936	2000000	0.016468
+chrS	1	27373	2000000	0.0136865
+chrS	2	58690	2000000	0.029345
+chrS	3	122346	2000000	0.061173
+chrS	4	202785	2000000	0.101393
+genome	129	8	2000000	4e-06
+genome	130	3	2000000	1.5e-06
+genome	131	1	2000000	5e-07
+123816 frag.bedGraph
+== [4] bedtools coverage: -a targets(BED) -b reads(BAM) =
+chrS	100000	200000	BG	6717	99844	100000	0.9984400
+chrS	500000	550000	HIGH	43226	50000	50000	1.0000000
+chrS	1000000	1030000	LOW	300	19480	30000	0.6493334
+chrS	1500000	1520000	ZERO	0	0	20000	0.0000000
+4 per_target.bed
+chrS	100000	200000	BG	6.7073798
+chrS	500000	550000	HIGH	86.4319992
+chrS	1000000	1030000	LOW	0.9997666
+chrS	1500000	1520000	ZERO	0.0000000
+== [5] samtools coverage / depth =
+#rname	startpos	endpos	numreads	covbases	coverage	meandepth	meanbaseq	meanmapq
+chrS	1	2000000	170300	1967064	98.3532	8.51415	30	60
+  50000 depth_high_naive.txt
+  50000 depth_high_s.txt
+  20000 depth_zero.txt
+ 120000 total
+0
+== done =

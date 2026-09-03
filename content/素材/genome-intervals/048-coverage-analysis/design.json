@@ -1,0 +1,50 @@
+{
+  "date": "2026-09-03",
+  "seed": 20260903,
+  "chrom": "chrS",
+  "chrom_length_bp": 2000000,
+  "read_length_bp": 100,
+  "insert_bp": {
+    "background": 300,
+    "high_extra": 130
+  },
+  "error_rate": 0.01,
+  "fragments": {
+    "background": 65000,
+    "high_extra": 20000,
+    "low": 150,
+    "background_rejected_overlapping": 1666,
+    "total": 85150
+  },
+  "total_reads": 170300,
+  "expected_depth": {
+    "BG": {
+      "start1": 100001,
+      "end1": 200000,
+      "length_bp": 100000,
+      "expected_mean_read_depth": 6.71,
+      "expected_mean_frag_depth": 10.06
+    },
+    "HIGH": {
+      "start1": 500001,
+      "end1": 550000,
+      "length_bp": 50000,
+      "expected_mean_read_depth": 86.44,
+      "expected_mean_frag_depth": 61.66
+    },
+    "LOW": {
+      "start1": 1000001,
+      "end1": 1030000,
+      "length_bp": 30000,
+      "expected_mean_read_depth": 1.0,
+      "expected_mean_frag_depth": 1.5
+    },
+    "ZERO": {
+      "start1": 1500001,
+      "end1": 1520000,
+      "length_bp": 20000,
+      "expected_mean_read_depth": 0.0,
+      "expected_mean_frag_depth": 0.0
+    }
+  }
+}

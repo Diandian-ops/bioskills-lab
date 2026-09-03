@@ -1,0 +1,109 @@
+========================================================================
+048 coverage-analysis — 真实复现记录（repro transcript）
+日期：2026-09-03（WSL Ubuntu / Windows 11，全部命令真跑，输出落盘）
+目录：content/素材/genome-intervals/048-coverage-analysis/
+========================================================================
+
+[0] 环境（已就绪，conda env bio；_run.sh → _run.log）
+    bedtools     v2.31.1
+    samtools     1.24（htslib 1.24；>=1.13，samtools depth 无 8000 cap）
+    bwa          0.7.19-r1273
+    python       3.11.16
+    mosdepth     未安装（skill 首选的现代工具，本次未真跑，诚实标注）
+    skill 兼容口径：bedtools 2.31+ / samtools 1.19+，均满足
+
+[1] 输入数据（make_inputs.py，seed 20260903，可复现）
+    ref.fa：chrS 2,000,000 bp 随机序列（ACGT 均匀）
+    reads：双端 2x100 bp，1% 替换错误，全碱基 Q30
+    设计（4 种覆盖形态的工程化区间，targets.bed）：
+      BG    chrS:100001-200000    (100 kb)  背景 ~10x 设计（插片段 300 bp）
+      HIGH  chrS:500001-550000    (50 kb)   背景 + 短插入文库额外片段
+                                            （insert 130 bp，双端各 100 bp，
+                                              mate 重叠 70 bp）
+      LOW   chrS:1000001-1030000  (30 kb)   设计 ~1.5x
+      ZERO  chrS:1500001-1520000  (20 kb)   设计 0x（不采样任何片段）
+    片段构成：背景 65,000（另拒绝 1,666 个与 LOW/ZERO 相交的候选）
+            + HIGH 20,000 + LOW 150 = 85,150 片段 → 170,300 reads
+    design.json：逐区间设计期望深度（read 口径 / 片段口径）
+    注：reads 由 python 按设计采样直接生成（dwgsim 不支持按区间控制
+    密度/插片段长度，无法构造 ZERO 区与短插入对照），比对用 bwa-mem。
+
+[2] 比对（_run.sh，bio 环境）
+    bwa index ref.fa && samtools faidx ref.fa
+    bwa mem -t 4 -R "@RG\tID:rg1\tSM:sample1\tPL:ILLUMINA\tLB:lib1" \
+        ref.fa reads_1.fq.gz reads_2.fq.gz | samtools sort -o aln.bam -
+    samtools index aln.bam
+    → flagstat：170,300 / 170,300 reads mapped（100.00%）
+
+[3] bedtools / samtools 真跑（全部按 SKILL.md 口径，无额外参数）
+    a) bedtools genomecov -ibam aln.bam -bga > cov.bedGraph
+       → 263,984 行 bedGraph（含零覆盖区段；已压缩为 cov.bedGraph.gz）
+    b) bedtools genomecov -ibam aln.bam > cov_hist.txt
+       → 裸默认 = 5 列直方图（chrom/depth/bases/size/fraction），
+         末尾含 genome 块；max depth 131
+    c) bedtools genomecov -ibam aln.bam -pc -bg > frag.bedGraph
+       → 片段口径（已压缩为 frag.bedGraph.gz）
+    d) bedtools coverage -a targets.bed -b aln.bam > per_target.bed
+       → 4 行 = 4 个目标（A=targets / B=reads 方向 sanity check 通过），
+         每行追加 4 列：count / covered bases / length / fraction
+    e) bedtools coverage -a targets.bed -b aln.bam -mean > per_target_mean.bed
+    f) samtools coverage aln.bam → samtools_coverage.txt（一行/contig）
+    g) samtools depth -a aln.bam（全染色体逐碱基，解析后未入库）
+       samtools depth -a -r chrS:500001-550000 aln.bam  → depth_high_naive.txt
+       samtools depth -a -s -r chrS:500001-550000 aln.bam → depth_high_s.txt
+       samtools depth -a -r chrS:1500001-1520000 aln.bam → depth_zero.txt
+
+[4] 对账与分布解析（parse_results.py → results.json，全部来自真跑产物）
+    ① 设计 vs 实测（bedtools coverage -mean 口径，read 深度）
+       区间   设计期望    实测    实测/设计   breadth(>=1x)
+       BG     6.71x      6.71x    1.000      99.84%
+       HIGH   86.44x     86.43x   1.000      100.00%
+       LOW    1.00x      1.00x    1.000      64.93%
+       ZERO   0.00x      0.00x    n/a        0.00%
+    ② ZERO 检出三重一致：samtools depth -a 输出 20,000/20,000 个位置
+       全部为 0；genomecov -bga 在区间内无非零 span（0 个）；
+       bedtools coverage breadth = 0.00%
+    ③ 全基因组分布（cov_hist.txt + depth 全染色体逐碱基）
+       mean 8.51x / median 6x / mean:median = 1.419（>1.1-1.2 偏态阈值）
+       breadth >=1x 98.35% / >=5x 77.79% / >=10x 15.72% / >=20x 2.50%
+       （>=20x 的 2.50% 恰等于 HIGH 区面积占比 50 kb / 2 Mb）
+       CV 1.517；Fano 19.59（Poisson 理想 = 1）
+    ④ mate-overlap 对照（HIGH 区，insert 130 bp / 重叠 70 bp）
+       朴素 read 深度（bedtools coverage -mean、samtools depth 默认）
+         = 86.43x（设计期望 86.44x，read 口径）
+       samtools depth -s（重叠只计一次）= 58.44x
+         （片段设计期望 61.66x；差值来自重叠区错配使有效重叠略增）
+       naive / -s = 1.48x：短插入下朴素口径把重叠 70 bp 双计
+    ⑤ -pc 的真实陷阱（本次实测发现）
+       genomecov -pc 片段口径均值仅 9.64x ≈ 背景水平，HIGH 的 20,000
+       对短插入 reads 整体缺失。根因：-pc 只统计 proper pair（flag 含
+       0x02），而 bwa mem 对重叠 mate（重叠区含错配，如 NM:i:1）不标
+       0x02（实测 flag 97/145）。结论：重叠去重优先 samtools depth -s；
+       -pc 在 bwa-mem 短插入数据上会整对丢 reads。
+    ⑥ samtools coverage 行（chrS）
+       numreads 170,300 / covbases 1,967,064 / coverage 98.3532%
+       （= breadth %）/ meandepth 8.51415 / meanbaseq 30 / meanmapq 60
+
+[5] 出图（make_figs.py → 3 张 PNG，全部真实数据，英文标签）
+    fig1_design_vs_measured.png   4 区间设计 vs 实测均值深度对账（双柱）
+    fig2_track.png                chrS 2 kb 分箱覆盖轨迹（4 区间标注）
+    fig3_hist_breadth.png         深度直方图 + 累积 breadth 曲线（双面板）
+    自检：check_figs.py make_figs.py → 3 × [PASS]
+          FIGURE QUALITY: TOTAL FAILS = 0   （2026-09-03）
+
+[6] 入库说明与重建命令
+    aln.bam(.bai)、reads_1/2.fq.gz、ref.fa 及 bwa 索引未入库（可由
+    seed 完全复现）。重建：
+      python3 make_inputs.py          # ref.fa + reads + design.json
+      bash _run.sh                    # 比对 + bedtools/samtools 全链
+      python3 parse_results.py        # results.json（解析后会压缩
+                                      # cov/frag.bedGraph 为 .gz）
+      python3 make_figs.py            # 3 张 PNG
+    保留的原始工具输出：targets.bed、per_target.bed、per_target_mean.bed、
+    cov_hist.txt、cov.bedGraph.gz、frag.bedGraph.gz、samtools_coverage.txt、
+    depth_high_naive.txt、depth_high_s.txt、depth_zero.txt
+
+[7] 门禁（gate_lint.py，2026-09-03）
+    048-bioSkills真实试用-coverage-analysis.md    → ERROR=0 WARN=0
+    048-bioSkills小红书-coverage-analysis-正文.md → ERROR=0 WARN=0
+========================================================================

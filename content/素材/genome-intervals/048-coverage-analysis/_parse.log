@@ -1,0 +1,59 @@
+== reconciliation ==
+BG    read exp 6.71x / meas 6.71x (ratio 1.000)  frag exp 10.06x  breadth 99.84%
+HIGH  read exp 86.44x / meas 86.43x (ratio 1.000)  frag exp 61.66x  breadth 100.00%
+LOW   read exp 1.00x / meas 1.00x (ratio 1.000)  frag exp 1.50x  breadth 64.93%
+ZERO  read exp 0.00x / meas 0.00x (ratio n/a)  frag exp 0.00x  breadth 0.00%
+== genome ==
+{
+ "mean_depth": 8.51,
+ "median_depth": 6,
+ "mean_over_median": 1.419,
+ "breadth_ge_1x_pct": 98.35,
+ "breadth_ge_5x_pct": 77.79,
+ "breadth_ge_10x_pct": 15.72,
+ "breadth_ge_20x_pct": 2.5,
+ "breadth_ge_30x_pct": 2.5,
+ "max_depth": 131,
+ "total_bases": 2000000
+}
+{
+ "bases": 2000000,
+ "mean_depth": 8.514,
+ "std_depth": 12.915,
+ "cv": 1.517,
+ "fano_factor": 19.59,
+ "poisson_ideal": 1.0
+}
+== mate_overlap_HIGH ==
+{
+ "insert_bp": 130,
+ "mate_overlap_bp": 70,
+ "naive_read_mean_depth": 86.43,
+ "samtools_depth_s_mean": 58.44,
+ "genomecov_pc_frag_mean": 9.64,
+ "expected_frag_depth": 61.66,
+ "naive_over_frag": 8.962
+}
+== zero_region ==
+{
+ "start1": 1500001,
+ "end1": 1520000,
+ "length_bp": 20000,
+ "samtools_depth_positions": 20000,
+ "positions_with_reads": 0,
+ "bedtools_bga_nonzero_spans": 0,
+ "nonzero_span_bases": 0,
+ "bedtools_coverage_breadth_pct": 0.0
+}
+== mapping ==
+{
+ "total_reads": 170300,
+ "mapped_reads": 170300,
+ "mapped_pct": 100.0
+}
+== versions ==
+{
+ "bedtools": "bedtools v2.31.1",
+ "samtools": "samtools 1.24",
+ "bwa": "Version: 0.7.19-r1273"
+}
