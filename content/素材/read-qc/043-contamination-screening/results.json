@@ -1,0 +1,250 @@
+{
+  "design": {
+    "S1": {
+      "Ecoli": 90.0,
+      "PhiX": 5.0,
+      "Lambda": 5.0
+    },
+    "S2": {
+      "Ecoli": 75.0,
+      "PhiX": 15.0,
+      "Lambda": 10.0
+    },
+    "S3": {
+      "Ecoli": 100.0
+    }
+  },
+  "kraken": {
+    "S1": {
+      "unclassified_pct": 0.01,
+      "species": {
+        "Escherichia coli": 89.98,
+        "Sinsheimervirus phiX174": 5.0,
+        "Lambdavirus lambda": 4.93
+      },
+      "n_species": 3
+    },
+    "S2": {
+      "unclassified_pct": 0.0,
+      "species": {
+        "Escherichia coli": 74.99,
+        "Sinsheimervirus phiX174": 15.0,
+        "Lambdavirus lambda": 9.85
+      },
+      "n_species": 3
+    },
+    "S3": {
+      "unclassified_pct": 0.01,
+      "species": {
+        "Escherichia coli": 99.98
+      },
+      "n_species": 1
+    }
+  },
+  "screen": {
+    "S1": {
+      "Ecoli": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 4746.0,
+        "%Unmapped": 9.49,
+        "#One_hit_one_genome": 43334.0,
+        "%One_hit_one_genome": 86.67,
+        "#Multiple_hits_one_genome": 1602.0,
+        "%Multiple_hits_one_genome": 3.2,
+        "#One_hit_multiple_genomes": 194.0,
+        "%One_hit_multiple_genomes": 0.39,
+        "Multiple_hits_multiple_genomes": 124.0,
+        "%Multiple_hits_multiple_genomes": 0.25
+      },
+      "PhiX": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 47501.0,
+        "%Unmapped": 95.0,
+        "#One_hit_one_genome": 2499.0,
+        "%One_hit_one_genome": 5.0,
+        "#Multiple_hits_one_genome": 0.0,
+        "%Multiple_hits_one_genome": 0.0,
+        "#One_hit_multiple_genomes": 0.0,
+        "%One_hit_multiple_genomes": 0.0,
+        "Multiple_hits_multiple_genomes": 0.0,
+        "%Multiple_hits_multiple_genomes": 0.0
+      },
+      "Lambda": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 47441.0,
+        "%Unmapped": 94.88,
+        "#One_hit_one_genome": 2241.0,
+        "%One_hit_one_genome": 4.48,
+        "#Multiple_hits_one_genome": 0.0,
+        "%Multiple_hits_one_genome": 0.0,
+        "#One_hit_multiple_genomes": 318.0,
+        "%One_hit_multiple_genomes": 0.64,
+        "Multiple_hits_multiple_genomes": 0.0,
+        "%Multiple_hits_multiple_genomes": 0.0
+      },
+      "%Hit_no_genomes: 0.01": {}
+    },
+    "S2": {
+      "Ecoli": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 12001.0,
+        "%Unmapped": 24.0,
+        "#One_hit_one_genome": 36107.0,
+        "%One_hit_one_genome": 72.21,
+        "#Multiple_hits_one_genome": 1333.0,
+        "%Multiple_hits_one_genome": 2.67,
+        "#One_hit_multiple_genomes": 328.0,
+        "%One_hit_multiple_genomes": 0.66,
+        "Multiple_hits_multiple_genomes": 231.0,
+        "%Multiple_hits_multiple_genomes": 0.46
+      },
+      "PhiX": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 42502.0,
+        "%Unmapped": 85.0,
+        "#One_hit_one_genome": 7498.0,
+        "%One_hit_one_genome": 15.0,
+        "#Multiple_hits_one_genome": 0.0,
+        "%Multiple_hits_one_genome": 0.0,
+        "#One_hit_multiple_genomes": 0.0,
+        "%One_hit_multiple_genomes": 0.0,
+        "Multiple_hits_multiple_genomes": 0.0,
+        "%Multiple_hits_multiple_genomes": 0.0
+      },
+      "Lambda": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 44945.0,
+        "%Unmapped": 89.89,
+        "#One_hit_one_genome": 4496.0,
+        "%One_hit_one_genome": 8.99,
+        "#Multiple_hits_one_genome": 0.0,
+        "%Multiple_hits_one_genome": 0.0,
+        "#One_hit_multiple_genomes": 559.0,
+        "%One_hit_multiple_genomes": 1.12,
+        "Multiple_hits_multiple_genomes": 0.0,
+        "%Multiple_hits_multiple_genomes": 0.0
+      },
+      "%Hit_no_genomes: 0.01": {}
+    },
+    "S3": {
+      "Ecoli": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 8.0,
+        "%Unmapped": 0.02,
+        "#One_hit_one_genome": 48122.0,
+        "%One_hit_one_genome": 96.24,
+        "#Multiple_hits_one_genome": 1781.0,
+        "%Multiple_hits_one_genome": 3.56,
+        "#One_hit_multiple_genomes": 35.0,
+        "%One_hit_multiple_genomes": 0.07,
+        "Multiple_hits_multiple_genomes": 54.0,
+        "%Multiple_hits_multiple_genomes": 0.11
+      },
+      "PhiX": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 50000.0,
+        "%Unmapped": 100.0,
+        "#One_hit_one_genome": 0.0,
+        "%One_hit_one_genome": 0.0,
+        "#Multiple_hits_one_genome": 0.0,
+        "%Multiple_hits_one_genome": 0.0,
+        "#One_hit_multiple_genomes": 0.0,
+        "%One_hit_multiple_genomes": 0.0,
+        "Multiple_hits_multiple_genomes": 0.0,
+        "%Multiple_hits_multiple_genomes": 0.0
+      },
+      "Lambda": {
+        "#Reads_processed": 50000.0,
+        "#Unmapped": 49911.0,
+        "%Unmapped": 99.82,
+        "#One_hit_one_genome": 0.0,
+        "%One_hit_one_genome": 0.0,
+        "#Multiple_hits_one_genome": 0.0,
+        "%Multiple_hits_one_genome": 0.0,
+        "#One_hit_multiple_genomes": 89.0,
+        "%One_hit_multiple_genomes": 0.18,
+        "Multiple_hits_multiple_genomes": 0.0,
+        "%Multiple_hits_multiple_genomes": 0.0
+      },
+      "%Hit_no_genomes: 0.02": {}
+    }
+  },
+  "conf_sweep": {
+    "S1": {
+      "0.0": {
+        "unclassified_pct": 0.0,
+        "species": {
+          "Escherichia coli": 89.99,
+          "Sinsheimervirus phiX174": 5.0,
+          "Lambdavirus lambda": 4.98
+        },
+        "n_species": 3
+      },
+      "0.05": {
+        "unclassified_pct": 0.0,
+        "species": {
+          "Escherichia coli": 89.99,
+          "Sinsheimervirus phiX174": 5.0,
+          "Lambdavirus lambda": 4.96
+        },
+        "n_species": 3
+      },
+      "0.1": {
+        "unclassified_pct": 0.01,
+        "species": {
+          "Escherichia coli": 89.98,
+          "Sinsheimervirus phiX174": 5.0,
+          "Lambdavirus lambda": 4.93
+        },
+        "n_species": 3
+      },
+      "0.2": {
+        "unclassified_pct": 0.02,
+        "species": {
+          "Escherichia coli": 89.96,
+          "Sinsheimervirus phiX174": 5.0,
+          "Lambdavirus lambda": 4.82
+        },
+        "n_species": 3
+      }
+    },
+    "S2": {
+      "0.0": {
+        "unclassified_pct": 0.0,
+        "species": {
+          "Escherichia coli": 75.0,
+          "Sinsheimervirus phiX174": 15.0,
+          "Lambdavirus lambda": 9.96
+        },
+        "n_species": 3
+      },
+      "0.05": {
+        "unclassified_pct": 0.0,
+        "species": {
+          "Escherichia coli": 75.0,
+          "Sinsheimervirus phiX174": 15.0,
+          "Lambdavirus lambda": 9.91
+        },
+        "n_species": 3
+      },
+      "0.1": {
+        "unclassified_pct": 0.0,
+        "species": {
+          "Escherichia coli": 74.99,
+          "Sinsheimervirus phiX174": 15.0,
+          "Lambdavirus lambda": 9.85
+        },
+        "n_species": 3
+      },
+      "0.2": {
+        "unclassified_pct": 0.01,
+        "species": {
+          "Escherichia coli": 74.96,
+          "Sinsheimervirus phiX174": 15.0,
+          "Lambdavirus lambda": 9.68
+        },
+        "n_species": 3
+      }
+    }
+  }
+}

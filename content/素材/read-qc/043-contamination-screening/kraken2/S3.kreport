@@ -1,0 +1,13 @@
+  0.01	3	3	U	0	unclassified
+ 99.99	49997	7	R	1	root
+ 99.98	49990	0	R1	131567	  cellular organisms
+ 99.98	49990	0	D	2	    Bacteria
+ 99.98	49990	0	K	3379134	      Pseudomonadati
+ 99.98	49990	0	P	1224	        Pseudomonadota
+ 99.98	49990	0	C	1236	          Gammaproteobacteria
+ 99.98	49990	0	O	91347	            Enterobacterales
+ 99.98	49990	0	F	543	              Enterobacteriaceae
+ 99.98	49990	0	G	561	                Escherichia
+ 99.98	49990	0	S	562	                  Escherichia coli
+ 99.98	49990	0	S1	83333	                    Escherichia coli K-12
+ 99.98	49990	49990	S2	511145	                      Escherichia coli str. K-12 substr. MG1655

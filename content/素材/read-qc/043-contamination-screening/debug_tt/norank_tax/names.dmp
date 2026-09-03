@@ -1,0 +1,62 @@
+1|	|1|	|no rank|
+10239|	|1|	|acellular root|
+10710|	|186765|	|species|
+10841|	|2732412|	|class|
+10847|	|1910954|	|species|
+1224|	|3379134|	|phylum|
+1236|	|1224|	|class|
+131567|	|1|	|cellular root|
+186765|	|3700837|	|genus|
+1910950|	|10841|	|order|
+1910954|	|3701015|	|genus|
+2|	|131567|	|domain|
+2681611|	|10710|	|no rank|
+2731341|	|10239|	|realm|
+2731342|	|10239|	|realm|
+2731360|	|2731341|	|kingdom|
+2731618|	|2731360|	|phylum|
+2731619|	|2731618|	|class|
+2732091|	|2731342|	|kingdom|
+2732412|	|2732091|	|phylum|
+2886930|	|10847|	|no rank|
+3379134|	|2|	|kingdom|
+3700705|	|2731619|	|family|
+3700837|	|3700705|	|subfamily|
+3701015|	|1910950|	|family|
+511145|	|83333|	|no rank|
+543|	|91347|	|family|
+561|	|543|	|genus|
+562|	|561|	|species|
+83333|	|562|	|strain|
+91347|	|1236|	|order|
+1|	|root|	||	|scientific name|
+10239|	|Viruses|	||	|scientific name|
+10710|	|Lambdavirus lambda|	||	|scientific name|
+10841|	|Microviricetes|	||	|scientific name|
+10847|	|Sinsheimervirus phiX174|	||	|scientific name|
+1224|	|Pseudomonadota|	||	|scientific name|
+1236|	|Gammaproteobacteria|	||	|scientific name|
+131567|	|cellular organisms|	||	|scientific name|
+186765|	|Lambdavirus|	||	|scientific name|
+1910950|	|Bullavirales|	||	|scientific name|
+1910954|	|Sinsheimervirus|	||	|scientific name|
+2|	|Bacteria|	||	|scientific name|
+2681611|	|Escherichia phage Lambda|	||	|scientific name|
+2731341|	|Duplodnaviria|	||	|scientific name|
+2731342|	|Floreoviria|	||	|scientific name|
+2731360|	|Heunggongvirae|	||	|scientific name|
+2731618|	|Uroviricota|	||	|scientific name|
+2731619|	|Caudoviricetes|	||	|scientific name|
+2732091|	|Sangervirae|	||	|scientific name|
+2732412|	|Phixviricota|	||	|scientific name|
+2886930|	|Escherichia phage phiX174|	||	|scientific name|
+3379134|	|Pseudomonadati|	||	|scientific name|
+3700705|	|Zimmerviridae|	||	|scientific name|
+3700837|	|Jacobvirinae|	||	|scientific name|
+3701015|	|Eubullaviridae|	||	|scientific name|
+511145|	|Escherichia coli str. K-12 substr. MG1655|	||	|scientific name|
+543|	|Enterobacteriaceae|	||	|scientific name|
+561|	|Escherichia|	||	|scientific name|
+562|	|Escherichia coli|	||	|scientific name|
+83333|	|Escherichia coli K-12|	||	|scientific name|
+91347|	|Enterobacterales|	||	|scientific name|

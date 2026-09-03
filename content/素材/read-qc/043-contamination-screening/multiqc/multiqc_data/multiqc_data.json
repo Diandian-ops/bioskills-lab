@@ -1,0 +1,490 @@
+{
+    "report_multiqc_command": "/opt/miniconda3/envs/bio-qc/bin/multiqc screen -o multiqc --force",
+    "report_data_sources": {
+        "FastQ Screen": {
+            "all_sections": {
+                "S1_1_screen": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S1_1_screen.txt",
+                "S1_2_screen": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S1_2_screen.txt",
+                "S2_1_screen": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S2_1_screen.txt",
+                "S2_2_screen": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S2_2_screen.txt",
+                "S3_1_screen": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S3_1_screen.txt",
+                "S3_2_screen": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S3_2_screen.txt"
+            }
+        }
+    },
+    "report_general_stats_data": {},
+    "report_general_stats_headers": {},
+    "report_creation_date": "2026-09-03, 22:06 CST",
+    "report_plot_data": {
+        "fastq_screen_plot": {
+            "id": "fastq_screen_plot",
+            "anchor": "fastq_screen_plot",
+            "plot_type": "bar plot",
+            "layout": {
+                "autosize": true,
+                "height": 320,
+                "hoverlabel": {
+                    "namelength": -1,
+                    "bgcolor": "white",
+                    "font": {
+                        "color": "rgba(60,60,60,1)"
+                    }
+                },
+                "margin": {
+                    "b": 65,
+                    "l": 60,
+                    "pad": 5,
+                    "r": 15,
+                    "t": 50
+                },
+                "showlegend": true,
+                "template": {
+                    "layout": {
+                        "colorway": [
+                            "#7cb5ec",
+                            "#434348",
+                            "#90ed7d",
+                            "#f7a35c",
+                            "#8085e9",
+                            "#f15c80",
+                            "#e4d354",
+                            "#2b908f",
+                            "#f45b5b",
+                            "#91e8e1"
+                        ],
+                        "font": {
+                            "color": "rgba(60,60,60,1)",
+                            "family": "system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', 'Liberation Sans', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'"
+                        },
+                        "legend": {
+                            "font": {
+                                "color": "rgba(60,60,60,1)"
+                            }
+                        },
+                        "modebar": {
+                            "activecolor": "rgba(80, 80, 80, 1)",
+                            "bgcolor": "rgba(0, 0, 0, 0)",
+                            "color": "rgba(100, 100, 100, 0.5)"
+                        },
+                        "paper_bgcolor": "rgba(0,0,0,0)",
+                        "plot_bgcolor": "rgba(0,0,0,0)",
+                        "title": {
+                            "font": {
+                                "color": "rgba(60,60,60,1)",
+                                "size": 20
+                            }
+                        },
+                        "xaxis": {
+                            "color": "rgba(100,100,100,1)",
+                            "gridcolor": "rgba(128,128,128,0.15)",
+                            "spikecolor": "rgba(60,60,60,1)",
+                            "spikethickness": -3,
+                            "tickfont": {
+                                "color": "rgba(80,80,80,1)",
+                                "size": 10
+                            },
+                            "zerolinecolor": "rgba(128,128,128,0.2)"
+                        },
+                        "yaxis": {
+                            "color": "rgba(100,100,100,1)",
+                            "gridcolor": "rgba(128,128,128,0.15)",
+                            "spikecolor": "rgba(60,60,60,1)",
+                            "spikethickness": -3,
+                            "tickfont": {
+                                "color": "rgba(80,80,80,1)",
+                                "size": 10
+                            },
+                            "zerolinecolor": "rgba(128,128,128,0.2)"
+                        }
+                    }
+                },
+                "title": {
+                    "text": "FastQ Screen: Mapped Reads",
+                    "x": 0.5,
+                    "xanchor": "center"
+                },
+                "xaxis": {
+                    "automargin": true
+                },
+                "yaxis": {
+                    "automargin": true,
+                    "showgrid": false,
+                    "categoryorder": "trace",
+                    "type": "category"
+                },
+                "barmode": "relative",
+                "bargroupgap": 0,
+                "bargap": 0.2,
+                "legend": {
+                    "tracegroupgap": 0,
+                    "traceorder": "normal"
+                },
+                "hovermode": "y unified"
+            },
+            "datasets": [
+                {
+                    "plot_id": "fastq_screen_plot",
+                    "label": "1",
+                    "uid": "fastq_screen_plot",
+                    "dconfig": {
+                        "title": "FastQ Screen: Mapped Reads",
+                        "subtitle": "6 bars"
+                    },
+                    "layout": {
+                        "title": {
+                            "text": "FastQ Screen: Mapped Reads<br><sup>6 bars</sup>"
+                        },
+                        "xaxis": {
+                            "title": {
+                                "text": "Mapped reads"
+                            },
+                            "hoverformat": ",.2f",
+                            "ticksuffix": "",
+                            "autorangeoptions": {
+                                "clipmin": null,
+                                "clipmax": null,
+                                "minallowed": 0,
+                                "maxallowed": 50000.0
+                            }
+                        },
+                        "yaxis": {
+                            "title": null,
+                            "hoverformat": null,
+                            "ticksuffix": "",
+                            "autorangeoptions": {
+                                "clipmin": null,
+                                "clipmax": null,
+                                "minallowed": null,
+                                "maxallowed": null
+                            }
+                        },
+                        "showlegend": true
+                    },
+                    "trace_params": {
+                        "hovertemplate": "<b></b>%{meta}: <b>%{x}</b><extra></extra>",
+                        "orientation": "h",
+                        "marker": {
+                            "line": {
+                                "width": 0
+                            }
+                        },
+                        "textposition": "inside",
+                        "insidetextanchor": "start"
+                    },
+                    "pct_range": {
+                        "xaxis": {
+                            "min": 0,
+                            "max": 100
+                        },
+                        "yaxis": {
+                            "min": 0,
+                            "max": 100
+                        }
+                    },
+                    "n_series": 6,
+                    "cats": [
+                        {
+                            "name": "Ecoli",
+                            "color": "rgba(124,181,236,1)",
+                            "data": [
+                                49915.0,
+                                49903.0,
+                                37438.0,
+                                37440.0,
+                                44935.0,
+                                44936.0
+                            ],
+                            "data_pct": [
+                                99.83,
+                                99.806,
+                                74.876,
+                                74.88,
+                                89.87,
+                                89.872
+                            ]
+                        },
+                        {
+                            "name": "PhiX",
+                            "color": "rgba(67,67,72,1)",
+                            "data": [
+                                0.0,
+                                0.0,
+                                7500.0,
+                                7498.0,
+                                2500.0,
+                                2499.0
+                            ],
+                            "data_pct": [
+                                0.0,
+                                0.0,
+                                15.0,
+                                14.996,
+                                5.0,
+                                4.997999999999999
+                            ]
+                        },
+                        {
+                            "name": "Lambda",
+                            "color": "rgba(144,237,125,1)",
+                            "data": [
+                                0.0,
+                                0.0,
+                                4490.0,
+                                4496.0,
+                                2247.0,
+                                2241.0
+                            ],
+                            "data_pct": [
+                                0.0,
+                                0.0,
+                                8.98,
+                                8.992,
+                                4.494,
+                                4.482
+                            ]
+                        },
+                        {
+                            "name": "Multiple Genomes",
+                            "color": "rgb(130,0,0)",
+                            "data": [
+                                80.0,
+                                87.0,
+                                567.0,
+                                561.0,
+                                313.0,
+                                319.0
+                            ],
+                            "data_pct": [
+                                0.16,
+                                0.174,
+                                1.134,
+                                1.122,
+                                0.626,
+                                0.638
+                            ]
+                        },
+                        {
+                            "name": "No hits",
+                            "color": "rgb(204,204,204)",
+                            "data": [
+                                5.0,
+                                10.0,
+                                5.0,
+                                5.0,
+                                5.0,
+                                5.0
+                            ],
+                            "data_pct": [
+                                0.01,
+                                0.02,
+                                0.01,
+                                0.01,
+                                0.01,
+                                0.01
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "S3_2_screen",
+                        "S3_1_screen",
+                        "S2_2_screen",
+                        "S2_1_screen",
+                        "S1_2_screen",
+                        "S1_1_screen"
+                    ],
+                    "cats_clustered": null,
+                    "samples_clustered": null,
+                    "group_labels": null,
+                    "offset_groups": null
+                }
+            ],
+            "pconfig": {
+                "id": "fastq_screen_plot",
+                "title": "FastQ Screen: Mapped Reads",
+                "subtitle": null,
+                "anchor": null,
+                "table_title": null,
+                "height": null,
+                "width": null,
+                "square": false,
+                "logswitch": false,
+                "logswitch_active": false,
+                "logswitch_label": "Log10",
+                "cpswitch": true,
+                "cpswitch_c_active": false,
+                "cpswitch_counts_label": "Counts",
+                "cpswitch_percent_label": "Percentages",
+                "xLog": null,
+                "yLog": null,
+                "xlog": false,
+                "ylog": false,
+                "data_labels": [],
+                "xTitle": null,
+                "yTitle": null,
+                "xlab": null,
+                "ylab": "Mapped reads",
+                "xsuffix": null,
+                "ysuffix": null,
+                "tt_suffix": null,
+                "xLabFormat": null,
+                "yLabFormat": null,
+                "xLabelFormat": null,
+                "yLabelFormat": null,
+                "xlab_format": null,
+                "ylab_format": null,
+                "tt_label": null,
+                "xDecimals": null,
+                "yDecimals": null,
+                "decimalPlaces": null,
+                "x_decimals": null,
+                "y_decimals": null,
+                "tt_decimals": null,
+                "xmin": null,
+                "xmax": null,
+                "ymin": null,
+                "ymax": null,
+                "xFloor": null,
+                "xCeiling": null,
+                "yFloor": null,
+                "yCeiling": null,
+                "x_clipmin": null,
+                "x_clipmax": null,
+                "y_clipmin": null,
+                "y_clipmax": null,
+                "save_data_file": true,
+                "showlegend": null,
+                "xMinRange": null,
+                "yMinRange": null,
+                "x_minrange": null,
+                "y_minrange": null,
+                "xPlotBands": null,
+                "yPlotBands": null,
+                "xPlotLines": null,
+                "yPlotLines": null,
+                "x_bands": null,
+                "y_bands": null,
+                "x_lines": null,
+                "y_lines": null,
+                "series_label": "samples",
+                "flat_if_very_large": true,
+                "stacking": "relative",
+                "hide_empty": null,
+                "hide_zero_cats": true,
+                "sort_samples": true,
+                "cluster_samples": false,
+                "cluster_method": "complete",
+                "cluster_switch_clustered_active": true,
+                "use_legend": null,
+                "suffix": null,
+                "lab_format": null,
+                "sample_groups": null
+            },
+            "add_log_tab": false,
+            "add_pct_tab": true,
+            "l_active": false,
+            "p_active": true,
+            "pct_axis_update": {
+                "ticksuffix": "%",
+                "hoverformat": ".1f"
+            },
+            "axis_controlled_by_switches": [
+                "xaxis"
+            ],
+            "square": false,
+            "flat": false,
+            "defer_render": false,
+            "section_anchor": null,
+            "module_anchor": null,
+            "sort_switch_sorted_active": false,
+            "cluster_switch_clustered_active": true
+        }
+    },
+    "config_analysis_dir": [
+        "screen"
+    ],
+    "config_git_hash": null,
+    "config_intro_text": null,
+    "config_report_comment": null,
+    "config_report_header_info": null,
+    "config_script_path": "/opt/miniconda3/envs/bio-qc/lib/python3.13/site-packages/multiqc",
+    "config_short_version": "1.35",
+    "config_subtitle": null,
+    "config_title": null,
+    "config_version": "1.35",
+    "config_output_dir": "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/multiqc",
+    "config_sample_names_rename": [],
+    "config_sample_names_rename_buttons": [],
+    "config_analysis_dir_abs": [
+        "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen"
+    ],
+    "report_saved_raw_data": {
+        "multiqc_fastq_screen": {
+            "S1_1_screen": {
+                "total_reads": 50000,
+                "Ecoli counts": 45254.0,
+                "Ecoli percentage": 90.51,
+                "PhiX counts": 2499.0,
+                "PhiX percentage": 5.0,
+                "Lambda counts": 2559.0,
+                "Lambda percentage": 5.12,
+                "No hits counts": 5,
+                "No hits percentage": 0.01
+            },
+            "S1_2_screen": {
+                "total_reads": 50000,
+                "Ecoli counts": 45248.0,
+                "Ecoli percentage": 90.5,
+                "PhiX counts": 2500.0,
+                "PhiX percentage": 5.0,
+                "Lambda counts": 2560.0,
+                "Lambda percentage": 5.11,
+                "No hits counts": 5,
+                "No hits percentage": 0.01
+            },
+            "S2_1_screen": {
+                "total_reads": 50000,
+                "Ecoli counts": 37999.0,
+                "Ecoli percentage": 75.99999999999999,
+                "PhiX counts": 7498.0,
+                "PhiX percentage": 15.0,
+                "Lambda counts": 5055.0,
+                "Lambda percentage": 10.11,
+                "No hits counts": 5,
+                "No hits percentage": 0.01
+            },
+            "S2_2_screen": {
+                "total_reads": 50000,
+                "Ecoli counts": 38004.0,
+                "Ecoli percentage": 76.0,
+                "PhiX counts": 7500.0,
+                "PhiX percentage": 15.0,
+                "Lambda counts": 5056.0,
+                "Lambda percentage": 10.11,
+                "No hits counts": 5,
+                "No hits percentage": 0.01
+            },
+            "S3_1_screen": {
+                "total_reads": 50000,
+                "Ecoli counts": 49992.0,
+                "Ecoli percentage": 99.97999999999999,
+                "PhiX counts": 0.0,
+                "PhiX percentage": 0.0,
+                "Lambda counts": 89.0,
+                "Lambda percentage": 0.18,
+                "No hits counts": 10,
+                "No hits percentage": 0.02
+            },
+            "S3_2_screen": {
+                "total_reads": 50000,
+                "Ecoli counts": 49995.0,
+                "Ecoli percentage": 99.99,
+                "PhiX counts": 0.0,
+                "PhiX percentage": 0.0,
+                "Lambda counts": 80.0,
+                "Lambda percentage": 0.16,
+                "No hits counts": 5,
+                "No hits percentage": 0.01
+            }
+        }
+    }
+}

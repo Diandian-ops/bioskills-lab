@@ -1,0 +1,7 @@
+Module	Section	Sample Name	Source
+FastQ Screen	all_sections	S1_1_screen	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S1_1_screen.txt
+FastQ Screen	all_sections	S1_2_screen	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S1_2_screen.txt
+FastQ Screen	all_sections	S2_1_screen	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S2_1_screen.txt
+FastQ Screen	all_sections	S2_2_screen	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S2_2_screen.txt
+FastQ Screen	all_sections	S3_1_screen	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S3_1_screen.txt
+FastQ Screen	all_sections	S3_2_screen	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/screen/S3_2_screen.txt

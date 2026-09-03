@@ -1,0 +1,32 @@
+  0.00	1	1	U	0	unclassified
+100.00	49999	80	R	1	root
+ 74.99	37496	0	R1	131567	  cellular organisms
+ 74.99	37496	0	D	2	    Bacteria
+ 74.99	37496	0	K	3379134	      Pseudomonadati
+ 74.99	37496	0	P	1224	        Pseudomonadota
+ 74.99	37496	0	C	1236	          Gammaproteobacteria
+ 74.99	37496	0	O	91347	            Enterobacterales
+ 74.99	37496	0	F	543	              Enterobacteriaceae
+ 74.99	37496	0	G	561	                Escherichia
+ 74.99	37496	0	S	562	                  Escherichia coli
+ 74.99	37496	0	S1	83333	                    Escherichia coli K-12
+ 74.99	37496	37496	S2	511145	                      Escherichia coli str. K-12 substr. MG1655
+ 24.85	12423	0	R1	10239	  Viruses
+ 15.00	7500	0	R2	2731342	    Floreoviria
+ 15.00	7500	0	K	2732091	      Sangervirae
+ 15.00	7500	0	P	2732412	        Phixviricota
+ 15.00	7500	0	C	10841	          Microviricetes
+ 15.00	7500	0	O	1910950	            Bullavirales
+ 15.00	7500	0	F	3701015	              Eubullaviridae
+ 15.00	7500	0	G	1910954	                Sinsheimervirus
+ 15.00	7500	0	S	10847	                  Sinsheimervirus phiX174
+ 15.00	7500	7500	S1	2886930	                    Escherichia phage phiX174
+  9.85	4923	0	R2	2731341	    Duplodnaviria
+  9.85	4923	0	K	2731360	      Heunggongvirae
+  9.85	4923	0	P	2731618	        Uroviricota
+  9.85	4923	0	C	2731619	          Caudoviricetes
+  9.85	4923	0	F	3700705	            Zimmerviridae
+  9.85	4923	0	F1	3700837	              Jacobvirinae
+  9.85	4923	0	G	186765	                Lambdavirus
+  9.85	4923	0	S	10710	                  Lambdavirus lambda
+  9.85	4923	4923	S1	2681611	                    Escherichia phage Lambda

@@ -1,0 +1,272 @@
+########## STAGE 0: environment
+Kraken version 2.17.1
+FastQ Screen v0.16.0
+multiqc, version 1.35
+[WARNING] Failed to launch x86-64-v3 version, staying with default
+[WARNING] Failed to launch x86-64-v3 version, staying with default
+/opt/miniconda3/envs/bio-qc/bin/bowtie2-align-s version 2.5.5
+Python 3.13.15
+########## STAGE 1: fetch real genomes
+-- ecoli.fna already valid, skip
+-- phix.fna already valid, skip
+-- lambda.fna already valid, skip
+== ecoli.fna: 1 record(s), 4708035 bytes, 4641652 bp
+>NC_000913.3 Escherichia coli str. K-12 substr. MG1655, complete genome
+== phix.fna: 1 record(s), 5520 bytes, 5386 bp
+>NC_001422.1 Escherichia phage phiX174, complete genome
+== lambda.fna: 1 record(s), 49254 bytes, 48502 bp
+>NC_001416.1 Enterobacteria phage lambda, complete genome
+########## STAGE 2: generate designed mixture reads
+loaded Ecoli: 4641652 bp
+loaded PhiX: 5386 bp
+loaded Lambda: 48502 bp
+S1 Ecoli: 45000 pairs (90.0%)
+S1 PhiX: 2500 pairs (5.0%)
+S1 Lambda: 2500 pairs (5.0%)
+S1: wrote 50000 pairs
+S2 Ecoli: 37500 pairs (75.0%)
+S2 PhiX: 7500 pairs (15.0%)
+S2 Lambda: 5000 pairs (10.0%)
+S2: wrote 50000 pairs
+S3 Ecoli: 50000 pairs (100.0%)
+S3: wrote 50000 pairs
+design.tsv written
+########## STAGE 3: build mini kraken2 DB + bowtie2 panel
+=== taxids from GenBank headers (eutils)
+ecoli=511145 phix=2886930 lambda=2681611
+=== seqid2taxid.map
+NC_000913.3	511145
+NC_001422.1	2886930
+NC_001416.1	2681611
+=== taxonomy subset via eutils (real NCBI lineage)
+511145 -> Escherichia coli str. K-12 substr. MG1655 (11 lineage nodes)
+2886930 -> Escherichia phage phiX174 (10 lineage nodes)
+2681611 -> Escherichia phage Lambda (10 lineage nodes)
+wrote taxonomy/nodes.dmp (31) taxonomy/names.dmp (31)
+-rwxrwxrwx 1 devah devah 1483 Sep  3 22:06 /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/k2_mini/taxonomy/names.dmp
+-rwxrwxrwx 1 devah devah  814 Sep  3 22:06 /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/k2_mini/taxonomy/nodes.dmp
+=== kraken2-build: add libraries
+Masking low-complexity regions of new file... done.
+Added "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/refs/ecoli.fna" to library (/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/k2_mini)
+Masking low-complexity regions of new file... done.
+Added "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/refs/phix.fna" to library (/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/k2_mini)
+Masking low-complexity regions of new file... done.
+Added "/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/refs/lambda.fna" to library (/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/k2_mini)
+=== kraken2-build: build
+Creating sequence ID to taxonomy ID map (step 1)...
+Sequence ID to taxonomy ID map already present, skipping map creation.
+Estimating required capacity (step 2)...
+Estimated hash table requirement: 8638168 bytes
+Capacity estimation complete. [0.114s]
+Building database files (step 3)...
+Taxonomy parsed and converted.
+CHT created with 5 bits reserved for taxid.
+Completed processing of 3 sequences, 4695540 bp
+Writing data to disk...  complete.
+Database files completed. [0.534s]
+Database construction complete. [Total: 0.675s]
+=== bowtie2 indexes for FastQ Screen
+Building a SMALL index
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.3.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.3.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.4.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.4.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.1.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.1.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.2.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.2.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.rev.1.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.rev.1.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.rev.2.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli.rev.2.bt2
+Building a SMALL index
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.3.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.3.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.4.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.4.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.1.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.1.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.2.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.2.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.rev.1.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.rev.1.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.rev.2.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix.rev.2.bt2
+Building a SMALL index
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.3.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.3.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.4.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.4.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.1.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.1.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.2.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.2.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.rev.1.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.rev.1.bt2
+Renaming /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.rev.2.bt2.tmp to /mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda.rev.2.bt2
+BOWTIE2	/opt/miniconda3/envs/bio-qc/bin/bowtie2
+THREADS	4
+DATABASE	Ecoli	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/ecoli
+DATABASE	PhiX	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/phix
+DATABASE	Lambda	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2/lambda
+=== kraken2-inspect (top)
+# Database options: nucleotide db, k = 35, l = 31
+# Spaced mask = 11111111111111111111111111111111110011001100110011001100110011
+# Toggle mask = 1110001101111110001010001100010000100111000110110101101000101101
+# Total taxonomy nodes: 32
+# Table size: 1483627
+# Table capacity: 2159542
+# Min clear hash value = 0
+100.00	1483627	1029	R	1	root
+ 98.83	1466208	0	R1	131567	  cellular organisms
+ 98.83	1466208	0	D	2	    Bacteria
+ 98.83	1466208	0	K	3379134	      Pseudomonadati
+ 98.83	1466208	0	P	1224	        Pseudomonadota
+=== DB sizes
+13M	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/k2_mini
+31M	/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/db/bt2
+########## STAGE 4: kraken2 main runs (confidence 0.1, min-hit-groups 2)
+--- kraken2 S1
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.261s (11489.8 Kseq/m, 3446.94 Mbp/m).
+  49997 sequences classified (99.99%)
+  3 sequences unclassified (0.01%)
+--- kraken2 S2
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.304s (9877.5 Kseq/m, 2963.24 Mbp/m).
+  49999 sequences classified (100.00%)
+  1 sequences unclassified (0.00%)
+--- kraken2 S3
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.278s (10791.5 Kseq/m, 3237.45 Mbp/m).
+  49997 sequences classified (99.99%)
+  3 sequences unclassified (0.01%)
+########## STAGE 5: kraken2 confidence sweep (S1, S2)
+--- kraken2 S1 confidence 0.0
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.281s (10676.3 Kseq/m, 3202.89 Mbp/m).
+  49998 sequences classified (100.00%)
+  2 sequences unclassified (0.00%)
+--- kraken2 S1 confidence 0.05
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.296s (10130.5 Kseq/m, 3039.15 Mbp/m).
+  49998 sequences classified (100.00%)
+  2 sequences unclassified (0.00%)
+--- kraken2 S1 confidence 0.1
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.272s (11045.8 Kseq/m, 3313.75 Mbp/m).
+  49997 sequences classified (99.99%)
+  3 sequences unclassified (0.01%)
+--- kraken2 S1 confidence 0.2
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.274s (10961.8 Kseq/m, 3288.55 Mbp/m).
+  49990 sequences classified (99.98%)
+  10 sequences unclassified (0.02%)
+--- kraken2 S2 confidence 0.0
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.293s (10224.6 Kseq/m, 3067.37 Mbp/m).
+  49999 sequences classified (100.00%)
+  1 sequences unclassified (0.00%)
+--- kraken2 S2 confidence 0.05
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.264s (11361.5 Kseq/m, 3408.45 Mbp/m).
+  49999 sequences classified (100.00%)
+  1 sequences unclassified (0.00%)
+--- kraken2 S2 confidence 0.1
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.272s (11027.5 Kseq/m, 3308.26 Mbp/m).
+  49999 sequences classified (100.00%)
+  1 sequences unclassified (0.00%)
+--- kraken2 S2 confidence 0.2
+Loading database information... done.
+50000 sequences (15.00 Mbp) processed in 0.290s (10329.3 Kseq/m, 3098.79 Mbp/m).
+  49996 sequences classified (99.99%)
+  4 sequences unclassified (0.01%)
+########## STAGE 6: FastQ Screen
+--- fastq_screen S1
+Using fastq_screen v0.16.0
+Reading configuration from '/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/fastq_screen.conf'
+Aligner (--aligner) not specified, but Bowtie2 path and index files found: mapping with Bowtie2
+Using '/opt/miniconda3/envs/bio-qc/bin/bowtie2' as Bowtie 2 path
+Adding database Ecoli
+Adding database PhiX
+Adding database Lambda
+Using 4 threads for searches
+Option --subset set to 100000 reads
+Processing S1_2.fastq.gz
+	Output graphics file 'S1_2_screen.png' already exists
+	Output HTML file 'S1_2_screen.html' already exists
+	Output file 'S1_2_screen.txt' already exists
+	Skipping S1_2.fastq.gz
+Processing S1_1.fastq.gz
+	Output graphics file 'S1_1_screen.png' already exists
+	Output HTML file 'S1_1_screen.html' already exists
+	Output file 'S1_1_screen.txt' already exists
+	Skipping S1_1.fastq.gz
+Processing complete
+--- fastq_screen S2
+Using fastq_screen v0.16.0
+Reading configuration from '/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/fastq_screen.conf'
+Aligner (--aligner) not specified, but Bowtie2 path and index files found: mapping with Bowtie2
+Using '/opt/miniconda3/envs/bio-qc/bin/bowtie2' as Bowtie 2 path
+Adding database Ecoli
+Adding database PhiX
+Adding database Lambda
+Using 4 threads for searches
+Option --subset set to 100000 reads
+Processing S2_1.fastq.gz
+	Output graphics file 'S2_1_screen.png' already exists
+	Output HTML file 'S2_1_screen.html' already exists
+	Output file 'S2_1_screen.txt' already exists
+	Skipping S2_1.fastq.gz
+Processing S2_2.fastq.gz
+	Output graphics file 'S2_2_screen.png' already exists
+	Output HTML file 'S2_2_screen.html' already exists
+	Output file 'S2_2_screen.txt' already exists
+	Skipping S2_2.fastq.gz
+Processing complete
+--- fastq_screen S3
+Using fastq_screen v0.16.0
+Reading configuration from '/mnt/d/1.WorkDir/RedBook/content/素材/read-qc/043-contamination-screening/fastq_screen.conf'
+Aligner (--aligner) not specified, but Bowtie2 path and index files found: mapping with Bowtie2
+Using '/opt/miniconda3/envs/bio-qc/bin/bowtie2' as Bowtie 2 path
+Adding database Ecoli
+Adding database PhiX
+Adding database Lambda
+Using 4 threads for searches
+Option --subset set to 100000 reads
+Processing S3_2.fastq.gz
+	Output graphics file 'S3_2_screen.png' already exists
+	Output HTML file 'S3_2_screen.html' already exists
+	Output file 'S3_2_screen.txt' already exists
+	Skipping S3_2.fastq.gz
+Processing S3_1.fastq.gz
+	Output graphics file 'S3_1_screen.png' already exists
+	Output HTML file 'S3_1_screen.html' already exists
+	Output file 'S3_1_screen.txt' already exists
+	Skipping S3_1.fastq.gz
+Processing complete
+########## STAGE 7: multiqc
+     write_results | Data        : multiqc/multiqc_data   (overwritten)
+     write_results | Report      : multiqc/multiqc_report.html   (overwritten)
+           multiqc | MultiQC complete
+########## STAGE 8: parse results
+== design vs kraken2 (species-level % of read pairs)
+S1: design={'Ecoli': 90.0, 'PhiX': 5.0, 'Lambda': 5.0} kraken={'unclassified': 0.01}
+S2: design={'Ecoli': 75.0, 'PhiX': 15.0, 'Lambda': 10.0} kraken={'unclassified': 0.0}
+S3: design={'Ecoli': 100.0} kraken={'unclassified': 0.01}
+== FastQ Screen (% one_hit_one_genome per genome)
+S1 {'Ecoli': {'#Reads_processed': 50000.0, '#Unmapped': 4746.0, '%Unmapped': 9.49, '#One_hit_one_genome': 43334.0, '%One_hit_one_genome': 86.67, '#Multiple_hits_one_genome': 1602.0, '%Multiple_hits_one_genome': 3.2, '#One_hit_multiple_genomes': 194.0, '%One_hit_multiple_genomes': 0.39, 'Multiple_hits_multiple_genomes': 124.0, '%Multiple_hits_multiple_genomes': 0.25}, 'PhiX': {'#Reads_processed': 50000.0, '#Unmapped': 47501.0, '%Unmapped': 95.0, '#One_hit_one_genome': 2499.0, '%One_hit_one_genome': 5.0, '#Multiple_hits_one_genome': 0.0, '%Multiple_hits_one_genome': 0.0, '#One_hit_multiple_genomes': 0.0, '%One_hit_multiple_genomes': 0.0, 'Multiple_hits_multiple_genomes': 0.0, '%Multiple_hits_multiple_genomes': 0.0}, 'Lambda': {'#Reads_processed': 50000.0, '#Unmapped': 47441.0, '%Unmapped': 94.88, '#One_hit_one_genome': 2241.0, '%One_hit_one_genome': 4.48, '#Multiple_hits_one_genome': 0.0, '%Multiple_hits_one_genome': 0.0, '#One_hit_multiple_genomes': 318.0, '%One_hit_multiple_genomes': 0.64, 'Multiple_hits_multiple_genomes': 0.0, '%Multiple_hits_multiple_genomes': 0.0}, '%Hit_no_genomes: 0.01': {}}
+S2 {'Ecoli': {'#Reads_processed': 50000.0, '#Unmapped': 12001.0, '%Unmapped': 24.0, '#One_hit_one_genome': 36107.0, '%One_hit_one_genome': 72.21, '#Multiple_hits_one_genome': 1333.0, '%Multiple_hits_one_genome': 2.67, '#One_hit_multiple_genomes': 328.0, '%One_hit_multiple_genomes': 0.66, 'Multiple_hits_multiple_genomes': 231.0, '%Multiple_hits_multiple_genomes': 0.46}, 'PhiX': {'#Reads_processed': 50000.0, '#Unmapped': 42502.0, '%Unmapped': 85.0, '#One_hit_one_genome': 7498.0, '%One_hit_one_genome': 15.0, '#Multiple_hits_one_genome': 0.0, '%Multiple_hits_one_genome': 0.0, '#One_hit_multiple_genomes': 0.0, '%One_hit_multiple_genomes': 0.0, 'Multiple_hits_multiple_genomes': 0.0, '%Multiple_hits_multiple_genomes': 0.0}, 'Lambda': {'#Reads_processed': 50000.0, '#Unmapped': 44945.0, '%Unmapped': 89.89, '#One_hit_one_genome': 4496.0, '%One_hit_one_genome': 8.99, '#Multiple_hits_one_genome': 0.0, '%Multiple_hits_one_genome': 0.0, '#One_hit_multiple_genomes': 559.0, '%One_hit_multiple_genomes': 1.12, 'Multiple_hits_multiple_genomes': 0.0, '%Multiple_hits_multiple_genomes': 0.0}, '%Hit_no_genomes: 0.01': {}}
+S3 {'Ecoli': {'#Reads_processed': 50000.0, '#Unmapped': 8.0, '%Unmapped': 0.02, '#One_hit_one_genome': 48122.0, '%One_hit_one_genome': 96.24, '#Multiple_hits_one_genome': 1781.0, '%Multiple_hits_one_genome': 3.56, '#One_hit_multiple_genomes': 35.0, '%One_hit_multiple_genomes': 0.07, 'Multiple_hits_multiple_genomes': 54.0, '%Multiple_hits_multiple_genomes': 0.11}, 'PhiX': {'#Reads_processed': 50000.0, '#Unmapped': 50000.0, '%Unmapped': 100.0, '#One_hit_one_genome': 0.0, '%One_hit_one_genome': 0.0, '#Multiple_hits_one_genome': 0.0, '%Multiple_hits_one_genome': 0.0, '#One_hit_multiple_genomes': 0.0, '%One_hit_multiple_genomes': 0.0, 'Multiple_hits_multiple_genomes': 0.0, '%Multiple_hits_multiple_genomes': 0.0}, 'Lambda': {'#Reads_processed': 50000.0, '#Unmapped': 49911.0, '%Unmapped': 99.82, '#One_hit_one_genome': 0.0, '%One_hit_one_genome': 0.0, '#Multiple_hits_one_genome': 0.0, '%Multiple_hits_one_genome': 0.0, '#One_hit_multiple_genomes': 89.0, '%One_hit_multiple_genomes': 0.18, 'Multiple_hits_multiple_genomes': 0.0, '%Multiple_hits_multiple_genomes': 0.0}, '%Hit_no_genomes: 0.02': {}}
+== confidence sweep
+S1 conf=0.0: unclassified=0.0% n_species=0 species={}
+S1 conf=0.05: unclassified=0.0% n_species=0 species={}
+S1 conf=0.1: unclassified=0.01% n_species=0 species={}
+S1 conf=0.2: unclassified=0.02% n_species=0 species={}
+S2 conf=0.0: unclassified=0.0% n_species=0 species={}
+S2 conf=0.05: unclassified=0.0% n_species=0 species={}
+S2 conf=0.1: unclassified=0.0% n_species=0 species={}
+S2 conf=0.2: unclassified=0.01% n_species=0 species={}
+results.json written
+########## DONE
+
+########## POSTSCRIPT (appended after initial STAGE 0-8 runs)
+1. parse_results.py fix: kraken2 kreport species rows were missed because reads
+   classified at strain rank (S1/S2 rows) with the "S" row count at 0. Parser
+   updated to accept rank == "S" with pct > 0 and strip the name field. Rerun
+   of STAGE 8 produced results.json with full species tables (the STAGE 8 block
+   above shows the pre-fix n_species=0 output; results.json is post-fix).
+2. make_figs.py run via managed venv self-check:
+   FIG1 designed_vs_detected, FIG2 fastq_screen_categories, FIG3 confidence_sweep
+   -> FIGURE QUALITY: TOTAL FAILS = 0
+   (fig3 designed-level labels moved into the legend after first check flagged
+   text outside axes.)
+3. Known limitation recorded honestly: taxonomy built from eutils subset
+   (31 nodes) instead of the full NCBI taxdump (~75 MB) because download
+   throughput that day was ~18 KB/s; disclosed in the note's
+   "未覆盖（诚实标注）" section.
+########## END POSTSCRIPT

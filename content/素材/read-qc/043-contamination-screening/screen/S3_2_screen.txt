@@ -1,0 +1,7 @@
+#Fastq_screen version: 0.16.0	#Aligner: bowtie2	#Reads in subset: 100000
+Genome	#Reads_processed	#Unmapped	%Unmapped	#One_hit_one_genome	%One_hit_one_genome	#Multiple_hits_one_genome	%Multiple_hits_one_genome	#One_hit_multiple_genomes	%One_hit_multiple_genomes	Multiple_hits_multiple_genomes	%Multiple_hits_multiple_genomes
+Ecoli	50000	5	0.01	48135	96.27	1780	3.56	28	0.06	52	0.10
+PhiX	50000	50000	100.00	0	0.00	0	0.00	0	0.00	0	0.00
+Lambda	50000	49920	99.84	0	0.00	0	0.00	80	0.16	0	0.00
+
+%Hit_no_genomes: 0.01
