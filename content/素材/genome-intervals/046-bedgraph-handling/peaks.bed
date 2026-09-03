@@ -1,0 +1,4 @@
+chr1	294000	306000	peak1	height=40.0x	sigma=2000
+chr1	792500	807500	peak2	height=60.0x	sigma=2500
+chr1	1195500	1204500	peak3	height=30.0x	sigma=1500
+chr1	1641000	1659000	peak4	height=50.0x	sigma=3000

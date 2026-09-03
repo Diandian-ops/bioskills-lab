@@ -1,0 +1,106 @@
+046-bedgraph-handling 复现记录（repro transcript）
+真跑日期：2026-09-03
+环境：WSL Ubuntu（root），conda env `bio`（source /opt/miniconda3/etc/profile.d/conda.sh && conda activate bio）
+工作目录：content/素材/genome-intervals/046-bedgraph-handling/
+
+================================================================
+0. 版本（实测，_run.log 开头）
+================================================================
+bedtools v2.31.1
+samtools 1.24
+bedGraphToBigWig v 2.10（bbi version 4）
+bigWigInfo 可用；bigWigToBedGraph 不在本环境（回读改用 pyBigWig）
+pyBigWig 0.3.25（本次补装：pip install pyBigWig）
+bamCoverage（deepTools）：本环境未安装，SKILL.md 的 bamCoverage/bamCompare
+路径仅文档口径，未真跑（诚实标注）。
+
+================================================================
+1. 造数（make_inputs.py，固定 seed=20260903）
+================================================================
+python3 make_inputs.py
+  - 合成参考 ref.fa：chr1 = 2,000,000 bp 随机 ACGT
+  - 4 个内嵌富集峰（peaks.bed）：peak1 300kb/h=40x/sigma=2000；
+    peak2 800kb/h=60x/sigma=2500；peak3 1.2Mb/h=30x/sigma=1500；
+    peak4 1.65Mb/h=50x/sigma=3000；背景深度 0.5x
+  - 每碱基泊松采样读起点，单端 100 bp 读，输出坐标排序 SAM
+  - sampleA：20,591 条 reads；sampleB：同批 reads 的 25% 随机子样本
+    （5,155 条，3.99x 更浅 = 同生物学、不同测序深度）
+  - meta.json 记录全部参数
+
+================================================================
+2. 主链路（_run.sh，完整输出见 _run.log）
+================================================================
+samtools faidx ref.fa
+cut -f1,2 ref.fa.fai > chrom.sizes                  # chr1  2000000
+samtools view -bS sampleA.sam | samtools sort -o sampleA.bam -
+samtools index sampleA.bam                          # sampleB 同理
+
+# 深度核实
+samtools depth -a -r chr1 sampleA.bam   # mean = 1.0295x
+samtools depth -a -r chr1 sampleB.bam   # mean = 0.2577x（比值 3.99）
+
+# genomecov：-bg 折叠等值段且省略零覆盖；-bga 额外铺零
+bedtools genomecov -ibam sampleA.bam -bg  > A.bedgraph       # 27,427 行
+bedtools genomecov -ibam sampleA.bam -bga > A_bga.bedgraph   # 33,372 行
+bedtools genomecov -ibam sampleB.bam -bg  > B.bedgraph       #  7,435 行
+bedtools genomecov -ibam sampleB.bam -bga > B_bga.bedgraph   #  9,669 行
+# -bga 前三列区间长度合计 = 2,000,000 bp（全基因组铺满，实测）
+# -bg A 覆盖 >0 的仅 820,627 bp（41.0%）；A 最高覆盖 78x
+# bigWigInfo A.bw：basesCovered 820,627 / mean 2.509179 / max 78 / zoomLevels 8
+
+# 手动 RPM（SKILL.md 提到的粗粒度 -scale 路线）
+NA=20591, NB=5155 -> scale 因子 A=48.564907, B=193.986421（比值 = 3.994）
+bedtools genomecov -ibam sampleA.bam -bg -scale 48.564907 > A_scaled.bedgraph
+bedtools genomecov -ibam sampleB.bam -bg -scale 193.986421 > B_scaled.bedgraph
+
+# 文本 -> bigWig（严格契约：C locale 排序 + 匹配 chrom.sizes）
+LC_COLLATE=C sort -k1,1 -k2,2n A.bedgraph > A.sorted.bedgraph
+bedGraphToBigWig A.sorted.bedgraph chrom.sizes A.bw   # OK，233,698 字节
+bedGraphToBigWig B.sorted.bedgraph chrom.sizes B.bw   # OK， 88,848 字节
+
+# bigWig 回读保真（pyBigWig 全染色体逐区间比对）
+#   27,427 行（区间坐标一一对应），max |delta| = 0（无损往返）
+#   bw.stats(chr1,780000,820000,mean) = 15.693；该窗口 4,840 个区间
+#   -> fig3_bw_window.txt
+
+# 多样本值矩阵
+bedtools unionbedg -i A.bedgraph B.bedgraph -header -names A B > matrix_union.txt
+# 28,103 行（含 header；union 区划把 A 27,427 + B 7,435 并成 28,102 个互不重叠区间）
+
+================================================================
+3. bedGraphToBigWig 错误契约四项实测（全部 exit 255，逐条报错）
+================================================================
+[7a] 未排序输入（tac 反转）：
+  "A.unsorted.bdg is not sorted at line 2. Please use the -sort option
+   to sort the input file."
+  注：本版本文案是 "...not sorted..."，非 SKILL.md 所写
+  "is not case-sensitive sorted"——同一契约、不同措辞（真实发现）。
+[7b] chrom.sizes 偏短（chr1 记为 1,000,000，即"错配 assembly"代理）：
+  "End coordinate 1000122 bigger than chr1 size of 1000000 line 14191
+   of A.sorted.bedgraph"
+[7c] 重叠区间（A、B 两条轨道拼接）：
+  "Error - overlapping regions in bedGraph line 10 of AB_overlap.bdg"
+  修复实测：bedtools merge -i AB_overlap.bdg -d 0 -c 4 -o max
+  34,862 行 -> 5,944 行，转换成功（AB.bw 生成）
+[7d] 染色体命名不匹配（bedGraph 用 '1'，chrom.sizes 用 'chr1'）：
+  "1 is not found in chromosome sizes file"
+  注：本版本显式报错退出，未复现 SKILL.md "整条染色体静默缺失"
+  的行为——静默路径存在于其他版本/其他违规组合，此处为显式拒绝。
+
+================================================================
+4. 出图（make_figs.py，受管 venv python 运行）
+================================================================
+fig1_library_size_artifact.png  原始 bedGraph：A 与 B 同形态、高度差 ~4x
+fig2_rpm_normalized.png         RPM 缩放后两轨道对齐（峰心均值 A=2987 vs
+                                B=2425 RPM，差 ~23% 来自浅库的泊松噪声）
+fig3_roundtrip_fidelity.png     bedGraph vs bigWig 回读值散点，n=27,427，
+                                max|delta|=0，全部落在 y=x
+自检：check_figs.py make_figs.py -> "TOTAL FAILS = 0"（2026-09-03）
+
+================================================================
+5. 未真跑部分（诚实标注）
+================================================================
+- deepTools bamCoverage/bamCompare/bigwigCompare/unionbedg 以外的
+  multiBigwigSummary/plotCorrelation：环境未安装 deepTools，仅文档口径。
+- -split（无剪接 RNA 数据）、--extendReads（deepTools 侧）、spike-in 路线。
+- chrom.sizes 命名错配在本版本为显式报错；"静默丢染色体"未复现。

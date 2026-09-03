@@ -1,0 +1,95 @@
+=== 046 bedgraph-handling real run 2026-09-03 ===
+--- versions ---
+bedtools v2.31.1
+samtools 1.24
+bedGraphToBigWig v 2.10 - Convert a bedGraph file to bigWig format (bbi version: 4).
+bigWigToBedGraph: NOT INSTALLED in this env
+bigWigInfo - Print out information about bigWig file.
+pyBigWig 0.3.25
+bamCoverage: NOT INSTALLED in this env (deeptools path documented, not run)
+--- step 1: inputs ---
+reads A = 20591, reads B = 5155 (ratio 3.99x)
+done.
+chrom.sizes:
+chr1	2000000
+mapped reads: A=20591  B=5155
+sampleA mean depth = 1.0295x over 2,000,000 bp
+sampleB mean depth = 0.2577x over 2,000,000 bp
+--- step 2: genomecov -bg vs -bga ---
+  27427 A.bedgraph
+  33372 A_bga.bedgraph
+   7435 B.bedgraph
+   9669 B_bga.bedgraph
+  77903 total
+max raw coverage in A_bga.bedgraph = 78x
+bp tiled by -bga (should equal 2000000): 2000000
+bp covered >0 by -bg (sample A): 820627
+--- step 3: manual RPM scaling (-scale 1e6/nreads) ---
+RPM scale factors: A=48.564907  B=193.986421
+chr1	90	146	1
+chr1	146	190	2
+chr1	90	146	48.5649
+chr1	146	190	97.1298
+--- step 4: sort + bedGraphToBigWig ---
+A.bw OK
+B.bw OK
+-rwxrwxrwx 1 devah devah 233698 Sep  3 22:51 A.bw
+-rwxrwxrwx 1 devah devah 613417 Sep  3 22:51 A.sorted.bedgraph
+-rwxrwxrwx 1 devah devah  88848 Sep  3 22:51 B.bw
+--- step 5: bigWig round-trip (pyBigWig full-chromosome readback + bigWigInfo) ---
+note: bigWigToBedGraph is not installed in this env; the round-trip is verified
+      with pyBigWig, which returns the underlying bedGraph rows via bw.intervals().
+version: 4
+isCompressed: yes
+isSwapped: 0
+primaryDataSize: 112,699
+primaryIndexSize: 6,412
+zoomLevels: 8
+chromCount: 1
+basesCovered: 820,627
+mean: 2.509179
+min: 1.000000
+max: 78.000000
+std: 6.553867
+bigWig chroms: {'chr1': 2000000}
+bw.stats chr1:780000-820000 mean = 15.693433919556032
+round-trip rows compared = 27427 (bigWig 27427 vs bedGraph 27427), max |delta| = 0
+bigWig intervals in 780000-820000 = 4840
+--- step 6: unionbedg multi-sample matrix ---
+28103 matrix_union.txt
+chrom	start	end	A	B
+chr1	90	146	1	0
+chr1	146	190	2	0
+chr1	1999498	1999598	1	0
+--- step 7: error-contract tests against bedGraphToBigWig ---
+[test 7a] unsorted input (reverse order):
+exit=255 ; message: A.unsorted.bdg is not sorted at line 2. Please use the -sort option to sort the input file.
+[test 7b] chrom.sizes shorter than the data (wrong assembly proxy):
+exit=255 ; message: End coordinate 1000122 bigger than chr1 size of 1000000 line 14191 of A.sorted.bedgraph
+[test 7c] overlapping intervals (two tracks concatenated):
+exit=255 ; message: Error - overlapping regions in bedGraph line 10 of AB_overlap.bdg
+ 34862 AB_overlap.bdg
+  5944 AB_merged.bdg
+ 40806 total
+AB.bw OK after merge (-c 4 -o max)
+[test 7d] chrom naming mismatch (bedGraph says '1', chrom.sizes says 'chr1'):
+exit=255 ; message: 1 is not found in chromosome sizes file
+--- step 8: file inventory ---
+-rwxrwxrwx 1 devah devah 613417 Sep  3 22:51 A.bedgraph
+-rwxrwxrwx 1 devah devah 233698 Sep  3 22:51 A.bw
+-rwxrwxrwx 1 devah devah 613417 Sep  3 22:51 A.sorted.bedgraph
+-rwxrwxrwx 1 devah devah 613417 Sep  3 22:51 A.unsorted.bdg
+-rwxrwxrwx 1 devah devah  98415 Sep  3 22:51 AB.bw
+-rwxrwxrwx 1 devah devah 130045 Sep  3 22:51 AB_merged.bdg
+-rwxrwxrwx 1 devah devah 778372 Sep  3 22:51 AB_overlap.bdg
+-rwxrwxrwx 1 devah devah 743475 Sep  3 22:51 A_bga.bedgraph
+-rwxrwxrwx 1 devah devah 531136 Sep  3 22:51 A_named1.bdg
+-rwxrwxrwx 1 devah devah 764451 Sep  3 22:51 A_scaled.bedgraph
+-rwxrwxrwx 1 devah devah 164955 Sep  3 22:51 B.bedgraph
+-rwxrwxrwx 1 devah devah  88848 Sep  3 22:51 B.bw
+-rwxrwxrwx 1 devah devah 164955 Sep  3 22:51 B.sorted.bedgraph
+-rwxrwxrwx 1 devah devah 213915 Sep  3 22:51 B_bga.bedgraph
+-rwxrwxrwx 1 devah devah 206981 Sep  3 22:51 B_scaled.bedgraph
+-rwxrwxrwx 1 devah devah    400 Sep  3 22:51 err_overlap.bw
+-rwxrwxrwx 1 devah devah 690536 Sep  3 22:51 matrix_union.txt
+=== END OF RUN ===

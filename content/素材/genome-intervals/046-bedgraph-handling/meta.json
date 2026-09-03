@@ -1,0 +1,37 @@
+{
+ "seed": 20260903,
+ "chrom": "chr1",
+ "chrom_length": 2000000,
+ "read_length": 100,
+ "base_depth_A": 0.5,
+ "subsample_fraction_B": 0.25,
+ "n_reads_A": 20591,
+ "n_reads_B": 5155,
+ "depth_ratio_A_over_B": 3.994,
+ "peaks": [
+  {
+   "name": "peak1",
+   "center": 300000,
+   "sigma": 2000,
+   "height_x": 40.0
+  },
+  {
+   "name": "peak2",
+   "center": 800000,
+   "sigma": 2500,
+   "height_x": 60.0
+  },
+  {
+   "name": "peak3",
+   "center": 1200000,
+   "sigma": 1500,
+   "height_x": 30.0
+  },
+  {
+   "name": "peak4",
+   "center": 1650000,
+   "sigma": 3000,
+   "height_x": 50.0
+  }
+ ]
+}
