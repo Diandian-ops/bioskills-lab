@@ -1,0 +1,15 @@
+== quant_A ==
+  expected_format = SR ; mapped = 79751/80000 (99.69%)
+  lib_format_counts: compatible_ratio = 1.0 ; compatible = 79751 ; incompatible = 0 ; assigned = 79751 ; SR-count = 79751
+  quant.sf: TPM sum = 1000000.0 ; NumReads total = 79751 ; records = 24
+== quant_IU ==
+  expected_format = IU ; mapped = 79751/80000 (99.69%)
+  lib_format_counts: compatible_ratio = 1.0 ; compatible = 79751 ; incompatible = 0 ; assigned = 79751 ; SR-count = 79751
+  quant.sf: TPM sum = 1000000.0 ; NumReads total = 79751 ; records = 24
+== quant_SF ==
+  expected_format = SF ; mapped = 0/80000 (0.0%)
+  lib_format_counts: compatible_ratio = 0.0 ; compatible = 0 ; incompatible = 79751 ; assigned = 0 ; SR-count = 79751
+  quant.sf: TPM sum = 0.0 ; NumReads total = 0 ; records = 24
+== gradient recovery (quant_A vs truth) ==
+  detected 24/24 transcripts (TPM>0); Pearson r on log10 TPM = 0.9981 ; Spearman rho (all, tie-averaged) = 0.9948
+  median TPM_observed/TPM_expected = 0.9933 ; ratio range 0.9167 - 1.5885

@@ -1,0 +1,5 @@
+transcripts: 24 (lengths 536-2920 nt, total 41280 bp)
+frac range: 0.000366 - 0.233 (span 636x), expected TPM 366 - 233194
+reads: 80000 SE 100 bp, err 0.01, min/max per-tx expected reads 11.8 / 22513.7
+orientation: dUTP-style SE (read = reverse complement of transcript)
+wrote transcripts.fa, truth.tsv, reads_se.fq.gz

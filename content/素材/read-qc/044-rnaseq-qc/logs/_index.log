@@ -1,0 +1,97 @@
+[2m2026-09-03T12:26:05.517932Z[0m [32m INFO[0m [2msalmon_index[0m[2m:[0m building compacted dBG (k=31, threads=28)
+[2m2026-09-03T12:26:05.524442Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS at start: current=17 MB, peak=17 MB
+[2m2026-09-03T12:26:05.524460Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m Phase 1: Counting minimizer frequencies...
+[2m2026-09-03T12:26:05.524463Z[0m [32m INFO[0m [2mcf1_rs::minimizer[0m[2m:[0m Counting minimizer frequencies with m=15, w=17, k=31
+[2m2026-09-03T12:26:05.533229Z[0m [32m INFO[0m [2mcf1_rs::minimizer[0m[2m:[0m Histogram: 4568 total minimizer occurrences across 4420 non-empty buckets
+[2m2026-09-03T12:26:05.534973Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS after P1: current=28 MB, peak=27 MB
+[2m2026-09-03T12:26:05.534978Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m Phase 2: Partitioning minimizers and routing super k-mers...
+[2m2026-09-03T12:26:05.535008Z[0m [32m INFO[0m [2mcf1_rs::minimizer[0m[2m:[0m Partitioned into 128 bins (target 35/bin)
+[2m2026-09-03T12:26:05.535028Z[0m [32m INFO[0m [2mcf1_rs::superkmer[0m[2m:[0m Routing super k-mers to 128 bins with m=15, w=17
+[2m2026-09-03T12:26:05.876954Z[0m [32m INFO[0m [2mcf1_rs::superkmer[0m[2m:[0m Finished routing super k-mers to bin files
+[2m2026-09-03T12:26:05.878588Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS after P2: current=48 MB, peak=47 MB
+[2m2026-09-03T12:26:05.878601Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m Phase 3: Building global MPHF...
+[2m2026-09-03T12:26:05.878603Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m Reading canonical k-mers from 128 bins
+[2m2026-09-03T12:26:05.879882Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m P3a: RSS before dedup: current=48 MB, peak=47 MB
+[2m2026-09-03T12:26:06.034270Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m Total 40560 distinct canonical k-mers across 128 bins (per-bin: min=205, max=1120, avg=316)
+[2m2026-09-03T12:26:06.036011Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m P3a: RSS after dedup: current=122 MB, peak=122 MB
+[2m2026-09-03T12:26:06.503085Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m P3b: RSS after consolidation: current=122 MB, peak=122 MB
+[2m2026-09-03T12:26:06.503105Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m Building global MPHF for 40560 distinct canonical k-mers (in-memory, threads=28)
+[2m2026-09-03T12:26:06.540782Z[0m [32m INFO[0m [2mcf1_rs::mphf[0m[2m:[0m MPHF construction complete
+[2m2026-09-03T12:26:06.543399Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS after P3 MPHF: current=124 MB, peak=124 MB
+[2m2026-09-03T12:26:06.544702Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS after P3 StateVector: current=124 MB, peak=124 MB
+[2m2026-09-03T12:26:06.648593Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m Phase 4: Classifying k-mer vertices...
+[2m2026-09-03T12:26:06.648613Z[0m [32m INFO[0m [2mcf1_rs::classify[0m[2m:[0m Phase 4: Classifying k-mer vertices
+[2m2026-09-03T12:26:06.657465Z[0m [32m INFO[0m [2mcf1_rs::classify[0m[2m:[0m Classification complete
+[2m2026-09-03T12:26:06.659125Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS after P4: current=124 MB, peak=124 MB
+[2m2026-09-03T12:26:06.659131Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m Phase 5: Extracting unitigs and writing output...
+[2m2026-09-03T12:26:06.659132Z[0m [32m INFO[0m [2mcf1_rs::output[0m[2m:[0m Phase 5: Extracting unitigs and writing output
+[2m2026-09-03T12:26:06.679429Z[0m [32m INFO[0m [2mcf1_rs::output[0m[2m:[0m Extracted 24 unitigs, 40560 vertices, avg length 1720
+[2m2026-09-03T12:26:06.684410Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m RSS after P5: current=162 MB, peak=161 MB
+[2m2026-09-03T12:26:06.688990Z[0m [32m INFO[0m [2mcf1_rs::output[0m[2m:[0m Wrote JSON output to salmon_index/cdbg.json
+[2m2026-09-03T12:26:06.689008Z[0m [32m INFO[0m [2mcf1_rs::pipeline[0m[2m:[0m Pipeline complete.
+[2m2026-09-03T12:26:06.689395Z[0m [32m INFO[0m [2msalmon_index[0m[2m:[0m cDBG: 24 unitigs, 40560 distinct k-mers
+[2m2026-09-03T12:26:06.690697Z[0m [32m INFO[0m [2msalmon_index[0m[2m:[0m building piscem index (m=19)
+[2m2026-09-03T12:26:06.690719Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m Parsing segment file: salmon_index/cdbg.cf_seg
+[2m2026-09-03T12:26:06.692624Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m   24 segments
+[2m2026-09-03T12:26:06.692639Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m Building SSHash dictionary (k=31, m=19)
+[2m2026-09-03T12:26:06.692727Z[0m [32m INFO[0m [2mpiscem_rs::index::mem_budget[0m[2m:[0m sshash minimizer-sort RAM budget: 8 GiB (auto-detected; 15 GiB usable)
+[2m2026-09-03T12:26:06.693560Z[0m [32m INFO[0m [2msshash_lib::builder::config[0m[2m:[0m Build Configuration:
+[2m2026-09-03T12:26:06.693574Z[0m [32m INFO[0m [2msshash_lib::builder::config[0m[2m:[0m   k = 31
+[2m2026-09-03T12:26:06.693575Z[0m [32m INFO[0m [2msshash_lib::builder::config[0m[2m:[0m   m = 19
+[2m2026-09-03T12:26:06.693576Z[0m [32m INFO[0m [2msshash_lib::builder::config[0m[2m:[0m   num_threads = all available cores
+[2m2026-09-03T12:26:06.693577Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Building SSHash Dictionary
+[2m2026-09-03T12:26:06.693578Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Step 1: Encoding sequences...
+[2m2026-09-03T12:26:06.693863Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m   Encoded 24 sequences
+[2m2026-09-03T12:26:06.693866Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m   Total bases: 41280
+[2m2026-09-03T12:26:06.693869Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Step 2: Extracting and coalescing minimizer tuples (in-memory)...
+[2m2026-09-03T12:26:06.695677Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m   Extracted and coalesced 5775 tuples
+[2m2026-09-03T12:26:06.695691Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Step 3: Classifying buckets (in-place)...
+[2m2026-09-03T12:26:06.695799Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m Bucket Statistics:
+[2m2026-09-03T12:26:06.695800Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Total buckets: 5775
+[2m2026-09-03T12:26:06.695801Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Total k-mers: 40560
+[2m2026-09-03T12:26:06.695802Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Total positions: 5775
+[2m2026-09-03T12:26:06.695802Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Singleton buckets: 5775 (100.00%)
+[2m2026-09-03T12:26:06.695805Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Light buckets (2-64): 0 (0.00%)
+[2m2026-09-03T12:26:06.695806Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Heavy buckets (>64): 0 (0.00%)
+[2m2026-09-03T12:26:06.695807Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Max bucket size: 1
+[2m2026-09-03T12:26:06.695807Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Positions in light buckets: 0 (0.00%)
+[2m2026-09-03T12:26:06.695808Z[0m [32m INFO[0m [2msshash_lib::builder::buckets[0m[2m:[0m   Positions in heavy buckets: 0 (0.00%)
+[2m2026-09-03T12:26:06.695809Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Step 4: Building minimizers control map...
+[2m2026-09-03T12:26:06.695938Z[0m [32m INFO[0m [2msshash_lib::minimizers_control_map[0m[2m:[0m Building PHast MPHF for 5775 minimizers (partitioned=true)
+[2m2026-09-03T12:26:06.698996Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m   Built MPHF for 5775 minimizers
+[2m2026-09-03T12:26:06.699009Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Step 5: Building sparse and skew index...
+[2m2026-09-03T12:26:06.699042Z[0m [32m INFO[0m [2msshash_lib::sparse_and_skew_index[0m[2m:[0m   Pass 1 (EF build): 0.00s — 5775 buckets, 5775 total super-kmers, max_bucket_size=1
+[2m2026-09-03T12:26:06.699059Z[0m [32m INFO[0m [2msshash_lib::sparse_and_skew_index[0m[2m:[0m   Pass 2 (fill offsets): 0.00s — 0 heavy buckets collected
+[2m2026-09-03T12:26:06.699061Z[0m [32m INFO[0m [2msshash_lib::sparse_and_skew_index[0m[2m:[0m   Pass 3 (skew index): 0.00s
+[2m2026-09-03T12:26:06.699062Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m   Index built successfully
+[2m2026-09-03T12:26:06.699063Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Dictionary Build Complete
+[2m2026-09-03T12:26:06.699063Z[0m [32m INFO[0m [2msshash_lib::builder::dictionary_builder[0m[2m:[0m Total memory: 0.02 MB
+[2m2026-09-03T12:26:06.699465Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m   Dictionary built: 24 strings
+[2m2026-09-03T12:26:06.699481Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m First pass over salmon_index/cdbg.cf_seq
+[2m2026-09-03T12:26:06.702361Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:06.702376Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m Second pass over salmon_index/cdbg.cf_seq to fill contig entries
+[2m2026-09-03T12:26:06.703095Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m   processing reference #0
+[2m2026-09-03T12:26:06.703493Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m   ContigTable: 24 contigs, 24 entries
+[2m2026-09-03T12:26:06.703505Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m Building equivalence class table
+[2m2026-09-03T12:26:06.703511Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m   EqClassMap: 24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:06.703846Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Saving SSHash dictionary to salmon_index/index.ssi
+[2m2026-09-03T12:26:06.708759Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Saving contig table to salmon_index/index.ctab
+[2m2026-09-03T12:26:06.710327Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Saving reference info to salmon_index/index.refinfo
+[2m2026-09-03T12:26:06.711331Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Saving equivalence class table to salmon_index/index.ectab
+[2m2026-09-03T12:26:06.712959Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Index saved to salmon_index/index
+[2m2026-09-03T12:26:06.713391Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m Index built and saved to salmon_index/index
+[2m2026-09-03T12:26:06.713403Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m auto dict selection: 40560 canonical k-mers (100000000 threshold), emitting Tiny artifacts: true
+[2m2026-09-03T12:26:06.713405Z[0m [32m INFO[0m [2mpiscem_rs::index::build[0m[2m:[0m Emitting Tiny index artifacts (.tdct + .tct)
+[2m2026-09-03T12:26:06.713408Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Building and saving TinyDictionary to salmon_index/index.tdct
+[2m2026-09-03T12:26:06.718117Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Building and saving TinyContigTable to salmon_index/index.tct
+[2m2026-09-03T12:26:06.719749Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading SSHash dictionary from salmon_index/index.ssi
+[2m2026-09-03T12:26:06.722261Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   k=31, 24 strings
+[2m2026-09-03T12:26:06.722274Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading contig table from salmon_index/index.ctab
+[2m2026-09-03T12:26:06.723243Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 contigs, 24 entries, entry_width=18 bits
+[2m2026-09-03T12:26:06.723256Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading reference info from salmon_index/index.refinfo
+[2m2026-09-03T12:26:06.723868Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:06.724205Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading equivalence class table from salmon_index/index.ectab
+[2m2026-09-03T12:26:06.724723Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:06.724875Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   ref_shift=13, pos_mask=0xfff
+[2m2026-09-03T12:26:06.736243Z[0m [32m INFO[0m [2msalmon_index[0m[2m:[0m index built: 24 references
+indexed 24 references (k=31, m=19)

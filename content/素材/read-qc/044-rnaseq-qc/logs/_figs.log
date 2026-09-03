@@ -1,0 +1,5 @@
+  [PASS] fig1_gradient_recovery.png: text within axes, no overlap
+  [PASS] fig2_strandedness_mapping.png: text within axes, no overlap
+  [PASS] fig3_tpm_dynamic_range.png: text within axes, no overlap
+FIGURE QUALITY: TOTAL FAILS = 0
+TOTAL FAILS = 0

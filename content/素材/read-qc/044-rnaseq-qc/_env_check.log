@@ -1,0 +1,21 @@
+=== bio-qc env ===
+salmon: /opt/miniconda3/envs/bio-qc/bin/salmon salmon 2.7.0
+fastp:  /opt/miniconda3/envs/bio-qc/bin/fastp fastp 1.3.6
+samtools: /opt/miniconda3/envs/bio-qc/bin/samtools samtools 1.24
+infer_experiment.py:     MISSING
+geneBody_coverage.py:    MISSING
+tin.py:                  MISSING
+read_distribution.py:    MISSING
+read_duplication.py:     MISSING
+junction_saturation.py:  MISSING
+picard:                  MISSING
+qualimap:                MISSING
+rnaseqc:                 MISSING
+how_are_we_stranded_here.py: MISSING
+
+=== bio env ===
+dwgsim: /opt/miniconda3/envs/bio/bin/dwgsim dwgsim: invalid option -- '-'
+infer_experiment.py:     MISSING
+salmon:                  MISSING
+picard:                  MISSING
+qualimap:                MISSING

@@ -1,0 +1,35 @@
+[2m2026-09-03T12:26:07.112356Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading SSHash dictionary from salmon_index/index.ssi
+[2m2026-09-03T12:26:07.114536Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   k=31, 24 strings
+[2m2026-09-03T12:26:07.114552Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading contig table from salmon_index/index.ctab
+[2m2026-09-03T12:26:07.115308Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 contigs, 24 entries, entry_width=18 bits
+[2m2026-09-03T12:26:07.115322Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading reference info from salmon_index/index.refinfo
+[2m2026-09-03T12:26:07.115857Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:07.116218Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading equivalence class table from salmon_index/index.ectab
+[2m2026-09-03T12:26:07.116754Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:07.116903Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   ref_shift=13, pos_mask=0xfff
+[2m2026-09-03T12:26:07.119663Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"index_load" [3melapsed_s[0m[2m=[0m0.008796184
+[2m2026-09-03T12:26:07.122855Z[0m [32m INFO[0m [2mpiscem_rs::io::calibrate[0m[2m:[0m using the serial decoder: 28 threads for 1 gzip input(s) is below the 50 threads per input needed before parallel decoding adds concurrency the serial path does not already have
+[2m2026-09-03T12:26:07.123352Z[0m [32m INFO[0m [2msalmon_quant::decode[0m[2m:[0m thread execution plan [3mrequested_budget[0m[2m=[0m28 [3meffective_budget[0m[2m=[0m28 [3mmapping_threads[0m[2m=[0m28 [3mdecode_slots[0m[2m=[0m0 [3mparallel_decode[0m[2m=[0mfalse [3mreason[0m[2m=[0mPolicyDeclined
+[2m2026-09-03T12:26:07.123366Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapping reads (selective-alignment mode, 28 threads)
+[2m2026-09-03T12:26:07.173157Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapped 0 / 80000 fragments (0.00%)
+[2m2026-09-03T12:26:07.173175Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"mapping" [3melapsed_s[0m[2m=[0m0.053512808
+[2m2026-09-03T12:26:07.173213Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"eff_length_collapse" [3melapsed_s[0m[2m=[0m3.8623e-5
+[2m2026-09-03T12:26:07.179824Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m0.006608002
+[2m2026-09-03T12:26:07.179839Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m1.7532e-5
+[2m2026-09-03T12:26:07.179844Z[0m [31mERROR[0m [2msalmon_quant[0m[2m:[0m 0 fragments mapped — the reference almost certainly does not match these reads (wrong reference/organism)
+[2m2026-09-03T12:26:07.179846Z[0m [33m WARN[0m [2msalmon_quant[0m[2m:[0m specified library type 'SF' disagrees with the observed format 'SR' — check the -l strandedness setting
+[2m2026-09-03T12:26:07.179890Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m writing results to quant_SF
+[2m2026-09-03T12:26:07.183189Z[0m [33m WARN[0m [2msalmon_core::libtype[0m[2m:[0m greater than 5% of the fragments disagreed with the expected library type (SF); see lib_format_counts.json for details
+[2m2026-09-03T12:26:07.202815Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.022970949
+[2m2026-09-03T12:26:07.202859Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m deterministic: mapped 0 / 80000 fragments (0.00%); quantifying from intermediate RAD
+[2m2026-09-03T12:26:07.203897Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m quantifying from RAD (salmon SA), 24 references
+[2m2026-09-03T12:26:07.203961Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m using fragment-length distribution baked in the RAD header
+[2m2026-09-03T12:26:07.209485Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m mapped 0 / 80000 fragments from RAD
+[2m2026-09-03T12:26:07.209502Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"rad_read" [3melapsed_s[0m[2m=[0m0.006636391
+[2m2026-09-03T12:26:18.789789Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m11.580282884
+[2m2026-09-03T12:26:18.789815Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m3.0044e-5
+[2m2026-09-03T12:26:18.789821Z[0m [31mERROR[0m [2msalmon_align::rad[0m[2m:[0m 0 fragments mapped — the reference almost certainly does not match these reads (wrong reference/organism)
+[2m2026-09-03T12:26:18.789823Z[0m [33m WARN[0m [2msalmon_align::rad[0m[2m:[0m specified library type 'SF' disagrees with the observed format 'SR' — check the -l strandedness setting
+[2m2026-09-03T12:26:18.792213Z[0m [33m WARN[0m [2msalmon_core::libtype[0m[2m:[0m greater than 5% of the fragments disagreed with the expected library type (SF); see lib_format_counts.json for details
+[2m2026-09-03T12:26:18.810559Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.020740795
+[2m2026-09-03T12:26:18.810848Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m 80000 fragments from intermediate RAD, 0 quantified (0.00%); 0 equivalence classes

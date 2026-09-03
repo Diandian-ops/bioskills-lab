@@ -1,0 +1,13 @@
+{
+  "salmon_version": "2.7.0",
+  "index": "salmon_index",
+  "libType": "IU",
+  "output": "quant_IU",
+  "mates1": [],
+  "mates2": [],
+  "unmatedReads": [
+    "reads_se.fq.gz"
+  ],
+  "threads": 0,
+  "sketch": false
+}

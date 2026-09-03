@@ -1,0 +1,279 @@
+### 044 rnaseq-qc repro transcript（WSL Ubuntu + bio-qc，salmon salmon 2.7.0）
+生成时间：2026-09-03T20:27:27+08:00
+
+== 环境核查（_env_check.log）==
+=== bio-qc env ===
+salmon: /opt/miniconda3/envs/bio-qc/bin/salmon salmon 2.7.0
+fastp:  /opt/miniconda3/envs/bio-qc/bin/fastp fastp 1.3.6
+samtools: /opt/miniconda3/envs/bio-qc/bin/samtools samtools 1.24
+infer_experiment.py:     MISSING
+geneBody_coverage.py:    MISSING
+tin.py:                  MISSING
+read_distribution.py:    MISSING
+read_duplication.py:     MISSING
+junction_saturation.py:  MISSING
+picard:                  MISSING
+qualimap:                MISSING
+rnaseqc:                 MISSING
+how_are_we_stranded_here.py: MISSING
+
+=== bio env ===
+dwgsim: /opt/miniconda3/envs/bio/bin/dwgsim dwgsim: invalid option -- '-'
+infer_experiment.py:     MISSING
+salmon:                  MISSING
+picard:                  MISSING
+qualimap:                MISSING
+
+== step1 make_inputs ==
+transcripts: 24 (lengths 536-2920 nt, total 41280 bp)
+frac range: 0.000366 - 0.233 (span 636x), expected TPM 366 - 233194
+reads: 80000 SE 100 bp, err 0.01, min/max per-tx expected reads 11.8 / 22513.7
+orientation: dUTP-style SE (read = reverse complement of transcript)
+wrote transcripts.fa, truth.tsv, reads_se.fq.gz
+
+== step2 salmon index（日志尾部）==
+[2m2026-09-03T12:26:06.718117Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Building and saving TinyContigTable to salmon_index/index.tct
+[2m2026-09-03T12:26:06.719749Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading SSHash dictionary from salmon_index/index.ssi
+[2m2026-09-03T12:26:06.722261Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   k=31, 24 strings
+[2m2026-09-03T12:26:06.722274Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading contig table from salmon_index/index.ctab
+[2m2026-09-03T12:26:06.723243Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 contigs, 24 entries, entry_width=18 bits
+[2m2026-09-03T12:26:06.723256Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading reference info from salmon_index/index.refinfo
+[2m2026-09-03T12:26:06.723868Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:06.724205Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading equivalence class table from salmon_index/index.ectab
+[2m2026-09-03T12:26:06.724723Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:06.724875Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   ref_shift=13, pos_mask=0xfff
+[2m2026-09-03T12:26:06.736243Z[0m [32m INFO[0m [2msalmon_index[0m[2m:[0m index built: 24 references
+indexed 24 references (k=31, m=19)
+
+== step salmon quant -l A（完整日志）==
+[2m2026-09-03T12:26:06.744685Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading SSHash dictionary from salmon_index/index.ssi
+[2m2026-09-03T12:26:06.746854Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   k=31, 24 strings
+[2m2026-09-03T12:26:06.746870Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading contig table from salmon_index/index.ctab
+[2m2026-09-03T12:26:06.747591Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 contigs, 24 entries, entry_width=18 bits
+[2m2026-09-03T12:26:06.747602Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading reference info from salmon_index/index.refinfo
+[2m2026-09-03T12:26:06.748202Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:06.748514Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading equivalence class table from salmon_index/index.ectab
+[2m2026-09-03T12:26:06.749042Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:06.749196Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   ref_shift=13, pos_mask=0xfff
+[2m2026-09-03T12:26:06.752246Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"index_load" [3melapsed_s[0m[2m=[0m0.009088222
+[2m2026-09-03T12:26:06.755709Z[0m [32m INFO[0m [2mpiscem_rs::io::calibrate[0m[2m:[0m using the serial decoder: 28 threads for 1 gzip input(s) is below the 50 threads per input needed before parallel decoding adds concurrency the serial path does not already have
+[2m2026-09-03T12:26:06.756314Z[0m [32m INFO[0m [2msalmon_quant::decode[0m[2m:[0m thread execution plan [3mrequested_budget[0m[2m=[0m28 [3meffective_budget[0m[2m=[0m28 [3mmapping_threads[0m[2m=[0m28 [3mdecode_slots[0m[2m=[0m0 [3mparallel_decode[0m[2m=[0mfalse [3mreason[0m[2m=[0mPolicyDeclined
+[2m2026-09-03T12:26:06.756330Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapping reads (selective-alignment mode, 28 threads)
+[2m2026-09-03T12:26:06.807202Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapped 79751 / 80000 fragments (99.69%)
+[2m2026-09-03T12:26:06.807222Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"mapping" [3melapsed_s[0m[2m=[0m0.054978037
+[2m2026-09-03T12:26:06.807261Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"eff_length_collapse" [3melapsed_s[0m[2m=[0m3.9262e-5
+[2m2026-09-03T12:26:06.816115Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m0.008851308
+[2m2026-09-03T12:26:06.816132Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m1.932e-5
+[2m2026-09-03T12:26:06.816188Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m writing results to quant_A
+[2m2026-09-03T12:26:06.840718Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.024582741
+[2m2026-09-03T12:26:06.840747Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m deterministic: mapped 79751 / 80000 fragments (99.69%); quantifying from intermediate RAD
+[2m2026-09-03T12:26:06.841641Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m quantifying from RAD (salmon SA), 24 references
+[2m2026-09-03T12:26:06.841700Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m using fragment-length distribution baked in the RAD header
+[2m2026-09-03T12:26:06.841702Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m library format under `-l A`: SR (baked in RAD header)
+[2m2026-09-03T12:26:06.850334Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m mapped 79751 / 80000 fragments from RAD
+[2m2026-09-03T12:26:06.850361Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"rad_read" [3melapsed_s[0m[2m=[0m0.009609539
+[2m2026-09-03T12:26:06.903278Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m0.052912671
+[2m2026-09-03T12:26:06.903300Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m2.6127e-5
+[2m2026-09-03T12:26:06.922545Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.01924266
+[2m2026-09-03T12:26:06.922848Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m 80000 fragments from intermediate RAD, 79751 quantified (99.69%); 24 equivalence classes
+
+== step salmon quant -l IU（完整日志）==
+[2m2026-09-03T12:26:06.932432Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading SSHash dictionary from salmon_index/index.ssi
+[2m2026-09-03T12:26:06.934489Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   k=31, 24 strings
+[2m2026-09-03T12:26:06.934504Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading contig table from salmon_index/index.ctab
+[2m2026-09-03T12:26:06.935313Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 contigs, 24 entries, entry_width=18 bits
+[2m2026-09-03T12:26:06.935325Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading reference info from salmon_index/index.refinfo
+[2m2026-09-03T12:26:06.935868Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:06.936205Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading equivalence class table from salmon_index/index.ectab
+[2m2026-09-03T12:26:06.936778Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:06.936942Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   ref_shift=13, pos_mask=0xfff
+[2m2026-09-03T12:26:06.939622Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"index_load" [3melapsed_s[0m[2m=[0m0.008811046
+[2m2026-09-03T12:26:06.942877Z[0m [32m INFO[0m [2mpiscem_rs::io::calibrate[0m[2m:[0m using the serial decoder: 28 threads for 1 gzip input(s) is below the 50 threads per input needed before parallel decoding adds concurrency the serial path does not already have
+[2m2026-09-03T12:26:06.943463Z[0m [32m INFO[0m [2msalmon_quant::decode[0m[2m:[0m thread execution plan [3mrequested_budget[0m[2m=[0m28 [3meffective_budget[0m[2m=[0m28 [3mmapping_threads[0m[2m=[0m28 [3mdecode_slots[0m[2m=[0m0 [3mparallel_decode[0m[2m=[0mfalse [3mreason[0m[2m=[0mPolicyDeclined
+[2m2026-09-03T12:26:06.943477Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapping reads (selective-alignment mode, 28 threads)
+[2m2026-09-03T12:26:06.991854Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapped 79751 / 80000 fragments (99.69%)
+[2m2026-09-03T12:26:06.991873Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"mapping" [3melapsed_s[0m[2m=[0m0.052252374
+[2m2026-09-03T12:26:06.991911Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"eff_length_collapse" [3melapsed_s[0m[2m=[0m3.8404e-5
+[2m2026-09-03T12:26:06.997985Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m0.006071028
+[2m2026-09-03T12:26:06.998001Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m1.8908e-5
+[2m2026-09-03T12:26:06.998007Z[0m [33m WARN[0m [2msalmon_quant[0m[2m:[0m specified library type 'IU' disagrees with the observed format 'SR' — check the -l strandedness setting
+[2m2026-09-03T12:26:06.998052Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m writing results to quant_IU
+[2m2026-09-03T12:26:07.001339Z[0m [33m WARN[0m [2msalmon_core::libtype[0m[2m:[0m found no concordant and consistent mappings; if this is a paired-end library, are you sure the reads are properly paired? See lib_format_counts.json for details
+[2m2026-09-03T12:26:07.023236Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.025230858
+[2m2026-09-03T12:26:07.023263Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m deterministic: mapped 79751 / 80000 fragments (99.69%); quantifying from intermediate RAD
+[2m2026-09-03T12:26:07.024367Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m quantifying from RAD (salmon SA), 24 references
+[2m2026-09-03T12:26:07.024429Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m using fragment-length distribution baked in the RAD header
+[2m2026-09-03T12:26:07.032731Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m mapped 79751 / 80000 fragments from RAD
+[2m2026-09-03T12:26:07.032753Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"rad_read" [3melapsed_s[0m[2m=[0m0.009479916
+[2m2026-09-03T12:26:07.083533Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m0.05077626
+[2m2026-09-03T12:26:07.083554Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m2.528e-5
+[2m2026-09-03T12:26:07.083560Z[0m [33m WARN[0m [2msalmon_align::rad[0m[2m:[0m specified library type 'IU' disagrees with the observed format 'SR' — check the -l strandedness setting
+[2m2026-09-03T12:26:07.085664Z[0m [33m WARN[0m [2msalmon_core::libtype[0m[2m:[0m found no concordant and consistent mappings; if this is a paired-end library, are you sure the reads are properly paired? See lib_format_counts.json for details
+[2m2026-09-03T12:26:07.102440Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.01888232
+[2m2026-09-03T12:26:07.102729Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m 80000 fragments from intermediate RAD, 79751 quantified (99.69%); 24 equivalence classes
+
+== step salmon quant -l SF（完整日志）==
+[2m2026-09-03T12:26:07.112356Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading SSHash dictionary from salmon_index/index.ssi
+[2m2026-09-03T12:26:07.114536Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   k=31, 24 strings
+[2m2026-09-03T12:26:07.114552Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading contig table from salmon_index/index.ctab
+[2m2026-09-03T12:26:07.115308Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 contigs, 24 entries, entry_width=18 bits
+[2m2026-09-03T12:26:07.115322Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading reference info from salmon_index/index.refinfo
+[2m2026-09-03T12:26:07.115857Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 references, max_ref_len=2920
+[2m2026-09-03T12:26:07.116218Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m Loading equivalence class table from salmon_index/index.ectab
+[2m2026-09-03T12:26:07.116754Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   24 tiles, 24 ECs, 24 label entries
+[2m2026-09-03T12:26:07.116903Z[0m [32m INFO[0m [2mpiscem_rs::index::reference_index[0m[2m:[0m   ref_shift=13, pos_mask=0xfff
+[2m2026-09-03T12:26:07.119663Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"index_load" [3melapsed_s[0m[2m=[0m0.008796184
+[2m2026-09-03T12:26:07.122855Z[0m [32m INFO[0m [2mpiscem_rs::io::calibrate[0m[2m:[0m using the serial decoder: 28 threads for 1 gzip input(s) is below the 50 threads per input needed before parallel decoding adds concurrency the serial path does not already have
+[2m2026-09-03T12:26:07.123352Z[0m [32m INFO[0m [2msalmon_quant::decode[0m[2m:[0m thread execution plan [3mrequested_budget[0m[2m=[0m28 [3meffective_budget[0m[2m=[0m28 [3mmapping_threads[0m[2m=[0m28 [3mdecode_slots[0m[2m=[0m0 [3mparallel_decode[0m[2m=[0mfalse [3mreason[0m[2m=[0mPolicyDeclined
+[2m2026-09-03T12:26:07.123366Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapping reads (selective-alignment mode, 28 threads)
+[2m2026-09-03T12:26:07.173157Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m mapped 0 / 80000 fragments (0.00%)
+[2m2026-09-03T12:26:07.173175Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"mapping" [3melapsed_s[0m[2m=[0m0.053512808
+[2m2026-09-03T12:26:07.173213Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"eff_length_collapse" [3melapsed_s[0m[2m=[0m3.8623e-5
+[2m2026-09-03T12:26:07.179824Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m0.006608002
+[2m2026-09-03T12:26:07.179839Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m1.7532e-5
+[2m2026-09-03T12:26:07.179844Z[0m [31mERROR[0m [2msalmon_quant[0m[2m:[0m 0 fragments mapped — the reference almost certainly does not match these reads (wrong reference/organism)
+[2m2026-09-03T12:26:07.179846Z[0m [33m WARN[0m [2msalmon_quant[0m[2m:[0m specified library type 'SF' disagrees with the observed format 'SR' — check the -l strandedness setting
+[2m2026-09-03T12:26:07.179890Z[0m [32m INFO[0m [2msalmon_quant[0m[2m:[0m writing results to quant_SF
+[2m2026-09-03T12:26:07.183189Z[0m [33m WARN[0m [2msalmon_core::libtype[0m[2m:[0m greater than 5% of the fragments disagreed with the expected library type (SF); see lib_format_counts.json for details
+[2m2026-09-03T12:26:07.202815Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.022970949
+[2m2026-09-03T12:26:07.202859Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m deterministic: mapped 0 / 80000 fragments (0.00%); quantifying from intermediate RAD
+[2m2026-09-03T12:26:07.203897Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m quantifying from RAD (salmon SA), 24 references
+[2m2026-09-03T12:26:07.203961Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m using fragment-length distribution baked in the RAD header
+[2m2026-09-03T12:26:07.209485Z[0m [32m INFO[0m [2msalmon_align::rad[0m[2m:[0m mapped 0 / 80000 fragments from RAD
+[2m2026-09-03T12:26:07.209502Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"rad_read" [3melapsed_s[0m[2m=[0m0.006636391
+[2m2026-09-03T12:26:18.789789Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"em_bias" [3melapsed_s[0m[2m=[0m11.580282884
+[2m2026-09-03T12:26:18.789815Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"posterior" [3melapsed_s[0m[2m=[0m3.0044e-5
+[2m2026-09-03T12:26:18.789821Z[0m [31mERROR[0m [2msalmon_align::rad[0m[2m:[0m 0 fragments mapped — the reference almost certainly does not match these reads (wrong reference/organism)
+[2m2026-09-03T12:26:18.789823Z[0m [33m WARN[0m [2msalmon_align::rad[0m[2m:[0m specified library type 'SF' disagrees with the observed format 'SR' — check the -l strandedness setting
+[2m2026-09-03T12:26:18.792213Z[0m [33m WARN[0m [2msalmon_core::libtype[0m[2m:[0m greater than 5% of the fragments disagreed with the expected library type (SF); see lib_format_counts.json for details
+[2m2026-09-03T12:26:18.810559Z[0m [32m INFO[0m [2msalmon::timing[0m[2m:[0m phase complete [3mphase[0m[2m=[0m"output" [3melapsed_s[0m[2m=[0m0.020740795
+[2m2026-09-03T12:26:18.810848Z[0m [32m INFO[0m [2msalmon[0m[2m:[0m 80000 fragments from intermediate RAD, 0 quantified (0.00%); 0 equivalence classes
+
+== quant_A/lib_format_counts.json ==
+{
+  "read_files": [
+    "reads_se.fq.gz"
+  ],
+  "expected_format": "SR",
+  "compatible_fragment_ratio": 1.0,
+  "num_compatible_fragments": 79751,
+  "num_incompatible_fragments": 0,
+  "num_assigned_fragments": 79751,
+  "num_frags_with_concordant_consistent_mappings": 79751,
+  "num_frags_with_inconsistent_or_orphan_mappings": 0,
+  "strand_mapping_bias": 0.0,
+  "IU": 0,
+  "ISF": 0,
+  "ISR": 0,
+  "OU": 0,
+  "OSF": 0,
+  "OSR": 0,
+  "MU": 0,
+  "MSF": 0,
+  "MSR": 0,
+  "U": 0,
+  "SF": 0,
+  "SR": 79751
+}
+== quant_IU/lib_format_counts.json ==
+{
+  "read_files": [
+    "reads_se.fq.gz"
+  ],
+  "expected_format": "IU",
+  "compatible_fragment_ratio": 1.0,
+  "num_compatible_fragments": 79751,
+  "num_incompatible_fragments": 0,
+  "num_assigned_fragments": 79751,
+  "num_frags_with_concordant_consistent_mappings": 0,
+  "num_frags_with_inconsistent_or_orphan_mappings": 79751,
+  "strand_mapping_bias": 0.0,
+  "IU": 0,
+  "ISF": 0,
+  "ISR": 0,
+  "OU": 0,
+  "OSF": 0,
+  "OSR": 0,
+  "MU": 0,
+  "MSF": 0,
+  "MSR": 0,
+  "U": 0,
+  "SF": 0,
+  "SR": 79751
+}
+== quant_SF/lib_format_counts.json ==
+{
+  "read_files": [
+    "reads_se.fq.gz"
+  ],
+  "expected_format": "SF",
+  "compatible_fragment_ratio": 0.0,
+  "num_compatible_fragments": 0,
+  "num_incompatible_fragments": 79751,
+  "num_assigned_fragments": 0,
+  "num_frags_with_concordant_consistent_mappings": 0,
+  "num_frags_with_inconsistent_or_orphan_mappings": 79751,
+  "strand_mapping_bias": 0.0,
+  "IU": 0,
+  "ISF": 0,
+  "ISR": 0,
+  "OU": 0,
+  "OSF": 0,
+  "OSR": 0,
+  "MU": 0,
+  "MSF": 0,
+  "MSR": 0,
+  "U": 0,
+  "SF": 0,
+  "SR": 79751
+}
+== step6 parse_quant ==
+== quant_A ==
+  expected_format = SR ; mapped = 79751/80000 (99.69%)
+  lib_format_counts: compatible_ratio = 1.0 ; compatible = 79751 ; incompatible = 0 ; assigned = 79751 ; SR-count = 79751
+  quant.sf: TPM sum = 1000000.0 ; NumReads total = 79751 ; records = 24
+== quant_IU ==
+  expected_format = IU ; mapped = 79751/80000 (99.69%)
+  lib_format_counts: compatible_ratio = 1.0 ; compatible = 79751 ; incompatible = 0 ; assigned = 79751 ; SR-count = 79751
+  quant.sf: TPM sum = 1000000.0 ; NumReads total = 79751 ; records = 24
+== quant_SF ==
+  expected_format = SF ; mapped = 0/80000 (0.0%)
+  lib_format_counts: compatible_ratio = 0.0 ; compatible = 0 ; incompatible = 79751 ; assigned = 0 ; SR-count = 79751
+  quant.sf: TPM sum = 0.0 ; NumReads total = 0 ; records = 24
+== gradient recovery (quant_A vs truth) ==
+  detected 24/24 transcripts (TPM>0); Pearson r on log10 TPM = 0.9981 ; Spearman rho (all, tie-averaged) = 0.9948
+  median TPM_observed/TPM_expected = 0.9933 ; ratio range 0.9167 - 1.5885
+
+== parsed_results.tsv ==
+tx_id	length	frac	tpm_expected	reads_expected	tpm_A	numreads_A	tpm_IU	numreads_IU	tpm_SF	numreads_SF
+tx0001	2173	0.23319446	233194.46	20020.93	222894.4374	19954	222894.4374	19954	0.0000	0
+tx0002	2630	0.21666339	216663.39	22513.74	202676.7769	22456	202676.7769	22456	0.0000	0
+tx0003	2719	0.16206311	162063.11	17410.04	150991.3523	17355	150991.3523	17355	0.0000	0
+tx0004	977	0.096290731	96290.73	3716.94	109412.7284	3703	109412.7284	3703	0.0000	0
+tx0005	1223	0.08112078	81120.78	3919.81	86320.2052	3910	86320.2052	3910	0.0000	0
+tx0006	2054	0.046790086	46790.09	3797.17	45080.9047	3786	45080.9047	3786	0.0000	0
+tx0007	1422	0.039788332	39788.33	2235.43	40780.3501	2225	40780.3501	2225	0.0000	0
+tx0008	1686	0.03021108	30211.08	2012.47	30022.1285	2007	30022.1285	2007	0.0000	0
+tx0009	619	0.026263581	26263.58	642.32	37256.5087	640	37256.5087	640	0.0000	0
+tx0010	1420	0.021625527	21625.53	1213.28	22141.6506	1206	22141.6506	1206	0.0000	0
+tx0011	977	0.020449169	20449.17	789.36	23312.6229	789	23312.6229	789	0.0000	0
+tx0012	2829	0.0077778347	7777.83	869.36	7179.6698	862	7179.6698	862	0.0000	0
+tx0013	536	0.0058628792	5862.88	124.16	9313.3130	124	9313.3130	124	0.0000	0
+tx0014	910	0.0041366839	4136.68	148.73	4849.4321	149	4849.4321	149	0.0000	0
+tx0015	1141	0.0017141799	1714.18	77.28	1856.3573	77	1856.3573	77	0.0000	0
+tx0016	2604	0.0015955474	1595.55	164.16	1496.5318	164	1496.5318	164	0.0000	0
+tx0017	1741	0.0010587546	1058.75	72.83	1051.7046	73	1051.7046	73	0.0000	0
+tx0018	2050	0.00062379986	623.80	50.52	608.6200	51	608.6200	51	0.0000	0
+tx0019	2920	0.00060557284	605.57	69.86	555.1194	69	555.1194	69	0.0000	0
+tx0020	2159	0.00055322072	553.22	47.19	528.8597	47	528.8597	47	0.0000	0
+tx0021	1835	0.00046689138	466.89	33.85	460.7849	34	460.7849	34	0.0000	0
+tx0022	1967	0.00040423136	404.23	31.42	387.8287	31	387.8287	31	0.0000	0
+tx0023	801	0.00037369421	373.69	11.83	467.8194	12	467.8194	12	0.0000	0
+tx0024	1887	0.00036645933	366.46	27.32	354.2939	27	354.2939	27	0.0000	0
+
+== make_figs（Windows 侧受管 venv 生成，logs/_figs.log）==
+  [PASS] fig1_gradient_recovery.png: text within axes, no overlap
+  [PASS] fig2_strandedness_mapping.png: text within axes, no overlap
+  [PASS] fig3_tpm_dynamic_range.png: text within axes, no overlap
+FIGURE QUALITY: TOTAL FAILS = 0
+TOTAL FAILS = 0
