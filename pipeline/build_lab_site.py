@@ -167,10 +167,18 @@ READQC_SUBS = [("qcreports", "quality-reports", "read-qc/quality-reports.html"),
                ("umi", "umi-processing", "read-qc/umi-processing.html"),
                ("contam", "contamination-screening", "read-qc/contamination-screening.html"),
                ("rnaseqqc", "rnaseq-qc", "read-qc/rnaseq-qc.html")]
+GENOMEI_SUBS = [("bedbasics", "bed-file-basics", "genome-intervals/bed-file-basics.html"),
+                ("bedgraph", "bedgraph-handling", "genome-intervals/bedgraph-handling.html"),
+                ("bigwig", "bigwig-tracks", "genome-intervals/bigwig-tracks.html"),
+                ("coverage", "coverage-analysis", "genome-intervals/coverage-analysis.html"),
+                ("gtfgff", "gtf-gff-handling", "genome-intervals/gtf-gff-handling.html"),
+                ("ivmath", "interval-arithmetic", "genome-intervals/interval-arithmetic.html"),
+                ("ovsig", "overlap-significance", "genome-intervals/overlap-significance.html"),
+                ("proximity", "proximity-operations", "genome-intervals/proximity-operations.html")]
 # 同一套「family 子页」机制同时服务 alignment / read-alignment / variant-calling，避免对 category 名硬编码
 FAMILY_SUBS = {"alignment": ALIGN_SUBS, "alignment-files": ALIGN_FILES_SUBS,
                "read-alignment": READ_ALIGN_SUBS, "variant-calling": VARCALL_SUBS,
-               "read-qc": READQC_SUBS}
+               "read-qc": READQC_SUBS, "genome-intervals": GENOMEI_SUBS}
 FAMILY_KEYS = {k for subs in FAMILY_SUBS.values() for k, _, _ in subs}
 
 def sidebar(active, prefix=""):
@@ -563,6 +571,14 @@ TRIALS = [
     ("read-qc",         "042", "umi-processing",          "DEEP DIVE 39", "umi"),
     ("read-qc",         "043", "contamination-screening", "DEEP DIVE 40", "contam"),
     ("read-qc",         "044", "rnaseq-qc",               "DEEP DIVE 41", "rnaseqqc"),
+    ("genome-intervals","045", "bed-file-basics",         "DEEP DIVE 42", "bedbasics"),
+    ("genome-intervals","046", "bedgraph-handling",       "DEEP DIVE 43", "bedgraph"),
+    ("genome-intervals","047", "bigwig-tracks",          "DEEP DIVE 44", "bigwig"),
+    ("genome-intervals","048", "coverage-analysis",      "DEEP DIVE 45", "coverage"),
+    ("genome-intervals","049", "gtf-gff-handling",       "DEEP DIVE 46", "gtfgff"),
+    ("genome-intervals","050", "interval-arithmetic",    "DEEP DIVE 47", "ivmath"),
+    ("genome-intervals","051", "overlap-significance",   "DEEP DIVE 48", "ovsig"),
+    ("genome-intervals","052", "proximity-operations",   "DEEP DIVE 49", "proximity"),
 ]
 def cat_page(cat):
     items = pages.get(cat, [])
