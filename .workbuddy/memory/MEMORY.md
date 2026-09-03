@@ -52,7 +52,12 @@
 - 超标处理只能精简源稿（或做卡片专用摘录稿，不动正式笔记），调 density 无效。
 
 ## 6. ⚠️ 环境现状：生信工具链已丢失（2026-09-01 探测）
-- `bcftools` / `samtools` / `bgzip` / `tabix` **全盘搜索不到**；无 conda/mamba/miniforge 目录；WSL 未安装（无分发版）；PATH 无生信目录。
+- `bcftools` / `samtools` / `bgzip` / `tabix` **Windows 原生全盘搜索不到**；无 conda/mamba/miniforge 目录；PATH 无生信目录（以上仅为 **Windows 侧**结论）。
+- **【2026-09-02 起已破局 — 此条覆盖上面的工具链缺失结论】WSL 已安装 Ubuntu 分发版**，conda env `/opt/miniconda3/envs/bio` 含：mafft/muscle/clustalo/clipkit/trimal/bmge/foldseek/**TMalign(注意大写)**/foldmason/bowtie2/bwa/hisat2/STAR/samtools/dwgsim/bedtools + python/biopython/numpy/matplotlib。
+  - 调用：`wsl.exe -d Ubuntu -u root -- bash -lc 'source /opt/miniconda3/etc/profile.d/conda.sh && conda activate bio && <cmd>'`；仓库挂载 `/mnt/d/1.WorkDir/RedBook`。
+  - 实战验证：001–014 的**重型 CLI 7 个（006/007/010/011/012/013/014）全部由此真跑**；014 STAR 已真跑出 99.87% uniquely mapped。
+  - → **022/023/027「无基础链」的结论应重新评估**（它们卡在 Windows 原生缺工具，WSL 路线另说）。
+  - 装包坑：conda 26.7 有 ToS 门禁，需 TUNA 镜像 `.condarc` + 本地代理才能装。
 - 但素材 transcript 显示 **2026-08-28 尚在 `bcftools 1.24` 环境跑通** → 工具链在 8/28 之后被清理。
 - **影响面**：① 022/023/027 补跑无基础链；② 已跑过的 9 篇素材 `make_figs.py`（依赖 bcftools）当前不可复现。
 - 其他探测：java 仅 IDE 内置 jre21（`C:\Users\Admin\.antigravity\extensions\redhat.java-1.52.0-win32-x64\jre\21.0.9`）；docker/singularity/apptainer 均无；网络 **github 返回 000（不通）**、broad 返回 200（通）。→ DeepVariant（仅 Docker 分发）基本不可行；GATK 需 jar（GitHub 不通）+ Java + 参考基因组 + BAM。
@@ -67,4 +72,5 @@
 - 五步：命令/参数溯源 → 人工复核标记项 → 实测证据链 → 未执行诚实标注 → 表述客观性与偏差标注。
 - **机器初筛只做筛选不做判定**：016–027 核查中标记 5 项，人工核实后 **4 项误报**（环境版本行被当命令、`gatk VariantFiltration` 因换行未连续匹配）。
 - 另一坑：Bash `cat` 读中文路径文件显示为空 → 须用 python `io.open` 复核（020 transcript 因此一度误判无内容）。
+- **同类坑（2026-09-03 新增，直接影响验收）**：`git ls-files` / `git status` 对中文路径默认做 octal 转义（`core.quotepath`），直接 `grep -c 真实试用` 恒返回 **0 假阴性**，会误判成「笔记没入库」。验收中文路径一律写 `git -c core.quotepath=false ls-files ...`（实测：加该参数后 004–014 真实试用/小红书各 11 篇正确列出）。
 - 2026-09-01 已核查 016–027：**12 篇均未发现无出处编造**。报告 `output/audit/笔记可信度核查-016-027.md`（不入库），脚本 `pipeline/audit/audit_note_vs_skill.py`（入库）。

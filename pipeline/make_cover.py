@@ -6,7 +6,7 @@ portrait 3:4 (1080x1440)，白底清爽风格（适配小红书信息流）。
 中文用 PingFang SC。
 
 用法：
-  python make_cover.py --out content/素材/alignment/006-trimming/006-cover.png \\
+  python make_cover.py --out content/素材/alignment/006-alignment-trimming/006-cover.png \\
     --name "alignment-trimming" \\
     --line "比对修剪别乱砍" --line "默认模式只动 gap 列" \\
     --cap "kpic-smart-gap 只动 gap 列" --cap "--log 让修剪可被审计"

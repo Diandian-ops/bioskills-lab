@@ -4,7 +4,7 @@ skill: alignment-trimming
 trial: "006"
 category: "bioSkills 真实试用"
 tags: ["bioSkills", "ClipKIT", "trimAl", "BMGE", "MSA", "alignment-trimming", "alignment", "真实试用"]
-cover: "content/素材/alignment/006-trimming/fig1_alignment_length.png"
+cover: "content/素材/alignment/006-alignment-trimming/fig1_alignment_length.png"
 date: "2026-09-03"
 status: "full-real"
 note: "按 SKILL.md 原命真跑 ClipKIT(kpic-smart-gap / gappyout)、trimAl(-automated1 / -gappyout / -strictplus)、BMGE(-h 0.5 -g 0.2) 于真实蛋白酶 MSA，比较各工具移除列数与落点。"
@@ -79,9 +79,9 @@ Tan 2015 与 Steenwyk 2020 看似矛盾、实则由激进度调和：轻修剪�
 
 ClipKIT 的 `--log` 与 trimAl 的 `-colnumbering` 给出保留列索引。两者都把移除集中在高空格列——下图输入逐列空位剖面中，被移除列（红点=ClipKIT、蓝 x=trimAl）几乎全部落在空位比例高的区域，符合 skill 的空位分数逻辑。
 
-![比对长度前后对比](../../素材/alignment/006-trimming/fig1_alignment_length.png)
-![每工具移除列数](../../素材/alignment/006-trimming/fig2_removed_per_tool.png)
-![输入空位剖面与移除列标注](../../素材/alignment/006-trimming/fig3_gap_distribution.png)
+![比对长度前后对比](../../素材/alignment/006-alignment-trimming/fig1_alignment_length.png)
+![每工具移除列数](../../素材/alignment/006-alignment-trimming/fig2_removed_per_tool.png)
+![输入空位剖面与移除列标注](../../素材/alignment/006-alignment-trimming/fig3_gap_distribution.png)
 
 ## 5 实践要点
 

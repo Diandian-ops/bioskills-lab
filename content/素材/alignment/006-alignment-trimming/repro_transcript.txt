@@ -6,7 +6,7 @@ bmge:     /opt/miniconda3/envs/bio/share/bmge-1.12-1/BMGE.jar
 biopython:1.88
 input sequences: 6
 
-########## CMD: mafft --localpair --maxiterate 1000 /mnt/d/1.WorkDir/RedBook/content/素材/alignment/006-trimming/sequences.fasta ##########
+########## CMD: mafft --localpair --maxiterate 1000 /mnt/d/1.WorkDir/RedBook/content/素材/alignment/006-alignment-trimming/sequences.fasta ##########
 exit=0  runtime=0.249s
 STDERR:
 outputhat23=16
